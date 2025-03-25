@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name          = 'OLX_Dealer'
-  spec.version       = '1.0.1'
+  spec.version       = '1.0.2'
   spec.summary       = 'OLX_Dealer'
   spec.description   = 'OLX_Dealer Module'
   spec.homepage      = 'https://cocoapods.org/pods/OLX_Dealer'
@@ -19,5 +19,6 @@ spec.license = { :type => 'MIT', :text => <<-LICENSE
  # spec.ios.vendored_frameworks = [
   #  "Frameworks/auth_library.xcframework",
    # "Frameworks/analytics_library.xcframework"
+   #  spec.dependency 'HostApp'
   #]
 end
