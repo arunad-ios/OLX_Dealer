@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name          = 'OLX_Dealer'
-  spec.version       = '1.0.0'
+  spec.version       = '1.0.1'
   spec.summary       = 'OLX_Dealer'
   spec.description   = 'OLX_Dealer Module'
   spec.homepage      = 'https://cocoapods.org/pods/OLX_Dealer'
@@ -11,11 +11,11 @@ spec.license = { :type => 'MIT', :text => <<-LICENSE
     LICENSE
 }
    spec.static_framework = true
-  spec.source        = { :git => 'https://github.com/arunad-ios/inventory_cocoa.git', :tag => spec.version.to_s }
+  spec.source        = { :git => 'https://github.com/arunad-ios/OLX_Dealer.git', :tag => spec.version.to_s }
   spec.swift_version = '5.0'
   spec.ios.deployment_target = '13.0'
- spec.source_files  = "inventory_cocoa/**/*.{h,m,swift}","inventory_cocoa/*.{h,m,swift}"
-#  spec.resources = 'inventory_cocoa/*.xcdatamodeld'
+ spec.source_files  = "OLX_BuyLeads/**/*.{h,m,swift}","OLX_BuyLeads/*.{h,m,swift}"
+#  spec.resources = 'OLX_BuyLeads/*.xcdatamodeld'
  # spec.ios.vendored_frameworks = [
   #  "Frameworks/auth_library.xcframework",
    # "Frameworks/analytics_library.xcframework"
