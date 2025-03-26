@@ -9,11 +9,10 @@ import UIKit
 
 @IBDesignable
 public class CustomView: UIView {
-
+    public var errormessage = ""
     private let label: UILabel = {
         let label = UILabel()
-        label.text = "View from Framework!"
-        label.textColor = .white
+        label.textColor = UIColor(red: 0/255.0, green: 42/255.0, blue: 57/255.0, alpha: 1.0)
         label.textAlignment = .center
         return label
     }()
@@ -22,7 +21,7 @@ public class CustomView: UIView {
             let button = UIButton(type: .system)
             button.setTitle("Dismiss", for: .normal)
             button.setTitleColor(.white, for: .normal)
-            button.backgroundColor = .red
+            button.backgroundColor = UIColor(red: 0/255.0, green: 42/255.0, blue: 57/255.0, alpha: 1.0)
             button.layer.cornerRadius = 8
             button.translatesAutoresizingMaskIntoConstraints = false
             return button
@@ -30,17 +29,19 @@ public class CustomView: UIView {
         
         override public init(frame: CGRect) {
             super.init(frame: frame)
-            setupView()
+           // setupView()
         }
 
         required init?(coder: NSCoder) {
             super.init(coder: coder)
-            setupView()
+          //  setupView()
         }
 
-        private func setupView() {
-            backgroundColor = .systemBlue
+    public func setupView() {
+            label.text = self.errormessage
+            backgroundColor = .white
             layer.cornerRadius = 12
+       
             addSubview(dismissButton)
             addSubview(label)
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -49,7 +50,7 @@ public class CustomView: UIView {
                 label.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -10)
             ])
             NSLayoutConstraint.activate([
-                dismissButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+                dismissButton.centerXAnchor.constraint(equalTo: trailingAnchor),
                 dismissButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
                 dismissButton.widthAnchor.constraint(equalToConstant: 100),
                 dismissButton.heightAnchor.constraint(equalToConstant: 40)

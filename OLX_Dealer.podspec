@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name          = 'OLX_Dealer'
-  spec.version       = '1.0.6'
+  spec.version       = '1.0.7'
   spec.summary       = 'OLX_Dealer'
   spec.description   = 'OLX_Dealer Module'
   spec.homepage      = 'https://cocoapods.org/pods/OLX_Dealer'
@@ -15,8 +15,10 @@ spec.license = { :type => 'MIT', :text => <<-LICENSE
   spec.swift_version = '5.0'
   spec.ios.deployment_target = '13.0'
  spec.source_files  = "OLX_BuyLeads/**/*.{h,m,swift}","OLX_BuyLeads/*.{h,m,swift}"
-   spec.resource_bundles = { 'OLX_BuyLeads' => ['OLX_BuyLeads/**/*.xib'] }
+   spec.resource_bundles = { 'OLX_BuyLeads' => ['OLX_BuyLeads/**/*.xib','OLX_BuyLeads/roboto/*.ttf','OLX_BuyLeads/Media.xcassets'] }
 
+
+#
 #  spec.resources = 'OLX_BuyLeads/*.xcdatamodeld'
  # spec.ios.vendored_frameworks = [
   #  "Frameworks/auth_library.xcframework",

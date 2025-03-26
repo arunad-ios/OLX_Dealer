@@ -40,6 +40,7 @@ public class ApiServices {
             let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             completion(.success(jsonResponse ?? [:]))
         } catch {
+            print(response.debugDescription as Any)
             completion(.failure(error))
         }
     }
