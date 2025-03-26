@@ -2,7 +2,7 @@
 //  ApiServices.swift
 //  CTE_BuyLeads
 //
-//  Created by Aruna on 25/03/25.
+//  Created by Chandini on 25/03/25.
 //
 
 import Foundation
@@ -11,7 +11,7 @@ public class ApiServices {
     
     public init() {} // Required for external usage
     public func sendRawDataWithHeaders(parameters: [String: Any], headers: [String: String], completion: @escaping (Result<[String: Any], Error>) -> Void) {
-        let urlString = "https://fcgapi.olx.in/dealer/" // Replace with your API URL
+        let urlString = "https://fcgapi.olx.in/dealer/mobile_api" // Replace with your API URL
         guard let url = URL(string: urlString) else { return }
         var request = URLRequest(url: url)
            request.httpMethod = "POST"
