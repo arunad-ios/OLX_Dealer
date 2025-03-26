@@ -14,13 +14,13 @@ import UIKit
 }
 
 public class MyPodManager {
-    public static var makes = [String]()
+    public static var userinfo = [String:Any]()
     public static var delegate: HostAppToPodDelegate?
 
-    public static func requestDataFromHost() {
+    public static func requestDataFromHost(userinfo : [String:Any]) {
       //  print("Pod: Requesting data from Host App...")
        // print(makes)
-       // self.makes = makes
+        self.userinfo = userinfo
         delegate?.sendDataToPod(data: "Framework needs user info")
     }
 }

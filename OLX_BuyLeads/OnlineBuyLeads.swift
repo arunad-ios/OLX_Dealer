@@ -2,7 +2,7 @@
 //  OnlineBuyLeads.swift
 //  CTE_BuyLeads
 //
-//  Created by Chandini on 25/03/25.
+//  Created by Aruna on 25/03/25.
 //
 
 import Foundation
@@ -46,6 +46,23 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.backgroundColor = UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0)
         view.backgroundColor = .white
+        let userinfo = MyPodManager.userinfo
+        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6IlAzOVZuNlJZIn0.eyJncmFudFR5cGUiOiJlbWFpbCIsImNsaWVudFR5cGUiOiJ3ZWIiLCJ0b2tlblR5cGUiOiJhY2Nlc3NUb2tlbiIsImlzTmV3VXNlciI6ZmFsc2UsImlhdCI6MTc0MjkwMzE4NiwiZXhwIjoxNzQyOTA0MDg2LCJhdWQiOiJvbHhpbiIsImlzcyI6Im9seCIsInN1YiI6IjQwMDgwNjgyMCIsImp0aSI6IjdjMGRjZWU1NTBlMTFmMmY3MDE4NjQyMmQ3ZWYzMjkyYjZmZDNkM2QifQ.M05JWIJ7qjxajU8EPCGLlFwxuP8izdZoKpsZZVdNgSE5hIg8Po0iE2fUbUmcbVsxsltwnEyLbiNJHeAh138VYyYbr1C8fOhIOjjZDzWODug9tjAE28BHr6V5znvQDYP_Ppm5xokxskC5kuhXgN8Ex74ucpCXh-6nMipYxSsxA1F8SdkY_3z5AJS029Vt4sUtYv1BsorVxEihDWBqpxvlInS_fptR1QvOAdtcxp_OTu43pYpBtT4tc6S9W4kwbLKJWay9sJToWV376TxdSoOY-A5WmZOPvE2u930uIyJvVf0Wlq7nppmTrBIoo-ZwonETOJXkxRsci3jrfowBw0Gxqg"] as! [String:String]
+        let parameters = ["action":"loadallematchinventory",
+                          "api_id": "cteolx2024v1.0",
+                          "device_id":"4fee41be780ae0e7",
+                          "dealer_id":userinfo["user_id"] as! String] as! [String:Any]
+        let api = ApiServices()
+        api.sendRawDataWithHeaders(parameters: parameters, headers: headers) { result in
+            switch result {
+            case .success(let data):
+                print("Response Data: \(data)")
+                DispatchQueue.main.async {
+                }
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+            }
+        }
         setupTableView()
     }
 
