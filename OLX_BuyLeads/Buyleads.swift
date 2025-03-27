@@ -18,8 +18,6 @@ public class MyPodManager {
     public static var delegate: HostAppToPodDelegate?
 
     public static func requestDataFromHost(userinfo : [String:Any]) {
-      //  print("Pod: Requesting data from Host App...")
-       // print(makes)
         self.userinfo = userinfo
         delegate?.sendDataToPod(data: "Framework needs user info")
     }

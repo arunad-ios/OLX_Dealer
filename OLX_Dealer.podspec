@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name          = 'OLX_Dealer'
-  spec.version       = '1.0.7'
+  spec.version       = '1.1.0'
   spec.summary       = 'OLX_Dealer'
   spec.description   = 'OLX_Dealer Module'
   spec.homepage      = 'https://cocoapods.org/pods/OLX_Dealer'

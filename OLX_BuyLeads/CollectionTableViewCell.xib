@@ -3,7 +3,6 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,10 +16,10 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Joo-Hs-yeL">
-                        <rect key="frame" x="0.0" y="0.0" width="631" height="236"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <rect key="frame" x="20" y="0.0" width="591" height="236"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="631" id="WSO-DX-QEk"/>
+                            <constraint firstAttribute="width" constant="591" id="WSO-DX-QEk"/>
                         </constraints>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="BcB-GV-rAa">
                             <size key="itemSize" width="128" height="128"/>
@@ -32,22 +31,18 @@
                 </subviews>
                 <constraints>
                     <constraint firstItem="Joo-Hs-yeL" firstAttribute="top" secondItem="nOC-r1-fUS" secondAttribute="top" id="SCk-Mm-7Ny"/>
-                    <constraint firstItem="Joo-Hs-yeL" firstAttribute="leading" secondItem="nOC-r1-fUS" secondAttribute="leading" id="c3x-Cr-Mlq"/>
-                    <constraint firstAttribute="trailing" secondItem="Joo-Hs-yeL" secondAttribute="trailing" id="n0B-NR-AB1"/>
+                    <constraint firstItem="Joo-Hs-yeL" firstAttribute="leading" secondItem="nOC-r1-fUS" secondAttribute="leading" constant="20" id="c3x-Cr-Mlq"/>
+                    <constraint firstAttribute="trailing" secondItem="Joo-Hs-yeL" secondAttribute="trailing" constant="20" id="n0B-NR-AB1"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="Joo-Hs-yeL" secondAttribute="bottom" id="6vZ-Kx-kCL"/>
             </constraints>
             <connections>
                 <outlet property="collectionView" destination="Joo-Hs-yeL" id="DZG-hg-onu"/>
             </connections>
-            <point key="canvasLocation" x="15" y="-29"/>
+            <point key="canvasLocation" x="14.503816793893129" y="-29.577464788732396"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-    </resources>
 </document>

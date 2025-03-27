@@ -12,22 +12,17 @@ import UIKit
 public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private let apiService = ApiServices()
     private var items = NSMutableArray()
-    let topView = UIView()
-
     private let tableView = UITableView()
     private var Buyleads = NSArray()
-   
-    private let data = [
-            ["Item 1", "Item 2", "Item 3","Item 1", "Item 2", "Item 3","Item 1", "Item 2", "Item 3"],  // First row items
-            ["Item A", "Item B", "Item C", "Item D"],  // Second row items
-            ["X", "Y", "Z"]  // Third row items
-        ]
+    private var data : [Any] = []
 
     public override func viewDidLoad() {
         
         super.viewDidLoad()
-        
-     
+        if Bundle(identifier: "com.Samplepod.OLX-BuyLeads") != nil {
+            FontLoader.registerFont(withName: "Roboto-Regular")
+            FontLoader.registerFont(withName: "Roboto-Bold")
+        }
         self.title = "Online Buy Leads"
         navigationController?.navigationBar.titleTextAttributes = [
                 .foregroundColor: UIColor.white, // Title text color
@@ -36,8 +31,13 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.backgroundColor = UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0)
         view.backgroundColor = .white
-       
+        let backButton = UIBarButtonItem(image: UIImage(named: "back"), style: .plain, target: self, action:  #selector(backButtonTapped))
+        self.navigationController?.navigationItem.leftBarButtonItem = backButton
         setupTableView()
+    }
+    @objc func backButtonTapped()
+    {
+        self.navigationController?.popViewController(animated: true)
     }
     func fetchBuyLeads()
     {
@@ -53,16 +53,22 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             case .success(let data):
                 print("Response Data: \(data)")
                 DispatchQueue.main.async {
-                    let dic = data["data"] as! NSDictionary
-                    let result = dic["buyleads"] as! NSDictionary
-                    self.Buyleads = result["buylead"] as! NSArray
-                    self.tableView.reloadData()
+                    if  let dic = data["data"] as? NSDictionary{
+                        guard  let result = dic["buyleads"] as? NSDictionary else { return }
+                            self.Buyleads = result["buylead"] as! NSArray
+                            self.data = (result["status_count"] as! NSArray) as! [Any]
+                            self.tableView.reloadData()
+                    }
                 }
             case .failure(let error):
                 print("Error: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     let myView = CustomView(frame: CGRect(x: 0, y: 0, width: 300, height: 250))
                     myView.errormessage = error.localizedDescription
+//                    let labelSize = myView.label.sizeThatFits(CGSize(width: myView.label.frame.width, height: CGFloat.greatestFiniteMagnitude))
+//                    var frame = myView.frame
+//                    frame.size.height = labelSize.height
+//                    myView.frame = frame
                     myView.setupView()
                     myView.center = self.view.center
                     self.view.addSubview(myView)
@@ -74,11 +80,10 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     private func setupTableView() {
      
 
-        tableView.backgroundColor = UIColor(red: 242/255, green: 244/255, blue: 245/255, alpha: 1.0)
+        tableView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        topView.backgroundColor = .blue
-        topView.translatesAutoresizingMaskIntoConstraints = false
+     
      
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -86,8 +91,8 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        tableView.addSubview(topView)
         tableView.separatorColor = .none
+        tableView.separatorStyle = .none
         tableView.delegate = self
         tableView.dataSource = self
         let bundle = Bundle(for: BuyLeadsCell.self)
@@ -172,7 +177,8 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         }
         else{
                   let cell = tableView.dequeueReusableCell(withIdentifier: "CollectionTableViewCell", for: indexPath) as! CollectionTableViewCell
-                   cell.configure(with: data[indexPath.row])  // Pass data to cell
+                     cell.configure(with: data)  // Pass data to cell
+                     cell.collectionView.layoutIfNeeded()
                    return cell
         }
     }

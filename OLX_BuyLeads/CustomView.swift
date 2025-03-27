@@ -10,7 +10,7 @@ import UIKit
 @IBDesignable
 public class CustomView: UIView {
     public var errormessage = ""
-    private let label: UILabel = {
+    public let label: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(red: 0/255.0, green: 42/255.0, blue: 57/255.0, alpha: 1.0)
         label.textAlignment = .center
@@ -51,7 +51,7 @@ public class CustomView: UIView {
             ])
             NSLayoutConstraint.activate([
                 dismissButton.centerXAnchor.constraint(equalTo: trailingAnchor),
-                dismissButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
+                dismissButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant:0),
                 dismissButton.widthAnchor.constraint(equalToConstant: 100),
                 dismissButton.heightAnchor.constraint(equalToConstant: 40)
             ])

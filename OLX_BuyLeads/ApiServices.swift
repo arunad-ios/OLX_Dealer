@@ -36,11 +36,15 @@ public class ApiServices {
             return
         }
         do {
-            print(response as Any)
+           // print(response as Any)
             let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+            if(jsonResponse!["status"] as! String == "fail"){
+                let error = NSError(domain: "fcgapi.olx.in", code: 1001, userInfo: [NSLocalizedDescriptionKey: (jsonResponse?["error"]! as! NSString)])
+                completion(.failure(error))
+            }
             completion(.success(jsonResponse ?? [:]))
         } catch {
-            print(response.debugDescription as Any)
+            //print(response.debugDescription as Any)
             completion(.failure(error))
         }
     }
