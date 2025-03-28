@@ -9,58 +9,94 @@ import UIKit
 
 @IBDesignable
 public class CustomView: UIView {
-    public var errormessage = ""
-    public let label: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor(red: 0/255.0, green: 42/255.0, blue: 57/255.0, alpha: 1.0)
-        label.textAlignment = .center
-        return label
-    }()
 
-    private let dismissButton: UIButton = {
-            let button = UIButton(type: .system)
-            button.setTitle("Dismiss", for: .normal)
-            button.setTitleColor(.white, for: .normal)
-            button.backgroundColor = UIColor(red: 0/255.0, green: 42/255.0, blue: 57/255.0, alpha: 1.0)
-            button.layer.cornerRadius = 8
-            button.translatesAutoresizingMaskIntoConstraints = false
-            return button
-        }()
+    private let titleLabel = UILabel()
+    private let messageLabel = UILabel()
+    private let closeButton = UIButton(type: .system)
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+
+    private func setupView() {
+        self.backgroundColor = UIColor.white
+        self.layer.cornerRadius = 12
+        self.layer.shadowColor = UIColor.black.cgColor
+        self.layer.shadowOpacity = 0.3
+        self.layer.shadowOffset = CGSize(width: 2, height: 2)
+
+        // Title Label
+        titleLabel.textAlignment = .center
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
+        titleLabel.textColor = UIColor(red: 0/255.0, green: 42/255.0, blue: 57/255.0, alpha: 1.0)
+
+        // Message Label
+        messageLabel.textAlignment = .center
+        messageLabel.font = UIFont.systemFont(ofSize: 16)
+        messageLabel.textColor = UIColor(red: 0/255.0, green: 42/255.0, blue: 57/255.0, alpha: 1.0)
+        messageLabel.numberOfLines = 0
+
+        // Close Button
+        closeButton.setTitle(" Ok ", for: .normal)
+        closeButton.addTarget(self, action: #selector(closePopup), for: .touchUpInside)
+        closeButton.setTitleColor(.white, for: .normal)
+        closeButton.backgroundColor = UIColor(red: 0/255.0, green: 42/255.0, blue: 57/255.0, alpha: 1.0)
+        closeButton.layer.cornerRadius = 5
+
+//        addSubview(messageLabel)
+//        addSubview(titleLabel)
+//        addSubview(closeButton)
+        // Stack View
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, messageLabel,closeButton])
+        stackView.axis = .vertical
+        stackView.spacing = 10
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        self.addSubview(stackView)
+
+        // Constraints
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            stackView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.9),
+            stackView.heightAnchor.constraint(lessThanOrEqualTo: self.heightAnchor, multiplier: 0.8),
+        ])
         
-        override public init(frame: CGRect) {
-            super.init(frame: frame)
-           // setupView()
-        }
+//        NSLayoutConstraint.activate([
+//            messageLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+//            messageLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -20),
+//            messageLabel.widthAnchor.constraint(equalToConstant: 250),
+//            messageLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 20),
+//            
+//            titleLabel.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 20),
+//            titleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+//            titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -20),
+//            titleLabel.widthAnchor.constraint(equalToConstant: 250),
+//            titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 20),
+//
+//            closeButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+//            closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
+//            closeButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
+//
+//         
+//        ])
+    }
 
-        required init?(coder: NSCoder) {
-            super.init(coder: coder)
-          //  setupView()
-        }
+    @objc private func closePopup() {
+        self.removeFromSuperview()
+    }
 
-    public func setupView() {
-            label.text = self.errormessage
-            backgroundColor = .white
-            layer.cornerRadius = 12
-       
-            addSubview(dismissButton)
-            addSubview(label)
-            label.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                label.centerXAnchor.constraint(equalTo: centerXAnchor),
-                label.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -10)
-            ])
-            NSLayoutConstraint.activate([
-                dismissButton.centerXAnchor.constraint(equalTo: trailingAnchor),
-                dismissButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant:0),
-                dismissButton.widthAnchor.constraint(equalToConstant: 100),
-                dismissButton.heightAnchor.constraint(equalToConstant: 40)
-            ])
-            dismissButton.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
-        }
-
-        @objc private func dismissView() {
-            self.removeFromSuperview()
-        }
-
+    func configure(title: String, message: String) {
+        titleLabel.text = title
+        messageLabel.text = message
+    }
    
+
 }

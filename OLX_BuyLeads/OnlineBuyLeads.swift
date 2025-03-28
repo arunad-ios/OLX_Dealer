@@ -7,7 +7,17 @@
 
 import Foundation
 import UIKit
-
+class DynamicCollectionView: UICollectionView {
+    override var contentSize: CGSize {
+        didSet {
+            invalidateIntrinsicContentSize()
+        }
+    }
+    
+    override var intrinsicContentSize: CGSize {
+        return contentSize
+    }
+}
 
 public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewDataSource {
     private let apiService = ApiServices()
@@ -15,6 +25,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     private let tableView = UITableView()
     private var Buyleads = NSArray()
     private var data : [Any] = []
+    private var errorView: ErrorView?
 
     public override func viewDidLoad() {
         
@@ -34,6 +45,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         let backButton = UIBarButtonItem(image: UIImage(named: "back"), style: .plain, target: self, action:  #selector(backButtonTapped))
         self.navigationController?.navigationItem.leftBarButtonItem = backButton
         setupTableView()
+           
     }
     @objc func backButtonTapped()
     {
@@ -63,27 +75,46 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             case .failure(let error):
                 print("Error: \(error.localizedDescription)")
                 DispatchQueue.main.async {
-                    let myView = CustomView(frame: CGRect(x: 0, y: 0, width: 300, height: 250))
-                    myView.errormessage = error.localizedDescription
-//                    let labelSize = myView.label.sizeThatFits(CGSize(width: myView.label.frame.width, height: CGFloat.greatestFiniteMagnitude))
-//                    var frame = myView.frame
-//                    frame.size.height = labelSize.height
-//                    myView.frame = frame
-                    myView.setupView()
-                    myView.center = self.view.center
-                    self.view.addSubview(myView)
+                    self.showError(message: error.localizedDescription)
                 }
             }
         }
     }
-
+    func showError(message: String) {
+          // Remove existing error view if any
+          errorView?.removeFromSuperview()
+          
+          // Create and add error view
+          let errorView = ErrorView(errorMessage: message)
+//          errorView.retryAction = {
+//              errorView.removeFromSuperview()
+//          }
+          
+          errorView.translatesAutoresizingMaskIntoConstraints = false
+          view.addSubview(errorView)
+        errorView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
+        errorView.messageLabel.text = message
+          NSLayoutConstraint.activate([
+              errorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+              errorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+              errorView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
+              errorView.heightAnchor.constraint(equalToConstant: errorView.messageLabel.frame.height + 150)
+          ])
+        errorView.retryButton.addTarget(self, action: #selector(retryNetworkRequest), for: .touchUpInside)
+        errorView.messageLabel.text = message
+          self.errorView = errorView
+      }
+      
+    @objc func retryNetworkRequest() {
+          print("Retry button tapped! Retry network request here.")
+          errorView?.removeFromSuperview() // Remove error view on retry
+      }
     private func setupTableView() {
-     
-
         tableView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-     
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 100
      
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -102,22 +133,8 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         let bundle1 = Bundle(for: CollectionTableViewCell.self)
         let nib1 = UINib(nibName: "CollectionTableViewCell", bundle: bundle1)
         tableView.register(nib1, forCellReuseIdentifier: "CollectionTableViewCell")
-        
-        
-        insertCustomView(at: IndexPath(row: 0, section: 0))  // Inserts after row 2
         fetchBuyLeads()
 
-    }
-    func insertCustomView(at indexPath: IndexPath) {
-        guard let cell = tableView.cellForRow(at: indexPath) else { return }
-        let customView = UIView(frame: CGRect(x: 10, y: cell.frame.maxY, width: tableView.frame.width - 20, height: 100))
-        customView.backgroundColor = .purple
-        let label = UILabel(frame: customView.bounds)
-        label.text = "Inserted View"
-        label.textAlignment = .center
-        label.textColor = .white
-        customView.addSubview(label)
-        tableView.addSubview(customView)
     }
 
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -139,10 +156,12 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         return headerView
     }
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if let cell = tableView.cellForRow(at: indexPath) as? CollectionTableViewCell {
+        if(indexPath.section == 0){
+            if let cell = tableView.cellForRow(at: indexPath) as? CollectionTableViewCell {
                cell.collectionView.layoutIfNeeded()
-               return cell.collectionView.collectionViewLayout.collectionViewContentSize.height
-           }
+                return cell.collectionView.collectionViewLayout.collectionViewContentSize.height
+            }
+        }
         return UITableView.automaticDimension
     }
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -158,31 +177,47 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if(indexPath.section == 1){
             let cell = tableView.dequeueReusableCell(withIdentifier: "BuyLeadsCell", for: indexPath) as! BuyLeadsCell
-            
             let response = Buyleads[indexPath.row] as! NSDictionary
             let cars = response["cars"] as! NSArray
             var make = ""
             for name in cars {
                 let car = name as! NSDictionary
                 if(make.count == 0){
-                    make = "\(car["make"] as! String),\(car["make"] as! String)\n\(car["make"] as! String)"
+                    make = "\(car["make"] as! String)"
                 }
                 else{
-                    make = "\(make),\(car["make"] as! String)"
+                    make = "\(make)\n\(car["make"] as! String)"
                 }
             }
-            //        let response = dic[0] as! NSDictionary
             cell.configure(with: response["contact_name"]! as! String, statustext: response["status_text"]! as! String,make_text: make)
+            cell.visitedBtn.tag = indexPath.row
+            cell.visitedBtn.addTarget(self, action: #selector(visitingStatus), for: .touchUpInside)
             return cell
         }
         else{
-                  let cell = tableView.dequeueReusableCell(withIdentifier: "CollectionTableViewCell", for: indexPath) as! CollectionTableViewCell
-                     cell.configure(with: data)  // Pass data to cell
-                     cell.collectionView.layoutIfNeeded()
-                   return cell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "CollectionTableViewCell", for: indexPath) as! CollectionTableViewCell
+                cell.configure(with: data)  // Pass data to cell
+                return cell
         }
     }
-
+    @objc func visitingStatus(sender:UIButton)
+    {
+        let response = Buyleads[sender.tag] as! NSDictionary
+        self.showPopup(title: "Message!", message: "Customer Visited On: \n \(response["customer_visited"]! as! String)")
+        
+    }
+    func showPopup(title: String, message: String) {
+        let popup = CustomView(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
+        popup.center = self.view.center
+        popup.configure(title: title, message: message)
+        self.view.addSubview(popup)
+    }
+    public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let customCell = cell as? CollectionTableViewCell {
+            customCell.configure(with: data)  // Call your method to update UI
+        }
+    }
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
     }
 }

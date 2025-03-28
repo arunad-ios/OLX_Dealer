@@ -49,42 +49,6 @@ public class CollectionViewCell : UICollectionViewCell {
         return imageView
       
     }()
-    
-//    override init(frame: CGRect) {
-//        super.init(frame: frame)
-//        self.contentView.layer.borderWidth = 1
-//        self.contentView.layer.borderColor = UIColor(red: 0/255.0, green: 42/255.0, blue: 57/255.0, alpha: 1.0).cgColor
-////        contentView.addSubview(myLabel)
-//////        contentView.addSubview(imagesvg)
-////        contentView.addSubview(myButton)
-////        myButton.alpha = 0.0
-////
-////        myLabel.translatesAutoresizingMaskIntoConstraints = false
-////        myButton.translatesAutoresizingMaskIntoConstraints = false
-////        imagesvg.translatesAutoresizingMaskIntoConstraints = false
-////
-////        NSLayoutConstraint.activate([
-////                            imagesvg.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-////                            imagesvg.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-////                            imagesvg.widthAnchor.constraint(equalToConstant: 30),
-////                            imagesvg.heightAnchor.constraint(equalToConstant: 30),
-////            
-////                     myButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
-////                     myButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-////                     myButton.widthAnchor.constraint(equalToConstant: 30),
-////                     myButton.heightAnchor.constraint(equalToConstant: 30),
-////                     
-////                     myLabel.leadingAnchor.constraint(equalTo: myButton.trailingAnchor, constant: 0),
-////                     myLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-////                     myLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10)
-////        ])
-////        contentView.isUserInteractionEnabled = true
-////        self.isUserInteractionEnabled = true
-////        let tapguesture = UITapGestureRecognizer(target: self, action: #selector(didTapButton))
-////        contentView.addGestureRecognizer(tapguesture)
-//       // myButton.setBackgroundImage(UIImage(named: "like"), for: .normal)
-//       // myButton.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
-//    }
     @objc private func didTapButton() {
            delegate?.didTapButton(in: self) // Notify the delegate
        }

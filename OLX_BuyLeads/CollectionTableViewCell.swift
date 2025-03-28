@@ -5,62 +5,52 @@ public class CollectionTableViewCell: UITableViewCell {
     
     public static let identifier = "CollectionTableViewCell"
     
-    @IBOutlet var collectionView: UICollectionView! = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical  // Change to .vertical if needed
-        layout.itemSize = CGSize(width: 100, height: 30)  // Adjust size
-        layout.minimumLineSpacing = 10  // Spacing between items
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-     //   collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .clear
-        return collectionView
-    }()
+    @IBOutlet var collectionViewHeightConstraint : NSLayoutConstraint!
+    
+    @IBOutlet var collectionView: UICollectionView!
     
     private var items: [Any] = []  // Sample data source
 
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-            super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        }
-
-        required init?(coder: NSCoder) {
-            super.init(coder: coder)
-        }
-
-    private func setupCollectionView() {
-        contentView.addSubview(collectionView)
-
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 10),
-            collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: 10),
-            collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            collectionView.heightAnchor.constraint(equalToConstant: 120)  // Adjust as needed
-        ])
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(CollectionViewCell.self, forCellWithReuseIdentifier: CollectionViewCell.identifier)
-    }
     
-    public func configure(with items: [Any]) {
+    public override func awakeFromNib() {
+           super.awakeFromNib()
+           collectionView.delegate = self
+           collectionView.dataSource = self
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
         let bundle1 = Bundle(for: CollectionViewCell.self)
         let nib1 = UINib(nibName: "CollectionViewCell", bundle: bundle1)
         collectionView.register(nib1, forCellWithReuseIdentifier: "CollectionViewCell")
-
-        self.items = items
-        print("Response Data: \(self.items) \(self.items.count)")
-        collectionView.reloadData()
-        DispatchQueue.main.async {
-               if let tableView = self.superview as? UITableView {
-                   tableView.beginUpdates()
-                   tableView.endUpdates()
-               }
+       }
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+            super.init(style: style, reuseIdentifier: reuseIdentifier)
+        }
+        required init?(coder: NSCoder) {
+            super.init(coder: coder)
+        }
+    func updateCollectionViewHeight() {
+           DispatchQueue.main.async {
+               self.collectionViewHeightConstraint.constant = self.collectionView.contentSize.height
+               self.superview?.layoutIfNeeded()
            }
+       }
+    public override func layoutSubviews() {
+          super.layoutSubviews()
+          updateCollectionViewHeight()
+      }
+    public func configure(with items: [Any]) {
+        if(self.items.count == 0){
+            self.items = items
+            print("Response Data: \(self.items) \(self.items.count)")
+            collectionView.reloadData()
+            collectionView.layoutIfNeeded()
+                    DispatchQueue.main.async {
+                           if let tableView = self.superview as? UITableView {
+                               tableView.beginUpdates()
+                               tableView.endUpdates()
+                           }
+                       }
+        }
     }
 }
 

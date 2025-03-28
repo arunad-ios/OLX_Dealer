@@ -47,6 +47,12 @@ public class BuyLeadsCell: UITableViewCell {
         button.isUserInteractionEnabled = true
         return button
     }()
+    @IBOutlet var visitedBtn: UIButton! = {
+        let button = UIButton(type: .custom)
+        button.backgroundColor = .clear
+        button.isUserInteractionEnabled = true
+        return button
+    }()
     public func configure(with contactname: String,statustext: String,make_text:String ) {
         contact_name.text = contactname
         status_text.text = statustext
