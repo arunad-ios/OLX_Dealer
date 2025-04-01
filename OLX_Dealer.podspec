@@ -17,7 +17,7 @@ spec.license = { :type => 'MIT', :text => <<-LICENSE
  spec.source_files  = "OLX_BuyLeads/**/*.{h,m,swift}","OLX_BuyLeads/*.{h,m,swift}"
 #   spec.resource_bundles = {  'OLX_BuyLeads' => ['**/*.xcassets'] }
  
-    s.resources = "OLX_BuyLeads/Resources/Images.xcassets"
+    spec.resources = "OLX_BuyLeads/Resources/Images.xcassets"
 
 #
 #  spec.resources = 'OLX_BuyLeads/*.xcdatamodeld'
