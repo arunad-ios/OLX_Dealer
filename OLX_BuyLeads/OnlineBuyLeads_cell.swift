@@ -50,13 +50,14 @@ class OnlineBuyLeads_cell : UITableViewCell {
         nameLabel.numberOfLines = 0
         // Status Label
         statusLabel.font = UIFont.systemFont(ofSize: 14)
-        statusLabel.textColor = .darkGray
+        statusLabel.textColor =  UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0)
+
         statusLabel.numberOfLines = 0
         
         // Date Label
-        dateLabel.font = UIFont.systemFont(ofSize: 14)
+        dateLabel.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         dateLabel.numberOfLines = 0
-        dateLabel.textColor = .darkGray
+        dateLabel.textColor = UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0)
 
         // Visited Label
         visitedLabel.text = "VISITED"
@@ -69,7 +70,8 @@ class OnlineBuyLeads_cell : UITableViewCell {
 
         // Car Label
         carLabel.font = UIFont.systemFont(ofSize: 14)
-        carLabel.textColor = .black
+        carLabel.textColor = UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0)
+        carLabel.numberOfLines = 0
 
         
         //bottom View
@@ -100,7 +102,6 @@ class OnlineBuyLeads_cell : UITableViewCell {
         NSLayoutConstraint.activate([
             label1.widthAnchor.constraint(equalToConstant: 1),
             label2.widthAnchor.constraint(equalToConstant: 1),
-
             // Only one height constraint
             ])
         
@@ -120,12 +121,22 @@ class OnlineBuyLeads_cell : UITableViewCell {
             bottomstackView.heightAnchor.constraint(equalToConstant: 50) // Only one height constraint
                ])
         
-        let stackView = UIStackView(arrangedSubviews: [nameLabel, statusLabel, dateLabel, visitedLabel, separatorView, carLabel,bottomstackView,cellseparatorView])
+        let stackView = UIStackView(arrangedSubviews: [nameLabel, statusLabel, visitedLabel, separatorView,dateLabel, carLabel,bottomstackView])
         stackView.axis = .vertical
         stackView.spacing = 5
         contentView.addSubview(stackView)
         stackView.backgroundColor = .clear
         
+        NSLayoutConstraint.activate([
+            nameLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 15),
+            statusLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 15),
+            dateLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 15),
+            visitedLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: -10),
+
+            separatorView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 0),
+            bottomstackView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 0),
+            // Only one height constraint
+            ])
         
 
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -140,13 +151,20 @@ class OnlineBuyLeads_cell : UITableViewCell {
             separatorView.heightAnchor.constraint(equalToConstant: 1),
             visitedLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
+        stackView.backgroundColor = .white
+        stackView.layer.cornerRadius = 10
+        stackView.layer.masksToBounds = true
     }
 
     func createButton(title: String, color: UIColor) -> UIButton {
         let button = UIButton(type: .system)
           button.setTitle(title, for: .normal)
-      //  button.setImage(UIImage.init(named: "like"), for: .normal)
-          button.backgroundColor = color
+//        if let bundleURL = Bundle.main.url(forResource: "MyBundle", withExtension: "bundle"),
+//           let resourceBundle = Bundle(url: bundleURL) {
+//            let image = UIImage(named: "my_image", in: resourceBundle, compatibleWith: nil)
+//        }
+//        button.setImage(UIImage.init(named: "thick_1"), for: .normal)
+        button.backgroundColor = color
           button.setTitleColor(.white, for: .normal)
           button.layer.cornerRadius = 10
           button.translatesAutoresizingMaskIntoConstraints = false
@@ -169,8 +187,8 @@ class OnlineBuyLeads_cell : UITableViewCell {
     func configure(name: String, status: String, date: String, cars: String) {
         nameLabel.text = name
         statusLabel.text = status
-        dateLabel.text =  "Inquired Cars\n" + cars
-        carLabel.text = ""
+        dateLabel.text =  "Inquired Cars"
+        carLabel.text = cars
         
     }
 }

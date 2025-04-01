@@ -110,6 +110,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
           errorView?.removeFromSuperview() // Remove error view on retry
       }
     private func setupTableView() {
+        
         tableView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -200,11 +201,14 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(visitingStatus))
             cell.visitedLabel.addGestureRecognizer(tapGesture)
             cell.visitedLabel.isUserInteractionEnabled = true
+            cell.contentView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
             return cell
         }
         else{
                  let cell = tableView.dequeueReusableCell(withIdentifier: OnlineBuyLeads_collection.identifier, for: indexPath) as! OnlineBuyLeads_collection
                 cell.configure(with: data)  // Pass data to cell
+            cell.contentView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
+
                 return cell
         }
     }
@@ -212,7 +216,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     {
         let response = Buyleads[sender.view!.tag] as! NSDictionary
         self.showPopup(title: "Message!", message: "Customer Visited On: \n \(response["customer_visited"]! as! String)")
-        
     }
     func showPopup(title: String, message: String) {
         let popup = CustomView(frame: CGRect(x: 0, y: 0, width: 300, height: 200))

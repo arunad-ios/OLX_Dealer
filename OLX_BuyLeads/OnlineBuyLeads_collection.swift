@@ -66,14 +66,14 @@ class OnlineBuyLeads_collection : UITableViewCell, UICollectionViewDelegate, UIC
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OnlineBuyLeads_collectioncell.identifier, for: indexPath) as! OnlineBuyLeads_collectioncell
         let dic = items[indexPath.item] as! NSDictionary
         print((dic["name"] as! String))
-        cell.configure(title: (dic["name"] as! String))
+        cell.configure(title: "\((dic["name"] as! String))\(((dic["count"] as! CVarArg)))")
         return cell
     }
 
     // MARK: - UICollectionView Delegate FlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let dic = items[indexPath.item] as! NSDictionary
-        let text = (dic["name"] as! String) // Example: Get text for cell
+        let text = "\((dic["name"] as! String))\((dic["count"] as! CVarArg))" // Example: Get text for cell
         let width = text.size(withAttributes: [.font: UIFont.systemFont(ofSize: 16)]).width + 50
         return CGSize(width: width, height: 30)
     }
