@@ -195,7 +195,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 }
             }
 //            cell.configure(with: response["contact_name"]! as! String, statustext: response["status_text"]! as! String,make_text: make,cars)
-            cell.configure(name: response["contact_name"]! as! String, status: response["status_text"]! as! String, date: make, cars: make)
+            cell.configure(name: response["contact_name"]! as! String, status: response["status_text"]! as! String, date: make, cars: make,phonenumber: response["mobile"]! as! String)
             
             cell.visitedLabel.tag = indexPath.row
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(visitingStatus))

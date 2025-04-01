@@ -45,8 +45,8 @@ class OnlineBuyLeads_collection : UITableViewCell, UICollectionViewDelegate, UIC
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 15),
+            collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -15),
             collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             collectionView.heightAnchor.constraint(equalToConstant: 100) // Set a fixed height
         ])
@@ -66,7 +66,12 @@ class OnlineBuyLeads_collection : UITableViewCell, UICollectionViewDelegate, UIC
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OnlineBuyLeads_collectioncell.identifier, for: indexPath) as! OnlineBuyLeads_collectioncell
         let dic = items[indexPath.item] as! NSDictionary
         print((dic["name"] as! String))
-        cell.configure(title: "\((dic["name"] as! String))\(((dic["count"] as! CVarArg)))")
+        if(indexPath.row == 0){
+            cell.configure(title: "\((dic["name"] as! String))(\((dic["count"] as! CVarArg)))")
+        }
+        else{
+            cell.configure(title: "\((dic["name"] as! String))")
+        }
         return cell
     }
 
