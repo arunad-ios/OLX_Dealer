@@ -126,13 +126,17 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         tableView.separatorStyle = .none
         tableView.delegate = self
         tableView.dataSource = self
-        let bundle = Bundle(for: BuyLeadsCell.self)
-        let nib = UINib(nibName: "BuyLeadsCell", bundle: bundle)
-        tableView.register(nib, forCellReuseIdentifier: "BuyLeadsCell")
+//        let bundle = Bundle(for: BuyLeadsCell.self)
+//        let nib = UINib(nibName: "BuyLeadsCell", bundle: bundle)
+//        tableView.register(nib, forCellReuseIdentifier: "BuyLeadsCell")
         
-        let bundle1 = Bundle(for: CollectionTableViewCell.self)
-        let nib1 = UINib(nibName: "CollectionTableViewCell", bundle: bundle1)
-        tableView.register(nib1, forCellReuseIdentifier: "CollectionTableViewCell")
+        tableView.register(OnlineBuyLeads_cell.self, forCellReuseIdentifier: "CustomCell")
+
+        tableView.register(OnlineBuyLeads_collection.self, forCellReuseIdentifier: OnlineBuyLeads_collection.identifier)
+
+//        let bundle1 = Bundle(for: CollectionTableViewCell.self)
+//        let nib1 = UINib(nibName: "CollectionTableViewCell", bundle: bundle1)
+//        tableView.register(nib1, forCellReuseIdentifier: "CollectionTableViewCell")
         fetchBuyLeads()
 
     }
@@ -157,7 +161,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     }
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if(indexPath.section == 0){
-            if let cell = tableView.cellForRow(at: indexPath) as? CollectionTableViewCell {
+            if let cell = tableView.cellForRow(at: indexPath) as? OnlineBuyLeads_collection {
                cell.collectionView.layoutIfNeeded()
                 return cell.collectionView.collectionViewLayout.collectionViewContentSize.height
             }
@@ -176,7 +180,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if(indexPath.section == 1){
-            let cell = tableView.dequeueReusableCell(withIdentifier: "BuyLeadsCell", for: indexPath) as! BuyLeadsCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! OnlineBuyLeads_cell
             let response = Buyleads[indexPath.row] as! NSDictionary
             let cars = response["cars"] as! NSArray
             var make = ""
@@ -189,20 +193,24 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                     make = "\(make)\n\(car["make"] as! String)"
                 }
             }
-            cell.configure(with: response["contact_name"]! as! String, statustext: response["status_text"]! as! String,make_text: make)
-            cell.visitedBtn.tag = indexPath.row
-            cell.visitedBtn.addTarget(self, action: #selector(visitingStatus), for: .touchUpInside)
+//            cell.configure(with: response["contact_name"]! as! String, statustext: response["status_text"]! as! String,make_text: make,cars)
+            cell.configure(name: response["contact_name"]! as! String, status: response["status_text"]! as! String, date: make, cars: make)
+            
+            cell.visitedLabel.tag = indexPath.row
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(visitingStatus))
+            cell.visitedLabel.addGestureRecognizer(tapGesture)
+            cell.visitedLabel.isUserInteractionEnabled = true
             return cell
         }
         else{
-                let cell = tableView.dequeueReusableCell(withIdentifier: "CollectionTableViewCell", for: indexPath) as! CollectionTableViewCell
+                 let cell = tableView.dequeueReusableCell(withIdentifier: OnlineBuyLeads_collection.identifier, for: indexPath) as! OnlineBuyLeads_collection
                 cell.configure(with: data)  // Pass data to cell
                 return cell
         }
     }
-    @objc func visitingStatus(sender:UIButton)
+    @objc func visitingStatus(sender:UITapGestureRecognizer)
     {
-        let response = Buyleads[sender.tag] as! NSDictionary
+        let response = Buyleads[sender.view!.tag] as! NSDictionary
         self.showPopup(title: "Message!", message: "Customer Visited On: \n \(response["customer_visited"]! as! String)")
         
     }
@@ -213,7 +221,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         self.view.addSubview(popup)
     }
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let customCell = cell as? CollectionTableViewCell {
+        if let customCell = cell as? OnlineBuyLeads_collection {
             customCell.configure(with: data)  // Call your method to update UI
         }
     }
