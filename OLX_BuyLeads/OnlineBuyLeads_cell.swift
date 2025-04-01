@@ -107,9 +107,9 @@ class OnlineBuyLeads_cell : UITableViewCell {
             ])
       
         
-             let button1 = createButton(title: "account", color: .systemBlue)
-             let button2 = createButton(title: "account", color: .systemGreen)
-             let button3 = createButton(title: "download", color: .systemRed)
+             let button1 = createButton(title: "Chat", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
+             let button2 = createButton(title: "Share", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
+             let button3 = createButton(title: "Delete", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
              
              // Create Labels
              let label1 = createLabel(text: "Label 1")
@@ -134,7 +134,6 @@ class OnlineBuyLeads_cell : UITableViewCell {
        label1.widthAnchor.constraint(equalToConstant: 1),
        label2.widthAnchor.constraint(equalToConstant: 1),
        button1.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 15),
-
        // Only one height constraint
        ])
         
@@ -180,17 +179,15 @@ class OnlineBuyLeads_cell : UITableViewCell {
 
     func createButton(title: String, color: UIColor) -> UIButton {
         let button = UIButton(type: .system)
-        //  button.setTitle(title, for: .normal)
-   
-        let image = UIImage(named: title)
-        button.setImage(image, for: .normal)
-      //  button.backgroundColor = color
+        //let image = UIImage(named: title)
+          button.setTitle(title, for: .normal)
+          button.backgroundColor = color
           button.setTitleColor(.white, for: .normal)
           button.layer.cornerRadius = 10
           button.translatesAutoresizingMaskIntoConstraints = false
           button.widthAnchor.constraint(equalToConstant: 50).isActive = true
           button.heightAnchor.constraint(equalToConstant: 25).isActive = true
-          return button
+                 return button
       }
       
       // Helper Function to Create Labels
@@ -202,6 +199,7 @@ class OnlineBuyLeads_cell : UITableViewCell {
           label.textColor = .black
           label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
           label.translatesAutoresizingMaskIntoConstraints = false
+          
           return label
       }
     func configure(name: String, status: String, date: String, cars: String,phonenumber : String) {
@@ -210,5 +208,15 @@ class OnlineBuyLeads_cell : UITableViewCell {
         dateLabel.text =  "Inquired Cars"
         carLabel.text = cars
         phoneLabel.text = ""
+        
+        if(phonenumber.count != 0){
+            let coloredText = NSMutableAttributedString(string: "\(name)(\(phonenumber))")
+            // 3️⃣ Apply Color to Part of the Text
+            coloredText.addAttribute(.foregroundColor, value: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0), range: NSRange(location: 0, length: name.count)) // "Hello" in blue
+            coloredText.addAttribute(.foregroundColor, value: UIColor.systemBlue, range: NSRange(location: name.count, length: phonenumber.count+2))  // "Swift" in red
+            
+            nameLabel.attributedText = coloredText
+        }
     }
 }
+
