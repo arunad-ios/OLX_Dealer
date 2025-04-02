@@ -10,17 +10,21 @@ import CoreData
 import UIKit
 
 @objc public protocol HostAppToPodDelegate {
-    func sendDataToPod(data: String)
+    func sendDataToPod(data: [String:Any])
 }
 
+public protocol NavigationDelegate: AnyObject {
+    func navigateToHostViewController()
+}
 public class MyPodManager {
     public static var userinfo = [String:Any]()
     public static var delegate: HostAppToPodDelegate?
 
     public static func requestDataFromHost(userinfo : [String:Any]) {
         self.userinfo = userinfo
-        delegate?.sendDataToPod(data: "Framework needs user info")
+        delegate?.sendDataToPod(data: userinfo)
     }
+    
 }
 
 public class SDKAlertManager {

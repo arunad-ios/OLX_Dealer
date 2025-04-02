@@ -26,10 +26,13 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     private var Buyleads = NSArray()
     private var data : [Any] = []
     private var errorView: ErrorView?
+    public weak var navdelegate: NavigationDelegate?
+
 
     public override func viewDidLoad() {
         
         super.viewDidLoad()
+        
         if Bundle(identifier: "com.Samplepod.OLX-BuyLeads") != nil {
             FontLoader.registerFont(withName: "Roboto-Regular")
             FontLoader.registerFont(withName: "Roboto-Bold")
@@ -60,7 +63,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                            "device_id":"4fee41be780ae0e7",
                           "dealer_id":userinfo["user_id"] as! String] as! [String:Any]
         let api = ApiServices()
-        api.sendRawDataWithHeaders(parameters: parameters, headers: headers) { result in
+        api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: "https://fcgapi.olx.in/dealer/mobile_api") { result in
             switch result {
             case .success(let data):
                 print("Response Data: \(data)")
@@ -70,6 +73,15 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                             self.Buyleads = result["buylead"] as! NSArray
                             self.data = (result["status_count"] as! NSArray) as! [Any]
                             self.tableView.reloadData()
+                     //   NotificationCenter.default.post(name: Notification.Name("MyCustomNotification"), object: nil)
+                    }
+                    else{
+                        print(data)
+                        let dic = data 
+                        if(dic["error"] as! String == "INVALID_TOKEN")
+                        {
+                            self.refreshToken()
+                        }
                     }
                 }
             case .failure(let error):
@@ -80,6 +92,34 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
+    func refreshToken()
+    {
+        let userinfo = MyPodManager.userinfo
+        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Authorization":"Bearer \(userinfo["refresh_token"] as! String)"] as! [String:String]
+        let parameters = ["user_id":userinfo["user_id"] as! String] as! [String:Any]
+        let api = ApiServices()
+        api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: "https://fcgapi.olx.in/dealer/v1/auth/refresh_token") { result in
+            switch result {
+            case .success(let data):
+                print("Response Data: \(data)")
+                DispatchQueue.main.async {
+                    if  let dic = data["data"] as? NSDictionary{
+                        guard  let result = dic["buyleads"] as? NSDictionary else { return }
+                        MyPodManager.requestDataFromHost(userinfo: result as! [String : Any])
+                    }
+                    else{
+                        print(data)
+                    }
+                }
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self.showError(message: error.localizedDescription)
+                }
+            }
+        }
+    }
+    
     func showError(message: String) {
           // Remove existing error view if any
           errorView?.removeFromSuperview()
@@ -132,8 +172,9 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
 //        tableView.register(nib, forCellReuseIdentifier: "BuyLeadsCell")
         
         tableView.register(OnlineBuyLeads_cell.self, forCellReuseIdentifier: "CustomCell")
-
         tableView.register(OnlineBuyLeads_collection.self, forCellReuseIdentifier: OnlineBuyLeads_collection.identifier)
+        
+        
 
 //        let bundle1 = Bundle(for: CollectionTableViewCell.self)
 //        let nib1 = UINib(nibName: "CollectionTableViewCell", bundle: bundle1)
@@ -202,6 +243,10 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             cell.visitedLabel.addGestureRecognizer(tapGesture)
             cell.visitedLabel.isUserInteractionEnabled = true
             cell.contentView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
+            cell.chatBtn.isUserInteractionEnabled = true
+            cell.chatBtn.tag =  indexPath.row
+            let chatGesture = UITapGestureRecognizer(target: self, action: #selector(navigateToHostVC))
+            cell.chatBtn.addGestureRecognizer(chatGesture)
             return cell
         }
         else{
@@ -212,6 +257,19 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 return cell
         }
     }
+    @objc func navigateToHostVC(sender : UITapGestureRecognizer) {
+          navdelegate?.navigateToHostViewController()
+        let response = Buyleads[sender.view!.tag] as! NSDictionary
+        let userinfo = MyPodManager.userinfo
+
+        let userInfo_host: [String: Any] = [
+            "olx_buyer_id": response["olx_buyer_id"]!,
+            "user_id": userinfo["user_id"] as! String
+        ]
+        
+        NotificationCenter.default.post(name: Notification.Name("OpenChat"), object: userInfo_host)
+
+      }
     @objc func visitingStatus(sender:UITapGestureRecognizer)
     {
         let response = Buyleads[sender.view!.tag] as! NSDictionary

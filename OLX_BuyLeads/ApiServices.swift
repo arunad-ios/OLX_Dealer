@@ -10,8 +10,8 @@ import Foundation
 public class ApiServices {
     
     public init() {} // Required for external usage
-    public func sendRawDataWithHeaders(parameters: [String: Any], headers: [String: String], completion: @escaping (Result<[String: Any], Error>) -> Void) {
-        let urlString = "https://fcgapi.olx.in/dealer/mobile_api" // Replace with your API URL
+    public func sendRawDataWithHeaders(parameters: [String: Any], headers: [String: String],url : String, completion: @escaping (Result<[String: Any], Error>) -> Void) {
+        let urlString = url // Replace with your API URL
         guard let url = URL(string: urlString) else { return }
         var request = URLRequest(url: url)
            request.httpMethod = "POST"

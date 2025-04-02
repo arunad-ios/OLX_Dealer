@@ -18,6 +18,9 @@ class OnlineBuyLeads_cell : UITableViewCell {
     let visitedLabel = UILabel()
     let separatorView = UIView()
     let carLabel = UILabel()
+    public var chatBtn = UIButton()
+    public var shareBtn = UIButton()
+    public var deleteBtn = UIButton()
 
     
     private let bottomView: UIView = {
@@ -58,15 +61,6 @@ class OnlineBuyLeads_cell : UITableViewCell {
         phoneLabel.numberOfLines = 0
         phoneLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
-
-        
-        
-        let topStackView = UIStackView(arrangedSubviews: [nameLabel, phoneLabel])
-        topStackView.axis = .horizontal    // Side by side
-        topStackView.distribution = .fillProportionally // Equal width labels
-        topStackView.alignment = .center
-        topStackView.spacing = 5
-      
         
         // Status Label
         statusLabel.font = UIFont.systemFont(ofSize: 14)
@@ -96,8 +90,6 @@ class OnlineBuyLeads_cell : UITableViewCell {
         //bottom View
         bottomView.backgroundColor = .systemGray6
         bottomView.translatesAutoresizingMaskIntoConstraints = false
-              
-        
         
 
         NSLayoutConstraint.activate([
@@ -107,9 +99,9 @@ class OnlineBuyLeads_cell : UITableViewCell {
             ])
       
         
-             let button1 = createButton(title: "Chat", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
-             let button2 = createButton(title: "Share", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
-             let button3 = createButton(title: "Delete", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
+        chatBtn = createButton(title: "Chat", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
+        shareBtn = createButton(title: "Share", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
+        deleteBtn = createButton(title: "Delete", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
              
              // Create Labels
              let label1 = createLabel(text: "Label 1")
@@ -118,7 +110,7 @@ class OnlineBuyLeads_cell : UITableViewCell {
    
         
              // Add Stack View
-        let bottomstackView = UIStackView(arrangedSubviews: [button1, label1, button2, label2, button3])
+        let bottomstackView = UIStackView(arrangedSubviews: [chatBtn, label1, shareBtn, label2, deleteBtn])
         bottomstackView.axis = .horizontal
         bottomstackView.alignment = .center
         bottomstackView.distribution = .equalSpacing
@@ -129,11 +121,11 @@ class OnlineBuyLeads_cell : UITableViewCell {
              
         bottomView.addSubview(bottomstackView)
         
+        bottomView.isUserInteractionEnabled = true
         
    NSLayoutConstraint.activate([
        label1.widthAnchor.constraint(equalToConstant: 1),
        label2.widthAnchor.constraint(equalToConstant: 1),
-       button1.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 15),
        // Only one height constraint
        ])
         
@@ -150,9 +142,9 @@ class OnlineBuyLeads_cell : UITableViewCell {
         NSLayoutConstraint.activate([
            nameLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 15),
          //  phoneLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
-            statusLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 15),
-            dateLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 15),
-            visitedLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: -10),
+           // statusLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 15),
+        //    dateLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 15),
+           // visitedLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: -10),
 
             separatorView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 0),
             bottomstackView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 0),
@@ -170,24 +162,33 @@ class OnlineBuyLeads_cell : UITableViewCell {
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
 
             separatorView.heightAnchor.constraint(equalToConstant: 1),
-            visitedLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
+           // visitedLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
         stackView.backgroundColor = .white
         stackView.layer.cornerRadius = 10
         stackView.layer.masksToBounds = true
+        stackView.isUserInteractionEnabled = true
     }
 
     func createButton(title: String, color: UIColor) -> UIButton {
-        let button = UIButton(type: .system)
-        //let image = UIImage(named: title)
-          button.setTitle(title, for: .normal)
-          button.backgroundColor = color
+        let button = UIButton(type: .custom)
+        if let bundleURL = Bundle(for: OnlineBuyLeads_cell.self).url(forResource: "OLX_BuyLeadsResources", withExtension: "bundle"),
+           let resourceBundle = Bundle(url: bundleURL) {
+            let image = UIImage(named: "account", in: resourceBundle, compatibleWith: nil)
+            button.setImage(image, for: .normal)
+        }
+        else{
+            button.setTitle(title, for: .normal)
+            button.backgroundColor = color
+        }
+        button.isUserInteractionEnabled = true
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
           button.setTitleColor(.white, for: .normal)
           button.layer.cornerRadius = 10
           button.translatesAutoresizingMaskIntoConstraints = false
           button.widthAnchor.constraint(equalToConstant: 50).isActive = true
           button.heightAnchor.constraint(equalToConstant: 25).isActive = true
-                 return button
+          return button
       }
       
       // Helper Function to Create Labels
@@ -199,7 +200,6 @@ class OnlineBuyLeads_cell : UITableViewCell {
           label.textColor = .black
           label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
           label.translatesAutoresizingMaskIntoConstraints = false
-          
           return label
       }
     func configure(name: String, status: String, date: String, cars: String,phonenumber : String) {
