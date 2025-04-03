@@ -10,12 +10,18 @@ import Foundation
 public class ApiServices {
     
     public init() {} // Required for external usage
-    public func sendRawDataWithHeaders(parameters: [String: Any], headers: [String: String],url : String, completion: @escaping (Result<[String: Any], Error>) -> Void) {
+    public func sendRawDataWithHeaders(parameters: [String: Any], headers: [String: String],url : String,authentication: String, completion: @escaping (Result<[String: Any], Error>) -> Void) {
         let urlString = url // Replace with your API URL
         guard let url = URL(string: urlString) else { return }
         var request = URLRequest(url: url)
            request.httpMethod = "POST"
            request.setValue("application/json", forHTTPHeaderField: "Content-Type") // Set header for JSON
+        if(authentication.count != 0){
+            let body: [String: Any] = [
+                "Authorization":authentication
+            ]
+            request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+        }
            for (key, value) in headers {
                request.setValue(value, forHTTPHeaderField: key)
            }

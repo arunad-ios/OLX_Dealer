@@ -11,10 +11,9 @@ import UIKit
 
 @objc public protocol HostAppToPodDelegate {
     func sendDataToPod(data: [String:Any])
-}
+    func navigateToHostApp(item: [String:Any])
 
-public protocol NavigationDelegate: AnyObject {
-    func navigateToHostViewController()
+    
 }
 public class MyPodManager {
     public static var userinfo = [String:Any]()
@@ -23,6 +22,9 @@ public class MyPodManager {
     public static func requestDataFromHost(userinfo : [String:Any]) {
         self.userinfo = userinfo
         delegate?.sendDataToPod(data: userinfo)
+    }
+    public static func navigatetoHost(userinfo : [String:Any]) {
+        delegate?.navigateToHostApp(item: userinfo)
     }
     
 }

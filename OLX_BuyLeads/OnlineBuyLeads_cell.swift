@@ -8,8 +8,21 @@
 import Foundation
 import UIKit
 
-class OnlineBuyLeads_cell : UITableViewCell {
+protocol TableCellDelegate: AnyObject {
+    func collectionViewCellDidSelect(item: String)
+}
+
+class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
     
+    weak var delegate: TableCellDelegate?  // ✅ Delegate Reference
+
+    var cars: [Any] = [] {
+           didSet {
+               collectionView.reloadData()
+               collectionView.layoutIfNeeded()
+               updateCollectionViewHeight()
+           }
+       }
     let phoneLabel = UILabel()
 
     let nameLabel = UILabel()
@@ -21,7 +34,18 @@ class OnlineBuyLeads_cell : UITableViewCell {
     public var chatBtn = UIButton()
     public var shareBtn = UIButton()
     public var deleteBtn = UIButton()
-
+    var heightconstaint =  NSLayoutConstraint()
+    public let collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical // Scroll horizontally
+        layout.minimumInteritemSpacing = 5
+        layout.minimumLineSpacing = 5
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
+        return collectionView
+    }()
     
     private let bottomView: UIView = {
           let view = UIView()
@@ -85,6 +109,17 @@ class OnlineBuyLeads_cell : UITableViewCell {
         carLabel.font = UIFont.systemFont(ofSize: 14)
         carLabel.textColor = UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0)
         carLabel.numberOfLines = 0
+        
+        
+        //collectionView
+        
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(CarsCollection.self, forCellWithReuseIdentifier: CarsCollection.identifier)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+
+        heightconstaint = collectionView.heightAnchor.constraint(equalToConstant: 100)
+        heightconstaint.isActive = true
 
         
         //bottom View
@@ -99,16 +134,16 @@ class OnlineBuyLeads_cell : UITableViewCell {
             ])
       
         
-        chatBtn = createButton(title: "Chat", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
-        shareBtn = createButton(title: "Share", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
-        deleteBtn = createButton(title: "Delete", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
+        chatBtn = createButton(title: "account", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
+        shareBtn = createButton(title: "download", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
+        deleteBtn = createButton(title: "chat", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
              
              // Create Labels
              let label1 = createLabel(text: "Label 1")
              let label2 = createLabel(text: "Label 2")
         
    
-        
+   
              // Add Stack View
         let bottomstackView = UIStackView(arrangedSubviews: [chatBtn, label1, shareBtn, label2, deleteBtn])
         bottomstackView.axis = .horizontal
@@ -133,7 +168,7 @@ class OnlineBuyLeads_cell : UITableViewCell {
             bottomstackView.heightAnchor.constraint(equalToConstant: 50) // Only one height constraint
                ])
         
-        let stackView = UIStackView(arrangedSubviews: [nameLabel, statusLabel, visitedLabel, separatorView,dateLabel, carLabel,bottomstackView])
+        let stackView = UIStackView(arrangedSubviews: [nameLabel, statusLabel, visitedLabel, separatorView,dateLabel,collectionView,carLabel,bottomstackView])
         stackView.axis = .vertical
         stackView.spacing = 5
         contentView.addSubview(stackView)
@@ -172,9 +207,20 @@ class OnlineBuyLeads_cell : UITableViewCell {
 
     func createButton(title: String, color: UIColor) -> UIButton {
         let button = UIButton(type: .custom)
-        if let bundleURL = Bundle(for: OnlineBuyLeads_cell.self).url(forResource: "OLX_BuyLeadsResources", withExtension: "bundle"),
-           let resourceBundle = Bundle(url: bundleURL) {
-            let image = UIImage(named: "account", in: resourceBundle, compatibleWith: nil)
+        if let bundlePath = Bundle(for: OnlineBuyLeads_cell.self).resourcePath {
+            print("✅ Framework Bundle Path: \(bundlePath)")
+
+            do {
+                let files = try FileManager.default.contentsOfDirectory(atPath: bundlePath)
+                print("📂 Bundle Contents: \(files)")
+            } catch {
+                print("❌ Error reading bundle contents: \(error)")
+            }
+        }
+        
+        if let frameworkBundle = Bundle(for: OnlineBuyLeads_cell.self).resourceURL,
+           let resourceBundle = Bundle(url: frameworkBundle.appendingPathComponent("OLX_BuyLeads.bundle")) {
+            let image = UIImage(named: title, in: resourceBundle, compatibleWith: nil)
             button.setImage(image, for: .normal)
         }
         else{
@@ -202,21 +248,48 @@ class OnlineBuyLeads_cell : UITableViewCell {
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }
-    func configure(name: String, status: String, date: String, cars: String,phonenumber : String) {
+    func configure(name: String, status: String, date: String, cars:  [Any] ,phonenumber : String) {
         nameLabel.text = "\(name)(\(phonenumber))"
         statusLabel.text = status
         dateLabel.text =  "Inquired Cars"
-        carLabel.text = cars
+      //  carLabel.text = cars
         phoneLabel.text = ""
-        
+        self.cars = cars
+        self.collectionView.reloadData()
+        self.updateCollectionViewHeight()
         if(phonenumber.count != 0){
             let coloredText = NSMutableAttributedString(string: "\(name)(\(phonenumber))")
             // 3️⃣ Apply Color to Part of the Text
             coloredText.addAttribute(.foregroundColor, value: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0), range: NSRange(location: 0, length: name.count)) // "Hello" in blue
             coloredText.addAttribute(.foregroundColor, value: UIColor.systemBlue, range: NSRange(location: name.count, length: phonenumber.count+2))  // "Swift" in red
-            
             nameLabel.attributedText = coloredText
         }
+    }
+    func updateCollectionViewHeight() {
+          collectionView.layoutIfNeeded()
+        heightconstaint.constant = collectionView.contentSize.height
+          superview?.layoutIfNeeded() // Refresh parent tableView
+      }
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return cars.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CarsCollection.identifier, for: indexPath) as! CarsCollection
+        let dic = cars[indexPath.item] as! NSDictionary
+        print((dic["make"] as! String))
+        cell.configure(title: "\((dic["make"] as! String))")
+        cell.chatBtn.tag = indexPath.row
+        cell.chatBtn.addTarget(self, action: #selector(chatFunction), for: .touchUpInside)
+        return cell
+    }
+    @objc func chatFunction(sender : UIButton){
+        let selectedItem = cars[sender.tag] as! NSDictionary
+        delegate?.collectionViewCellDidSelect(item: NSString(format: "%@", selectedItem["adId"] as! CVarArg) as String)
+    }
+    // MARK: - UICollectionView Delegate FlowLayout
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: self.contentView.frame.size.width, height: 30)
     }
 }
 

@@ -7,26 +7,16 @@
 
 import Foundation
 import UIKit
-class DynamicCollectionView: UICollectionView {
-    override var contentSize: CGSize {
-        didSet {
-            invalidateIntrinsicContentSize()
-        }
-    }
-    
-    override var intrinsicContentSize: CGSize {
-        return contentSize
-    }
-}
 
-public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
+
+public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewDataSource,TableCellDelegate {
     private let apiService = ApiServices()
     private var items = NSMutableArray()
     private let tableView = UITableView()
     private var Buyleads = NSArray()
     private var data : [Any] = []
     private var errorView: ErrorView?
-    public weak var navdelegate: NavigationDelegate?
 
 
     public override func viewDidLoad() {
@@ -63,7 +53,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                            "device_id":"4fee41be780ae0e7",
                           "dealer_id":userinfo["user_id"] as! String] as! [String:Any]
         let api = ApiServices()
-        api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: "https://fcgapi.olx.in/dealer/mobile_api") { result in
+        api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: "https://fcgapi.olx.in/dealer/mobile_api",authentication: "") { result in
             switch result {
             case .success(let data):
                 print("Response Data: \(data)")
@@ -95,21 +85,16 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     func refreshToken()
     {
         let userinfo = MyPodManager.userinfo
-        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Authorization":"Bearer \(userinfo["refresh_token"] as! String)"] as! [String:String]
+        let headers = ["x-origin-Panamera":"dev","Api-Version":"134","client-language":"en-in","Authorization":"Bearer \(userinfo["refresh_token"] as! String)"] as! [String:String]
         let parameters = ["user_id":userinfo["user_id"] as! String] as! [String:Any]
         let api = ApiServices()
-        api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: "https://fcgapi.olx.in/dealer/v1/auth/refresh_token") { result in
+        api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: "https://fcgapi.olx.in/dealer/v1/auth/refresh_token",authentication: "") { result in
             switch result {
             case .success(let data):
                 print("Response Data: \(data)")
                 DispatchQueue.main.async {
-                    if  let dic = data["data"] as? NSDictionary{
-                        guard  let result = dic["buyleads"] as? NSDictionary else { return }
-                        MyPodManager.requestDataFromHost(userinfo: result as! [String : Any])
-                    }
-                    else{
-                        print(data)
-                    }
+                MyPodManager.requestDataFromHost(userinfo: data)
+                self.fetchBuyLeads()
                 }
             case .failure(let error):
                 print("Error: \(error.localizedDescription)")
@@ -236,29 +221,56 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 }
             }
 //            cell.configure(with: response["contact_name"]! as! String, statustext: response["status_text"]! as! String,make_text: make,cars)
-            cell.configure(name: response["contact_name"]! as! String, status: response["status_text"]! as! String, date: make, cars: make,phonenumber: response["mobile"]! as! String)
-            
+            cell.configure(name: response["contact_name"]! as! String, status: response["status_text"]! as! String, date: make, cars: cars as! [Any],phonenumber: response["mobile"]! as! String)
+            cell.delegate = self
+
             cell.visitedLabel.tag = indexPath.row
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(visitingStatus))
             cell.visitedLabel.addGestureRecognizer(tapGesture)
             cell.visitedLabel.isUserInteractionEnabled = true
             cell.contentView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
+            
+            //navigate to chat screen from SDK to OLX App
             cell.chatBtn.isUserInteractionEnabled = true
             cell.chatBtn.tag =  indexPath.row
             let chatGesture = UITapGestureRecognizer(target: self, action: #selector(navigateToHostVC))
             cell.chatBtn.addGestureRecognizer(chatGesture)
+            
+            //make a call
+            cell.nameLabel.tag = indexPath.row
+            let callGesture = UITapGestureRecognizer(target: self, action: #selector(calltoBuyLead))
+            cell.nameLabel.addGestureRecognizer(callGesture)
+            cell.nameLabel.isUserInteractionEnabled = true
             return cell
         }
         else{
-                 let cell = tableView.dequeueReusableCell(withIdentifier: OnlineBuyLeads_collection.identifier, for: indexPath) as! OnlineBuyLeads_collection
-                cell.configure(with: data)  // Pass data to cell
+            let cell = tableView.dequeueReusableCell(withIdentifier: OnlineBuyLeads_collection.identifier, for: indexPath) as! OnlineBuyLeads_collection
+            cell.configure(with: data)  // Pass data to cell
             cell.contentView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
-
-                return cell
+            return cell
         }
     }
+    @objc func calltoBuyLead(sender : UITapGestureRecognizer){
+        let response = Buyleads[sender.view!.tag] as! NSDictionary
+        if let phoneURL = URL(string: "tel://\(response["mobile"]! as! String)"),
+           UIApplication.shared.canOpenURL(phoneURL) {
+            UIApplication.shared.open(phoneURL)
+        } else {
+            print("📵 Calling not supported on this device")
+        }
+    }
+    func collectionViewCellDidSelect(item: String) {
+        print("Selected item from collectionView: \(item)")
+          // Perform action (e.g., navigate to another screen)
+        let userinfo = MyPodManager.userinfo
+        let userInfo_host: [String: Any] = [
+            "olx_buyer_id": item,
+            "user_id": userinfo["user_id"] as! String
+        ]
+        MyPodManager.navigatetoHost(userinfo: userInfo_host)
+      }
+    
     @objc func navigateToHostVC(sender : UITapGestureRecognizer) {
-          navdelegate?.navigateToHostViewController()
         let response = Buyleads[sender.view!.tag] as! NSDictionary
         let userinfo = MyPodManager.userinfo
 
@@ -266,14 +278,15 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             "olx_buyer_id": response["olx_buyer_id"]!,
             "user_id": userinfo["user_id"] as! String
         ]
-        
         NotificationCenter.default.post(name: Notification.Name("OpenChat"), object: userInfo_host)
 
       }
     @objc func visitingStatus(sender:UITapGestureRecognizer)
     {
         let response = Buyleads[sender.view!.tag] as! NSDictionary
-        self.showPopup(title: "Message!", message: "Customer Visited On: \n \(response["customer_visited"]! as! String)")
+        if((response["customer_visited"]! as! String).count != 0){
+            self.showPopup(title: "Message!", message: "Customer Visited On: \n \(response["customer_visited"]! as! String)")
+        }
     }
     func showPopup(title: String, message: String) {
         let popup = CustomView(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
