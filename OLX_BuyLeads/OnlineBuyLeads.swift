@@ -33,7 +33,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 .font: UIFont.boldSystemFont(ofSize: 15) // Custom font and size
             ]
         navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.backgroundColor = UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0)
+        navigationController?.navigationBar.backgroundColor = UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
         view.backgroundColor = .white
         let backButton = UIBarButtonItem(image: UIImage(named: "back"), style: .plain, target: self, action:  #selector(backButtonTapped))
         self.navigationController?.navigationItem.leftBarButtonItem = backButton
@@ -46,12 +46,12 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     }
     func fetchBuyLeads()
     {
-        let userinfo = MyPodManager.userinfo
-        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(userinfo["access_token"] as! String)","Http-User-agent":"postman"] as! [String:String]
+      //  let userinfo = MyPodManager.userinfo
+        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.access_token)","Http-User-agent":"postman"] as! [String:String]
         let parameters = [ "action":"loadallbuylead",
                            "api_id": "cteolx2024v1.0",
                            "device_id":"4fee41be780ae0e7",
-                          "dealer_id":userinfo["user_id"] as! String] as! [String:Any]
+                           "dealer_id":MyPodManager.user_id] as! [String:Any]
         let api = ApiServices()
         api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: "https://fcgapi.olx.in/dealer/mobile_api",authentication: "") { result in
             switch result {
@@ -84,16 +84,15 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     }
     func refreshToken()
     {
-        let userinfo = MyPodManager.userinfo
-        let headers = ["x-origin-Panamera":"dev","Api-Version":"134","client-language":"en-in","Authorization":"Bearer \(userinfo["refresh_token"] as! String)"] as! [String:String]
-        let parameters = ["user_id":userinfo["user_id"] as! String] as! [String:Any]
+        let headers = ["x-origin-Panamera":"dev","Api-Version":"134","client-language":"en-in","Authorization":"Bearer \(MyPodManager.refresh_token)"] as! [String:String]
+        let parameters = ["user_id":MyPodManager.user_id] as! [String:Any]
         let api = ApiServices()
         api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: "https://fcgapi.olx.in/dealer/v1/auth/refresh_token",authentication: "") { result in
             switch result {
             case .success(let data):
                 print("Response Data: \(data)")
                 DispatchQueue.main.async {
-                MyPodManager.requestDataFromHost(userinfo: data)
+                    MyPodManager.requestDataFromHost(accesstoken: data["access_token"] as! String, userid: data["user_id"] as! String, refreshtoken: data["refresh_token"] as! String)
                 self.fetchBuyLeads()
                 }
             case .failure(let error):
@@ -241,6 +240,9 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             let callGesture = UITapGestureRecognizer(target: self, action: #selector(calltoBuyLead))
             cell.nameLabel.addGestureRecognizer(callGesture)
             cell.nameLabel.isUserInteractionEnabled = true
+            
+            cell.editBtn.tag = indexPath.row
+            cell.editBtn.addTarget(self, action: #selector(editBuylead), for: .touchUpInside)
             return cell
         }
         else{
@@ -249,6 +251,12 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             cell.contentView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
             return cell
         }
+    }
+    @objc func editBuylead(sender : UIButton)
+    {
+        let editVC = OnlineBuyLead_Edit()
+        editVC.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(editVC, animated: true)
     }
     @objc func calltoBuyLead(sender : UITapGestureRecognizer){
         let response = Buyleads[sender.view!.tag] as! NSDictionary

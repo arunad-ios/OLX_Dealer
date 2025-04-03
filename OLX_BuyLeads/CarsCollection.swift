@@ -14,7 +14,8 @@ class CarsCollection : UICollectionViewCell {
 
     let titleLabel = UILabel()
     let chatBtn = UIButton()
-    
+    let deleteBtn = UIButton()
+
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -28,35 +29,58 @@ class CarsCollection : UICollectionViewCell {
     func setupUI() {
       
         // Checkbox
-        chatBtn.backgroundColor = .clear
-        chatBtn.layer.borderWidth = 1
+        chatBtn.backgroundColor = .systemBlue
+        chatBtn.layer.borderWidth = 0
         chatBtn.layer.borderColor = UIColor.darkGray.cgColor
         chatBtn.translatesAutoresizingMaskIntoConstraints = false
-        
-        if let bundlePath = Bundle(for: CarsCollection.self).path(forResource: "OLX_BuyLeads", ofType: "bundle"),
-           let resourceBundle = Bundle(path: bundlePath) {
-            let image = UIImage(named: "think", in: resourceBundle, compatibleWith: nil)
+        if let bundleURL = Bundle(for: OnlineBuyLeads_cell.self).url(forResource: "OLX_BuyLeadsResources", withExtension: "bundle"),
+           let resourceBundle = Bundle(url: bundleURL) {
+            let image = UIImage(named: "chat", in: resourceBundle, compatibleWith: nil)
             chatBtn.setImage(image, for: .normal)
+            chatBtn.layer.borderWidth = 0
         }
         
-        // Label
-        titleLabel.font = UIFont.systemFont(ofSize: 14)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        deleteBtn.backgroundColor = .systemBlue
+        deleteBtn.layer.borderWidth = 0
+        deleteBtn.layer.borderColor = UIColor.darkGray.cgColor
+        deleteBtn.translatesAutoresizingMaskIntoConstraints = false
+        if let bundleURL = Bundle(for: OnlineBuyLeads_cell.self).url(forResource: "OLX_BuyLeadsResources", withExtension: "bundle"),
+           let resourceBundle = Bundle(url: bundleURL) {
+            let image = UIImage(named: "chat", in: resourceBundle, compatibleWith: nil)
+            deleteBtn.setImage(image, for: .normal)
+            deleteBtn.layer.borderWidth = 0
+        }
         
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(chatBtn)
-
+        titleLabel.font = UIFont.systemFont(ofSize: 12)
+        titleLabel.textColor = UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
+        // Label
+     
+               
+               // Create StackView
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, chatBtn, deleteBtn])
+               stackView.axis = .horizontal // Horizontal layout
+               stackView.spacing = 10        // Space between items
+        stackView.distribution = .fillProportionally
+               stackView.translatesAutoresizingMaskIntoConstraints = false
+               
+               // Add StackView to the View
+        contentView.addSubview(stackView)
+               
         NSLayoutConstraint.activate([
-            
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
-            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
-            chatBtn.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 8),
-            chatBtn.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            chatBtn.widthAnchor.constraint(equalToConstant: 20),
-            chatBtn.heightAnchor.constraint(equalToConstant: 20)
-         
-        ])
+            chatBtn.widthAnchor.constraint(equalToConstant: 25),
+            chatBtn.heightAnchor.constraint(equalToConstant: 25),
+            deleteBtn.widthAnchor.constraint(equalToConstant: 25),
+            deleteBtn.heightAnchor.constraint(equalToConstant: 25)
+            ])
+       
+        
+               // Constraints
+               NSLayoutConstraint.activate([
+                stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+                stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+                   stackView.widthAnchor.constraint(equalToConstant: 300),
+                   stackView.heightAnchor.constraint(equalToConstant: 50)
+               ])
     }
     
     func configure(title: String) {

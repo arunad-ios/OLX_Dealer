@@ -19,7 +19,7 @@ public class PodViewController: UIViewController {
                 .font: UIFont.boldSystemFont(ofSize: 15) // Custom font and size
             ]
         navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.backgroundColor = UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0)
+        navigationController?.navigationBar.backgroundColor = UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
 //        let navItem = UINavigationItem(title: "Online Buy Leads")
 //        navigationController?.navigationBar.items = [navItem]
         let dismissButton = UIButton(type: .system)

@@ -32,7 +32,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
     let separatorView = UIView()
     let carLabel = UILabel()
     public var chatBtn = UIButton()
-    public var shareBtn = UIButton()
+    public var editBtn = UIButton()
     public var deleteBtn = UIButton()
     var heightconstaint =  NSLayoutConstraint()
     public let collectionView: UICollectionView = {
@@ -76,7 +76,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
 
         // Name Label
         nameLabel.font = UIFont.boldSystemFont(ofSize: 16)
-        nameLabel.textColor =  UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0)
+        nameLabel.textColor =  UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
         nameLabel.numberOfLines = 0
         nameLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         // Name Label
@@ -88,13 +88,13 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         
         // Status Label
         statusLabel.font = UIFont.systemFont(ofSize: 14)
-        statusLabel.textColor =  UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0)
+        statusLabel.textColor =  UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
         statusLabel.numberOfLines = 0
         
         // Date Label
         dateLabel.font = UIFont.systemFont(ofSize: 14, weight: .bold)
         dateLabel.numberOfLines = 0
-        dateLabel.textColor = UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0)
+        dateLabel.textColor = UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
 
         // Visited Label
         visitedLabel.text = "VISITED"
@@ -107,7 +107,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
 
         // Car Label
         carLabel.font = UIFont.systemFont(ofSize: 14)
-        carLabel.textColor = UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0)
+        carLabel.textColor = UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
         carLabel.numberOfLines = 0
         
         
@@ -134,9 +134,9 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
             ])
       
         
-        chatBtn = createButton(title: "account", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
-        shareBtn = createButton(title: "download", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
-        deleteBtn = createButton(title: "chat", color: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0))
+        chatBtn = createButton(title: "sms", color: UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0))
+        editBtn = createButton(title: "edit", color: UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0))
+        deleteBtn = createButton(title: "download", color: UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0))
              
              // Create Labels
              let label1 = createLabel(text: "Label 1")
@@ -145,7 +145,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
    
    
              // Add Stack View
-        let bottomstackView = UIStackView(arrangedSubviews: [chatBtn, label1, shareBtn, label2, deleteBtn])
+        let bottomstackView = UIStackView(arrangedSubviews: [chatBtn, label1, editBtn, label2, deleteBtn])
         bottomstackView.axis = .horizontal
         bottomstackView.alignment = .center
         bottomstackView.distribution = .equalSpacing
@@ -217,10 +217,9 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
                 print("❌ Error reading bundle contents: \(error)")
             }
         }
-        
-        if let frameworkBundle = Bundle(for: OnlineBuyLeads_cell.self).resourceURL,
-           let resourceBundle = Bundle(url: frameworkBundle.appendingPathComponent("OLX_BuyLeads.bundle")) {
-            let image = UIImage(named: title, in: resourceBundle, compatibleWith: nil)
+        if let bundleURL = Bundle(for: OnlineBuyLeads_cell.self).url(forResource: "OLX_BuyLeadsResources", withExtension: "bundle"),
+           let resourceBundle = Bundle(url: bundleURL) {
+            let image = UIImage(named: "account", in: resourceBundle, compatibleWith: nil)
             button.setImage(image, for: .normal)
         }
         else{
@@ -260,7 +259,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         if(phonenumber.count != 0){
             let coloredText = NSMutableAttributedString(string: "\(name)(\(phonenumber))")
             // 3️⃣ Apply Color to Part of the Text
-            coloredText.addAttribute(.foregroundColor, value: UIColor(red: 0/255, green: 47/255, blue: 52/255, alpha: 1.0), range: NSRange(location: 0, length: name.count)) // "Hello" in blue
+            coloredText.addAttribute(.foregroundColor, value: UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0), range: NSRange(location: 0, length: name.count)) // "Hello" in blue
             coloredText.addAttribute(.foregroundColor, value: UIColor.systemBlue, range: NSRange(location: name.count, length: phonenumber.count+2))  // "Swift" in red
             nameLabel.attributedText = coloredText
         }

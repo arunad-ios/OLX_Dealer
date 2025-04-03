@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name          = 'OLX_Dealer'
-  spec.version       = '1.2.3'
+  spec.version       = '1.2.6'
   spec.summary       = 'OLX_Dealer'
   spec.description   = 'OLX_Dealer Module'
   spec.homepage      = 'https://cocoapods.org/pods/OLX_Dealer'
@@ -10,19 +10,19 @@ spec.license = { :type => 'MIT', :text => <<-LICENSE
     Permission is hereby granted...
     LICENSE
 }
-   spec.static_framework = true
+  spec.static_framework = true
   spec.source        = { :git => 'https://github.com/arunad-ios/OLX_Dealer.git', :tag => spec.version.to_s }
   spec.swift_version = '5.0'
   spec.ios.deployment_target = '13.0'
- spec.source_files  = "OLX_BuyLeads/**/*.{h,m,swift}","OLX_BuyLeads/*.{h,m,swift}"
-spec.resource_bundles = {
-  'OLX_BuyLeadsResources' => ['OLX_BuyLeads/Resources/Images.xcassets']
-}
-    #spec.resources = "OLX_BuyLeads/Resources/Images.xcassets"
+  spec.source_files  = "OLX_BuyLeads/**/*.{h,m,swift}","OLX_BuyLeads/*.{h,m,swift}"
+  spec.resource_bundles = {
+  'OLX_BuyLeadsResources' => ['OLX_BuyLeads/Resources/Assets.xcassets']
+  }
 
-#
-#  spec.resources = 'OLX_BuyLeads/*.xcdatamodeld'
- # spec.ios.vendored_frameworks = [
+
+   # spec.resources = "OLX_BuyLeads/Resources/Images.xcassets"
+  #  spec.resources = 'OLX_BuyLeads/*.xcdatamodeld'
+  # spec.ios.vendored_frameworks = [
   #  "Frameworks/auth_library.xcframework",
    # "Frameworks/analytics_library.xcframework"
    #  spec.dependency 'HostApp'
