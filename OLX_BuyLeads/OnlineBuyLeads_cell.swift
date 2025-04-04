@@ -73,41 +73,49 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
     func setupUI() {
         selectionStyle = .none
         contentView.backgroundColor = .clear
-
+//UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
         // Name Label
-        nameLabel.font = UIFont.boldSystemFont(ofSize: 16)
-        nameLabel.textColor =  UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
+        nameLabel.font = UIFont(name: "Roboto-Regular", size: 16)
+        nameLabel.textColor =  UIColor.black
         nameLabel.numberOfLines = 0
         nameLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         // Name Label
-        phoneLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        phoneLabel.font = UIFont(name: "Roboto-Regular", size: 16)
         phoneLabel.textColor =  .systemBlue
         phoneLabel.numberOfLines = 0
         phoneLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
         
         // Status Label
-        statusLabel.font = UIFont.systemFont(ofSize: 14)
-        statusLabel.textColor =  UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
-        statusLabel.numberOfLines = 0
+        statusLabel.font = UIFont(name: "Roboto-Regular", size: 14)
+        statusLabel.textColor =   UIColor.black
+        statusLabel.numberOfLines = 1
         
         // Date Label
-        dateLabel.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        dateLabel.font = UIFont(name: "Roboto-Bold", size: 14)
         dateLabel.numberOfLines = 0
-        dateLabel.textColor = UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
+        dateLabel.textColor =  UIColor.black
 
         // Visited Label
         visitedLabel.text = "VISITED"
-        visitedLabel.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        visitedLabel.font = UIFont(name: "Roboto-Bold", size: 12)
         visitedLabel.textColor = .systemGreen
         visitedLabel.textAlignment = .right
 
+        
+        let visibleStackView = UIStackView(arrangedSubviews: [statusLabel,visitedLabel])
+        visibleStackView.axis = .horizontal
+        visibleStackView.alignment = .center
+        visibleStackView.distribution = .fillProportionally
+        visibleStackView.spacing = 10
+        visibleStackView.translatesAutoresizingMaskIntoConstraints = false
+        
         // Separator
         separatorView.backgroundColor = .lightGray
 
         // Car Label
         carLabel.font = UIFont.systemFont(ofSize: 14)
-        carLabel.textColor = UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
+        carLabel.textColor =  UIColor.black
         carLabel.numberOfLines = 0
         
         
@@ -141,41 +149,44 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
              // Create Labels
              let label1 = createLabel(text: "Label 1")
              let label2 = createLabel(text: "Label 2")
-        
+             let label3 = createLabel(text: "Label 1")
+             let label4 = createLabel(text: "Label 2")
    
    
              // Add Stack View
-        let bottomstackView = UIStackView(arrangedSubviews: [chatBtn, label1, editBtn, label2, deleteBtn])
+        let bottomstackView = UIStackView(arrangedSubviews: [label3, chatBtn, label1, editBtn, label2, deleteBtn,label4])
         bottomstackView.axis = .horizontal
         bottomstackView.alignment = .center
         bottomstackView.distribution = .equalSpacing
         bottomstackView.spacing = 10
         bottomstackView.translatesAutoresizingMaskIntoConstraints = false
         bottomstackView.backgroundColor = .systemGray6
-
              
         bottomView.addSubview(bottomstackView)
         
         bottomView.isUserInteractionEnabled = true
         
-   NSLayoutConstraint.activate([
+      NSLayoutConstraint.activate([
        label1.widthAnchor.constraint(equalToConstant: 1),
        label2.widthAnchor.constraint(equalToConstant: 1),
+       label3.widthAnchor.constraint(equalToConstant: 0),
+       label4.widthAnchor.constraint(equalToConstant: 0),
        // Only one height constraint
        ])
         
         NSLayoutConstraint.activate([
-            bottomstackView.heightAnchor.constraint(equalToConstant: 50) // Only one height constraint
+            bottomstackView.heightAnchor.constraint(equalToConstant: 50), // Only one height constraint
+            visibleStackView.heightAnchor.constraint(equalToConstant: 35) // Only one height constraint
                ])
         
-        let stackView = UIStackView(arrangedSubviews: [nameLabel, statusLabel, visitedLabel, separatorView,dateLabel,collectionView,carLabel,bottomstackView])
+        let stackView = UIStackView(arrangedSubviews: [nameLabel, visibleStackView, separatorView,dateLabel,collectionView,carLabel,bottomstackView])
         stackView.axis = .vertical
-        stackView.spacing = 5
+        stackView.spacing = 0
         contentView.addSubview(stackView)
         stackView.backgroundColor = .clear
         
         NSLayoutConstraint.activate([
-           nameLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 15),
+           nameLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 5),
          //  phoneLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
            // statusLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 15),
         //    dateLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 15),
@@ -207,7 +218,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
 
     func createButton(title: String, color: UIColor) -> UIButton {
         let button = UIButton(type: .custom)
-        if let bundlePath = Bundle(for: OnlineBuyLeads_cell.self).resourcePath {
+        if let bundlePath = Bundle(for: OnlineBuyLeads.self).resourcePath {
             print("✅ Framework Bundle Path: \(bundlePath)")
 
             do {
@@ -217,18 +228,20 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
                 print("❌ Error reading bundle contents: \(error)")
             }
         }
-        if let bundleURL = Bundle(for: OnlineBuyLeads_cell.self).url(forResource: "OLX_BuyLeadsResources", withExtension: "bundle"),
+        print(Bundle.allBundles)
+        if let bundleURL = Bundle(for: OnlineBuyLeads_cell.self).url(forResource: "OLX_BuyLeads", withExtension: "bundle"),
            let resourceBundle = Bundle(url: bundleURL) {
-            let image = UIImage(named: "account", in: resourceBundle, compatibleWith: nil)
+            let image = UIImage(named: title, in: resourceBundle, compatibleWith: nil)
             button.setImage(image, for: .normal)
         }
         else{
-            button.setTitle(title, for: .normal)
-            button.backgroundColor = color
+            button.setImage(UIImage(named: title), for: .normal)
+          //  button.setTitle(title, for: .normal)
+           // button.backgroundColor = color
         }
         button.isUserInteractionEnabled = true
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 12)
-          button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 12)
+          button.setTitleColor(UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0), for: .normal)
           button.layer.cornerRadius = 10
           button.translatesAutoresizingMaskIntoConstraints = false
           button.widthAnchor.constraint(equalToConstant: 50).isActive = true
@@ -243,7 +256,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
           label.backgroundColor = .white
           label.textAlignment = .center
           label.textColor = .black
-          label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+          label.font = UIFont(name: "Roboto-Bold", size: 14)
           label.translatesAutoresizingMaskIntoConstraints = false
           return label
       }
@@ -259,14 +272,14 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         if(phonenumber.count != 0){
             let coloredText = NSMutableAttributedString(string: "\(name)(\(phonenumber))")
             // 3️⃣ Apply Color to Part of the Text
-            coloredText.addAttribute(.foregroundColor, value: UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0), range: NSRange(location: 0, length: name.count)) // "Hello" in blue
+            coloredText.addAttribute(.foregroundColor, value: UIColor.black, range: NSRange(location: 0, length: name.count)) // "Hello" in blue
             coloredText.addAttribute(.foregroundColor, value: UIColor.systemBlue, range: NSRange(location: name.count, length: phonenumber.count+2))  // "Swift" in red
             nameLabel.attributedText = coloredText
         }
     }
     func updateCollectionViewHeight() {
           collectionView.layoutIfNeeded()
-        heightconstaint.constant = collectionView.contentSize.height
+          heightconstaint.constant = collectionView.contentSize.height
           superview?.layoutIfNeeded() // Refresh parent tableView
       }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -280,6 +293,12 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         cell.configure(title: "\((dic["make"] as! String))")
         cell.chatBtn.tag = indexPath.row
         cell.chatBtn.addTarget(self, action: #selector(chatFunction), for: .touchUpInside)
+        if(self.cars.count > 1){
+            cell.deleteBtn.alpha = 1.0
+        }
+        else{
+            cell.deleteBtn.alpha = 0.0
+        }
         return cell
     }
     @objc func chatFunction(sender : UIButton){
@@ -288,7 +307,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
     }
     // MARK: - UICollectionView Delegate FlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.contentView.frame.size.width, height: 30)
+        return CGSize(width: self.contentView.frame.size.width, height: 25)
     }
 }
 

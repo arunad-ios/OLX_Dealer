@@ -10,23 +10,25 @@ import UIKit
 
 
 
-public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewDataSource,TableCellDelegate {
+public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewDataSource,TableCellDelegate,collectionCellDelegate {
     private let apiService = ApiServices()
     private var items = NSMutableArray()
     private let tableView = UITableView()
     private var Buyleads = NSArray()
-    private var data : [Any] = []
+    private var data : [Any] = ["All","Hot","Inv Car","Archive","Appointment Fixed"]
     private var errorView: ErrorView?
-
+    private var apidata : [Any] = []
+    var status = ""
+    var noleadView = UIView()
+    let noLeadLabel = UILabel()
+    public var refresh = UIButton()
+    
+    let loadingView = LoadingView()
 
     public override func viewDidLoad() {
         
         super.viewDidLoad()
-        
-        if Bundle(identifier: "com.Samplepod.OLX-BuyLeads") != nil {
-            FontLoader.registerFont(withName: "Roboto-Regular")
-            FontLoader.registerFont(withName: "Roboto-Bold")
-        }
+        FontLoader.registerFonts()
         self.title = "Online Buy Leads"
         navigationController?.navigationBar.titleTextAttributes = [
                 .foregroundColor: UIColor.white, // Title text color
@@ -35,7 +37,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         navigationController?.navigationBar.tintColor = .white
         navigationController?.navigationBar.backgroundColor = UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
         view.backgroundColor = .white
-        let backButton = UIBarButtonItem(image: UIImage(named: "back"), style: .plain, target: self, action:  #selector(backButtonTapped))
+        let backButton = UIBarButtonItem(image: UIImage(named: "back_arrow"), style: .plain, target: self, action:  #selector(backButtonTapped))
         self.navigationController?.navigationItem.leftBarButtonItem = backButton
         setupTableView()
            
@@ -44,26 +46,46 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     {
         self.navigationController?.popViewController(animated: true)
     }
-    func fetchBuyLeads()
+   @objc func fetchBuyLeads()
     {
-      //  let userinfo = MyPodManager.userinfo
+        //{verified=n, spage=1,  car_inventory_id=,  showcv=,}
+        
+        loadingView.show(in: self.view, withText: "Loading Leads...")
+        self.noleadView.isHidden = true
+
         let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.access_token)","Http-User-agent":"postman"] as! [String:String]
+        
         let parameters = [ "action":"loadallbuylead",
                            "api_id": "cteolx2024v1.0",
                            "device_id":"4fee41be780ae0e7",
-                           "dealer_id":MyPodManager.user_id] as! [String:Any]
+                           "dealer_id":MyPodManager.user_id,
+                           "status_filters":self.status,
+                           "show_apptfixed":"n",
+                           "hotleads":"n",
+                           "show_archieve":"n",
+                           "app_type":"olx",
+                           "search_key":"",
+                           "android_version":"15"] as! [String:Any]
+        
+        
         let api = ApiServices()
         api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: "https://fcgapi.olx.in/dealer/mobile_api",authentication: "") { result in
             switch result {
             case .success(let data):
                 print("Response Data: \(data)")
+              
                 DispatchQueue.main.async {
+                    self.loadingView.hide()
                     if  let dic = data["data"] as? NSDictionary{
-                        guard  let result = dic["buyleads"] as? NSDictionary else { return }
+                        guard  let result = dic["buyleads"] as? NSDictionary else {return}
                             self.Buyleads = result["buylead"] as! NSArray
-                            self.data = (result["status_count"] as! NSArray) as! [Any]
+                            self.apidata = (result["status_count"] as! NSArray) as! [Any]
                             self.tableView.reloadData()
-                     //   NotificationCenter.default.post(name: Notification.Name("MyCustomNotification"), object: nil)
+                           if(self.Buyleads.count == 0){
+                            self.noleadView.isHidden = false
+                           }else{
+                            self.noleadView.isHidden = true
+                           }
                     }
                     else{
                         print(data)
@@ -72,11 +94,15 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                         {
                             self.refreshToken()
                         }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                            self.loadingView.hide()
+                        }
                     }
                 }
             case .failure(let error):
                 print("Error: \(error.localizedDescription)")
                 DispatchQueue.main.async {
+                    self.loadingView.hide()
                     self.showError(message: error.localizedDescription)
                 }
             }
@@ -135,11 +161,12 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
       }
     private func setupTableView() {
         
+        
         tableView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 100
+        tableView.estimatedRowHeight = 60
      
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -151,18 +178,62 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         tableView.separatorStyle = .none
         tableView.delegate = self
         tableView.dataSource = self
-//        let bundle = Bundle(for: BuyLeadsCell.self)
-//        let nib = UINib(nibName: "BuyLeadsCell", bundle: bundle)
-//        tableView.register(nib, forCellReuseIdentifier: "BuyLeadsCell")
         
         tableView.register(OnlineBuyLeads_cell.self, forCellReuseIdentifier: "CustomCell")
         tableView.register(OnlineBuyLeads_collection.self, forCellReuseIdentifier: OnlineBuyLeads_collection.identifier)
         
         
+        noleadView.backgroundColor = .clear
+        // Add the view to the parent view
+        view.addSubview(noleadView)
 
-//        let bundle1 = Bundle(for: CollectionTableViewCell.self)
-//        let nib1 = UINib(nibName: "CollectionTableViewCell", bundle: bundle1)
-//        tableView.register(nib1, forCellReuseIdentifier: "CollectionTableViewCell")
+        // Enable Auto Layout
+        noleadView.translatesAutoresizingMaskIntoConstraints = false
+        noleadView.layer.cornerRadius = 5
+        self.view.addSubview(noleadView)
+        self.view.bringSubviewToFront(noleadView)
+
+        // Center the view horizontally and vertically
+        NSLayoutConstraint.activate([
+            noleadView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            noleadView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            noleadView.widthAnchor.constraint(equalToConstant: 150), // Example width
+            noleadView.heightAnchor.constraint(equalToConstant: 80) // Example height
+        ])
+        
+           
+        noLeadLabel.text = "No Leads Found"
+        noLeadLabel.textColor = .lightGray
+        noLeadLabel.backgroundColor = .clear
+        
+        refresh.backgroundColor = UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
+        refresh.setTitle("Refresh", for: .normal)
+        refresh.addTarget(self, action: #selector(fetchBuyLeads), for: .touchUpInside)
+        refresh.layer.cornerRadius = 5.0
+        
+        
+        
+        let stackView = UIStackView(arrangedSubviews: [noLeadLabel,refresh])
+        stackView.axis = .vertical
+        stackView.spacing = 10
+        stackView.distribution = .fillProportionally
+        stackView.backgroundColor = .clear
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        noleadView.addSubview(stackView)
+
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: noleadView.topAnchor, constant: 10),
+            stackView.leadingAnchor.constraint(equalTo: noleadView.leadingAnchor, constant: 10),
+            stackView.trailingAnchor.constraint(equalTo: noleadView.trailingAnchor, constant: -10),
+            stackView.bottomAnchor.constraint(equalTo: noleadView.bottomAnchor, constant: -10)
+        ])
+        stackView.layer.cornerRadius = 10
+        stackView.layer.masksToBounds = true
+        stackView.isUserInteractionEnabled = true
+        
+        
+      
+
         fetchBuyLeads()
 
     }
@@ -181,7 +252,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         titleLabel.text = "FOLLOWUP"
         titleLabel.textColor = .white
         titleLabel.font = UIFont(name: "Roboto-Medium", size: 14)
-
         headerView.addSubview(titleLabel)
         return headerView
     }
@@ -247,11 +317,21 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         }
         else{
             let cell = tableView.dequeueReusableCell(withIdentifier: OnlineBuyLeads_collection.identifier, for: indexPath) as! OnlineBuyLeads_collection
+            cell.delegate = self
             cell.configure(with: data)  // Pass data to cell
             cell.contentView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
             return cell
         }
     }
+    @objc func selectedCellitem(item: String)
+    {
+        let popupVC = FilterTableViewController()
+        popupVC.configure(with: self.apidata)
+        popupVC.modalPresentationStyle = .overFullScreen
+        popupVC.delegate = self
+        present(popupVC, animated: true)
+    }
+    
     @objc func editBuylead(sender : UIButton)
     {
         let editVC = OnlineBuyLead_Edit()
@@ -270,21 +350,19 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     func collectionViewCellDidSelect(item: String) {
         print("Selected item from collectionView: \(item)")
           // Perform action (e.g., navigate to another screen)
-        let userinfo = MyPodManager.userinfo
         let userInfo_host: [String: Any] = [
             "olx_buyer_id": item,
-            "user_id": userinfo["user_id"] as! String
+            "user_id": MyPodManager.user_id
         ]
         MyPodManager.navigatetoHost(userinfo: userInfo_host)
       }
     
     @objc func navigateToHostVC(sender : UITapGestureRecognizer) {
         let response = Buyleads[sender.view!.tag] as! NSDictionary
-        let userinfo = MyPodManager.userinfo
 
         let userInfo_host: [String: Any] = [
             "olx_buyer_id": response["olx_buyer_id"]!,
-            "user_id": userinfo["user_id"] as! String
+            "user_id": MyPodManager.user_id
         ]
         NotificationCenter.default.post(name: Notification.Name("OpenChat"), object: userInfo_host)
 
@@ -309,5 +387,12 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     }
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+    }
+}
+extension OnlineBuyLeads: PopupTableViewDelegate {
+    public func didSelectItem(_ item: String) {
+        print("Selected item: \(item)")
+        self.status = item
+        self.fetchBuyLeads()
     }
 }

@@ -9,6 +9,13 @@ import Foundation
 import UIKit
 
 public class FontLoader {
+    public static func registerFonts() {
+           let fontNames = ["Roboto-Black", "Roboto-BlackItalic","Roboto-Bold","Roboto-BoldItalic","Roboto-Italic","Roboto-Light","Roboto-Medium","Roboto-Regular","Roboto-Thin","Roboto-ThinItalic"] // Add your font names here
+
+           for fontName in fontNames {
+               registerFont(withName: fontName)
+           }
+       }
     public static func registerFont(withName name: String) {
         guard let fontURL = Bundle(for: FontLoader.self).url(forResource: name, withExtension: "ttf") else {
             print("⚠️ Font \(name) not found in bundle!")

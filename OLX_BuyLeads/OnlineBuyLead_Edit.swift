@@ -18,7 +18,8 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.title = "Edit Buy Lead"
+
         tableView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -51,6 +52,8 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = "Details for \(sections[indexPath.section])"
+        cell.textLabel?.font =  UIFont(name: "Roboto-Regular", size: 14)
+
         return cell
     }
     

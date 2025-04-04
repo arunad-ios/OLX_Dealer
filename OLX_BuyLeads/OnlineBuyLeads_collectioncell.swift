@@ -11,50 +11,74 @@ import UIKit
 
 class OnlineBuyLeads_collectioncell : UICollectionViewCell {
     
-    static let identifier = "CustomCollectionViewCell"
-
-    let titleLabel = UILabel()
-    let checkBox = UIView()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupUI()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func setupUI() {
-        contentView.backgroundColor = .clear
-        contentView.layer.borderWidth = 1
-        contentView.layer.borderColor = UIColor.darkGray.cgColor
-        contentView.layer.cornerRadius = 5
         
-        // Checkbox
-        checkBox.backgroundColor = .clear
-        checkBox.layer.borderWidth = 1
-        checkBox.layer.borderColor = UIColor.darkGray.cgColor
-        checkBox.translatesAutoresizingMaskIntoConstraints = false
+        static let identifier = "CustomCollectionViewCell"
         
-        // Label
-        titleLabel.font = UIFont.systemFont(ofSize: 14)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        public let checkBox: UIButton = {
+            let button = UIButton(type: .system)
+            button.setImage(UIImage.init(named: "uncheck"), for: .normal)
+            return button
+        }()
         
-        contentView.addSubview(checkBox)
-        contentView.addSubview(titleLabel)
+        public let titleLabel: UILabel = {
+            let label = UILabel()
+            label.text = "Label"
+            label.textAlignment = .center
+            label.font = UIFont(name: "Roboto-Medium", size: 14)
+            label.textColor = .black
+            return label
+        }()
         
-        NSLayoutConstraint.activate([
-            checkBox.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            checkBox.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            checkBox.widthAnchor.constraint(equalToConstant: 20),
-            checkBox.heightAnchor.constraint(equalToConstant: 20),
+        public let bottomArrow: UIButton = {
+            let button = UIButton(type: .system)
+            button.setImage(UIImage.init(named: "downarrow"), for: .normal)
+            return button
+        }()
+        
+        public let stackView: UIStackView = {
+            let stackView = UIStackView()
+            stackView.axis = .horizontal
+            stackView.alignment = .center
+            stackView.spacing = 1
+            stackView.distribution = .fillProportionally
+            return stackView
+        }()
+        
+        override init(frame: CGRect) {
+            super.init(frame: frame)
+            setupStackView()
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+        
+        public func setupStackView() {
             
-            titleLabel.leadingAnchor.constraint(equalTo: checkBox.trailingAnchor, constant: 8),
-            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
-        ])
-    }
-    
+            contentView.layer.borderColor = UIColor.lightGray.cgColor
+            contentView.layer.borderWidth = 0.5
+            contentView.layer.masksToBounds = true
+            contentView.layer.cornerRadius = 5
+            stackView.addArrangedSubview(checkBox)
+            stackView.addArrangedSubview(titleLabel)
+            stackView.addArrangedSubview(bottomArrow)
+            
+            contentView.addSubview(stackView)
+            
+            NSLayoutConstraint.activate([
+                checkBox.widthAnchor.constraint(equalToConstant: 20),
+                checkBox.heightAnchor.constraint(equalToConstant: 20),
+              
+                ])
+            
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
+                stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 5),
+                stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
+                stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5)
+            ])
+        }
     func configure(title: String) {
         titleLabel.text = title
     }

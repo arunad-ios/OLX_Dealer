@@ -29,30 +29,31 @@ class CarsCollection : UICollectionViewCell {
     func setupUI() {
       
         // Checkbox
-        chatBtn.backgroundColor = .systemBlue
-        chatBtn.layer.borderWidth = 0
-        chatBtn.layer.borderColor = UIColor.darkGray.cgColor
+       
         chatBtn.translatesAutoresizingMaskIntoConstraints = false
-        if let bundleURL = Bundle(for: OnlineBuyLeads_cell.self).url(forResource: "OLX_BuyLeadsResources", withExtension: "bundle"),
+        if let bundleURL = Bundle(for: OnlineBuyLeads_cell.self).url(forResource: "OLX_BuyLeads", withExtension: "bundle"),
            let resourceBundle = Bundle(url: bundleURL) {
             let image = UIImage(named: "chat", in: resourceBundle, compatibleWith: nil)
             chatBtn.setImage(image, for: .normal)
             chatBtn.layer.borderWidth = 0
         }
+        else{
+            chatBtn.setImage(UIImage(named:  "chat"), for: .normal)
+        }
         
-        deleteBtn.backgroundColor = .systemBlue
-        deleteBtn.layer.borderWidth = 0
-        deleteBtn.layer.borderColor = UIColor.darkGray.cgColor
         deleteBtn.translatesAutoresizingMaskIntoConstraints = false
-        if let bundleURL = Bundle(for: OnlineBuyLeads_cell.self).url(forResource: "OLX_BuyLeadsResources", withExtension: "bundle"),
+        if let bundleURL = Bundle(for: OnlineBuyLeads_cell.self).url(forResource: "OLX_BuyLeads", withExtension: "bundle"),
            let resourceBundle = Bundle(url: bundleURL) {
-            let image = UIImage(named: "chat", in: resourceBundle, compatibleWith: nil)
+            let image = UIImage(named: "delete", in: resourceBundle, compatibleWith: nil)
             deleteBtn.setImage(image, for: .normal)
             deleteBtn.layer.borderWidth = 0
         }
+        else{
+            deleteBtn.setImage(UIImage(named:  "delete"), for: .normal)
+        }
         
         titleLabel.font = UIFont.systemFont(ofSize: 12)
-        titleLabel.textColor = UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
+        titleLabel.textColor = UIColor.black
         // Label
      
                
@@ -72,14 +73,12 @@ class CarsCollection : UICollectionViewCell {
             deleteBtn.widthAnchor.constraint(equalToConstant: 25),
             deleteBtn.heightAnchor.constraint(equalToConstant: 25)
             ])
-       
-        
                // Constraints
                NSLayoutConstraint.activate([
                 stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
                 stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
                    stackView.widthAnchor.constraint(equalToConstant: 300),
-                   stackView.heightAnchor.constraint(equalToConstant: 50)
+                   stackView.heightAnchor.constraint(equalToConstant: 30)
                ])
     }
     
