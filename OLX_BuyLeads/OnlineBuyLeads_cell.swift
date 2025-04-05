@@ -2,7 +2,7 @@
 //  OnlineBuyLeads_cell.swift
 //  OLX_BuyLeads
 //
-//  Created by Chandini on 01/04/25.
+//  Created by Aruna on 01/04/25.
 //
 
 import Foundation
@@ -16,15 +16,8 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
     
     weak var delegate: TableCellDelegate?  // ✅ Delegate Reference
 
-    var cars: [Any] = [] {
-           didSet {
-               collectionView.reloadData()
-               collectionView.layoutIfNeeded()
-               updateCollectionViewHeight()
-           }
-       }
+    var cars: [Any] = []
     let phoneLabel = UILabel()
-
     let nameLabel = UILabel()
     let statusLabel = UILabel()
     let dateLabel = UILabel()
@@ -186,12 +179,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         stackView.backgroundColor = .clear
         
         NSLayoutConstraint.activate([
-           nameLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 5),
-         //  phoneLabel.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
-           // statusLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 15),
-        //    dateLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 15),
-           // visitedLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: -10),
-
+             nameLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 5),
             separatorView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 0),
             bottomstackView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 0),
             // Only one height constraint
@@ -206,7 +194,6 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-
             separatorView.heightAnchor.constraint(equalToConstant: 1),
            // visitedLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
@@ -218,27 +205,8 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
 
     func createButton(title: String, color: UIColor) -> UIButton {
         let button = UIButton(type: .custom)
-        if let bundlePath = Bundle(for: OnlineBuyLeads.self).resourcePath {
-            print("✅ Framework Bundle Path: \(bundlePath)")
-
-            do {
-                let files = try FileManager.default.contentsOfDirectory(atPath: bundlePath)
-                print("📂 Bundle Contents: \(files)")
-            } catch {
-                print("❌ Error reading bundle contents: \(error)")
-            }
-        }
-        print(Bundle.allBundles)
-        if let bundleURL = Bundle(for: OnlineBuyLeads_cell.self).url(forResource: "OLX_BuyLeads", withExtension: "bundle"),
-           let resourceBundle = Bundle(url: bundleURL) {
-            let image = UIImage(named: title, in: resourceBundle, compatibleWith: nil)
-            button.setImage(image, for: .normal)
-        }
-        else{
-            button.setImage(UIImage(named: title), for: .normal)
-          //  button.setTitle(title, for: .normal)
-           // button.backgroundColor = color
-        }
+        let image = UIImage(named: title, in: .buyLeadsBundle, compatibleWith: nil)
+        button.setImage(image, for: .normal)
         button.isUserInteractionEnabled = true
         button.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 12)
           button.setTitleColor(UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0), for: .normal)
@@ -311,3 +279,8 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
     }
 }
 
+extension Bundle {
+    public static var buyLeadsBundle: Bundle {
+        return Bundle(for: OnlineBuyLeads.self)
+    }
+}

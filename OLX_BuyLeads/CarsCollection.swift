@@ -2,7 +2,7 @@
 //  CarsCollection.swift
 //  OLX_BuyLeads
 //
-//  Created by Chandini on 03/04/25.
+//  Created by Aruna on 03/04/25.
 //
 
 import Foundation
@@ -31,38 +31,21 @@ class CarsCollection : UICollectionViewCell {
         // Checkbox
        
         chatBtn.translatesAutoresizingMaskIntoConstraints = false
-        if let bundleURL = Bundle(for: OnlineBuyLeads_cell.self).url(forResource: "OLX_BuyLeads", withExtension: "bundle"),
-           let resourceBundle = Bundle(url: bundleURL) {
-            let image = UIImage(named: "chat", in: resourceBundle, compatibleWith: nil)
-            chatBtn.setImage(image, for: .normal)
-            chatBtn.layer.borderWidth = 0
-        }
-        else{
-            chatBtn.setImage(UIImage(named:  "chat"), for: .normal)
-        }
-        
+      
+        let image = UIImage(named: "chat", in: .buyLeadsBundle, compatibleWith: nil)
+        chatBtn.setImage(image, for: .normal)
+        deleteBtn.setImage(UIImage(named: "delete", in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
         deleteBtn.translatesAutoresizingMaskIntoConstraints = false
-        if let bundleURL = Bundle(for: OnlineBuyLeads_cell.self).url(forResource: "OLX_BuyLeads", withExtension: "bundle"),
-           let resourceBundle = Bundle(url: bundleURL) {
-            let image = UIImage(named: "delete", in: resourceBundle, compatibleWith: nil)
-            deleteBtn.setImage(image, for: .normal)
-            deleteBtn.layer.borderWidth = 0
-        }
-        else{
-            deleteBtn.setImage(UIImage(named:  "delete"), for: .normal)
-        }
-        
         titleLabel.font = UIFont.systemFont(ofSize: 12)
         titleLabel.textColor = UIColor.black
         // Label
-     
                
                // Create StackView
         let stackView = UIStackView(arrangedSubviews: [titleLabel, chatBtn, deleteBtn])
-               stackView.axis = .horizontal // Horizontal layout
-               stackView.spacing = 10        // Space between items
+        stackView.axis = .horizontal // Horizontal layout
+        stackView.spacing = 10        // Space between items
         stackView.distribution = .fillProportionally
-               stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
                
                // Add StackView to the View
         contentView.addSubview(stackView)

@@ -2,12 +2,11 @@
 //  OnlineBuyLeads.swift
 //  CTE_BuyLeads
 //
-//  Created by Chandini on 25/03/25.
+//  Created by Aruna on 25/03/25.
 //
 
 import Foundation
 import UIKit
-
 
 
 public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewDataSource,TableCellDelegate,collectionCellDelegate {
@@ -66,6 +65,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                            "app_type":"olx",
                            "search_key":"",
                            "android_version":"15"] as! [String:Any]
+        
         
         
         let api = ApiServices()
