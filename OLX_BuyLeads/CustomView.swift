@@ -104,5 +104,38 @@ public class CustomView: UIView {
             }
         }
     }
+    public func showCustomErrorPopup(message: String) {
+        let popupView = UIView()
+        popupView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+        popupView.layer.cornerRadius = 12
+        popupView.translatesAutoresizingMaskIntoConstraints = false
+
+        let label = UILabel()
+        label.text = message
+        label.textColor = .white
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        popupView.addSubview(label)
+        self.addSubview(popupView)
+
+        NSLayoutConstraint.activate([
+            popupView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            popupView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            popupView.leadingAnchor.constraint(greaterThanOrEqualTo: self.leadingAnchor, constant: 30),
+            popupView.trailingAnchor.constraint(lessThanOrEqualTo: self.trailingAnchor, constant: -30),
+
+            label.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 20),
+            label.bottomAnchor.constraint(equalTo: popupView.bottomAnchor, constant: -20),
+            label.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 16),
+            label.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -16),
+        ])
+
+        // Auto dismiss after 2 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            popupView.removeFromSuperview()
+        }
+    }
 
 }

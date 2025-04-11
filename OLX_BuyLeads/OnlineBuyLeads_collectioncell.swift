@@ -16,7 +16,7 @@ class OnlineBuyLeads_collectioncell : UICollectionViewCell {
         
         public let checkBox: UIButton = {
             let button = UIButton(type: .system)
-            button.setImage(UIImage.init(named: "uncheck"), for: .normal)
+            button.setImage(UIImage(named: "uncheck", in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
             return button
         }()
         
@@ -31,7 +31,7 @@ class OnlineBuyLeads_collectioncell : UICollectionViewCell {
         
         public let bottomArrow: UIButton = {
             let button = UIButton(type: .system)
-            button.setImage(UIImage.init(named: "downarrow"), for: .normal)
+            button.setImage(UIImage(named: "downarrow", in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
             return button
         }()
         
@@ -58,7 +58,7 @@ class OnlineBuyLeads_collectioncell : UICollectionViewCell {
             contentView.layer.borderColor = UIColor.lightGray.cgColor
             contentView.layer.borderWidth = 0.5
             contentView.layer.masksToBounds = true
-            contentView.layer.cornerRadius = 5
+            //contentView.layer.cornerRadius = 5
             stackView.addArrangedSubview(checkBox)
             stackView.addArrangedSubview(titleLabel)
             stackView.addArrangedSubview(bottomArrow)

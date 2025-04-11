@@ -1,64 +1,39 @@
 //
-//  LoadInventoryView.swift
+//  StockInventoryView.swift
 //  OLX_BuyLeads
 //
-//  Created by Chandini on 05/04/25.
+//  Created by Chandini on 11/04/25.
 //
 
 import Foundation
 import UIKit
-public protocol InventoryTableViewDelegate: AnyObject {
-    func didSelectInventory(_ item: String)
+public protocol StockTableViewDelegate: AnyObject {
+    func didSelectStock(_ name: String,addID : String)
 }
-public class LoadInventoryView : UIViewController, UITableViewDataSource, UITableViewDelegate{
+public class StockInventoryView : UIViewController, UITableViewDataSource, UITableViewDelegate{
     
-    public weak var delegate: InventoryTableViewDelegate?
+    public weak var delegate: StockTableViewDelegate?
     let searchBar = UISearchBar()
 
     private let tableView = UITableView()
-    public var items: [Any] = []
+    public var items: [Ads] = []
+    public var searchAds : [Ads] = []
+    var issearchtoggle = false
 
     public override func viewDidLoad() {
         self.view.backgroundColor = .white
         super.viewDidLoad()
+        self.items = self.getStockList()
         self.setupTableView()
-        loadInventory()
+     //   loadInventory()
+    }
+    public func getStockList()->[Ads]{
+        return InventoryAPIManager.sharedInstance.getStocks() as! [Ads]
     }
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         dismiss(animated: true)
     }
-    
-    public func configure(with items: [Any]) {
-        self.items = items
-    }
-  
-    func loadInventory()
-    {
-        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.access_token)","Http-User-agent":"postman"] as! [String:String]
-        let parameters = [
-            "action": "loadallematchinventory",
-            "api_id": "cteolx2024v1.0",
-            "device_id":"4fee41be780ae0e7",
-            "dealer_id":MyPodManager.user_id
-        ] as! [String:Any]
-        let api = ApiServices()
-        api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: Constant.OLXApi,authentication: "") { result in
-            switch result {
-            case .success(let data):
-                print("Response Data: \(data)")
-                DispatchQueue.main.async {
-                    if  let dic = data["data"] as? NSDictionary{
-                        self.items = (dic["cars"] as! NSArray) as! [Any]
-                        self.tableView.reloadData()
-                    }
-                }
-            case .failure(let error):
-                print("Error: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                }
-            }
-        }
-    }
+   
     private func setupTableView() {
         
         tableView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
@@ -74,7 +49,6 @@ public class LoadInventoryView : UIViewController, UITableViewDataSource, UITabl
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-
         tableView.separatorColor = .none
         tableView.separatorStyle = .none
         tableView.delegate = self
@@ -122,31 +96,72 @@ public class LoadInventoryView : UIViewController, UITableViewDataSource, UITabl
         ])
         return headerView
     }
+    // MARK: - UISearchBarDelegate
+    public func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        self.issearchtoggle = true
+        return true
+    }
+    
+     public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print("Searching: \(searchText)")
+         let filteredUsers = items.filter {
+             $0.name!.localizedCaseInsensitiveContains(searchText)
+         }
+         self.searchAds = filteredUsers
+    }
+    public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        self.issearchtoggle = false
+        self.items = self.getStockList()
+    }
    @objc func dismissView()
     {
         self.dismiss(animated: false, completion: nil)
     }
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if(issearchtoggle){
+            return searchAds.count
+        }
         return items.count
     }
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if(issearchtoggle){
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            let Adstock = searchAds[indexPath.row]
+            let name = Adstock.name ?? ""
+            cell.textLabel?.text = "\(items[indexPath.row].adId!) \(name)"
+            cell.textLabel?.font =  UIFont(name: "Roboto-Regular", size: 14)
+            return cell
+        }
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let dic = items[indexPath.item] as! NSDictionary
-        print((dic["name"] as! String))
-        cell.textLabel?.text = "\((dic["name"] as! String))"
+        let Adstock = items[indexPath.row] 
+        let name = Adstock.name ?? ""
+        cell.textLabel?.text = "\(items[indexPath.row].adId!) \(name)"
         cell.textLabel?.font =  UIFont(name: "Roboto-Regular", size: 14)
         return cell
     }
 
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let dic = items[indexPath.item] as! NSDictionary
-        delegate?.didSelectInventory(NSString(format: "%@", dic["id"] as! CVarArg) as String)
+        if(issearchtoggle){
+            let Adstock = searchAds[indexPath.row]
+            let name = Adstock.name ?? ""
+            let adID = Adstock.adId ?? ""
+            delegate?.didSelectStock(name, addID: adID)
+        }
+        else{
+            let Adstock = items[indexPath.row]
+            let name = Adstock.name ?? ""
+            let adID = Adstock.adId ?? ""
+            delegate?.didSelectStock(name, addID: adID)
+        }
+     
         dismiss(animated: true)
     }
 }
-extension LoadInventoryView : UISearchBarDelegate {
+extension StockInventoryView : UISearchBarDelegate {
     
 }

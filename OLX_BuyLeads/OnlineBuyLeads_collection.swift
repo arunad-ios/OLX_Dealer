@@ -9,14 +9,17 @@ import Foundation
 import UIKit
 
 protocol collectionCellDelegate: AnyObject {
-    func selectedCellitem(item: String)
+    func selectedCellitem(item: Int)
+    func deselectedCellitem(item: Int)
+
 }
 
 
 class OnlineBuyLeads_collection : UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     weak var delegate: collectionCellDelegate?  // ✅ Delegate Reference
 
-    
+    var keyvalues =  ["All","hotleads","Inventory",
+                      "show_archieve","show_apptfixed"] as! [String]
     static let identifier = "CustomTableViewCell"
     
     public let collectionView: UICollectionView = {
@@ -44,15 +47,16 @@ class OnlineBuyLeads_collection : UITableViewCell, UICollectionViewDelegate, UIC
     }
     
     private func setupCollectionView() {
-        contentView.backgroundColor = .clear
+        contentView.backgroundColor = .red
         contentView.addSubview(collectionView)
+        
         
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(OnlineBuyLeads_collectioncell.self, forCellWithReuseIdentifier: OnlineBuyLeads_collectioncell.identifier)
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            collectionView.topAnchor.constraint(equalTo: contentView.topAnchor,constant: 0),
             collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,constant: 10),
             collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,constant: -10),
             collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
@@ -83,10 +87,10 @@ class OnlineBuyLeads_collection : UITableViewCell, UICollectionViewDelegate, UIC
             cell.bottomArrow.isHidden = true
         }
         if selectionitems.contains(where: { ($0 as? String) == (items[indexPath.row] as! String) }) {
-            cell.checkBox.setImage(UIImage.init(named: "check"), for: .normal)
+            cell.checkBox.setImage(UIImage(named: "check", in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
         }
         else{
-            cell.checkBox.setImage(UIImage.init(named: "uncheck"), for: .normal)
+            cell.checkBox.setImage(UIImage(named: "uncheck", in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
         }
         cell.checkBox.tag = indexPath.row
         cell.checkBox.addTarget(self, action: #selector(selectionCheck), for: .touchUpInside)
@@ -100,23 +104,35 @@ class OnlineBuyLeads_collection : UITableViewCell, UICollectionViewDelegate, UIC
             if let index = selectionitems.firstIndex(where: { ($0 as? String) == (items[sender.tag] as! String) }) {
                 selectionitems.remove(at: index)
             }
+            UserDefaults.standard.set("n", forKey: keyvalues[sender.tag] as! String)
+            delegate?.deselectedCellitem(item: sender.tag)
         }
         else{
-            selectionitems.removeAll()
+            UserDefaults.standard.set("y", forKey: keyvalues[sender.tag] as! String)
             selectionitems.append(items[sender.tag] as! String)
+            delegate?.selectedCellitem(item: sender.tag)
         }
         self.collectionView.reloadData()
     }
     // MARK: - UICollectionView Delegate FlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let text = items[indexPath.item] as! String
-      //  let text = "\((dic["name"] as! String))\((dic["count"] as! CVarArg))" // Example: Get text for cell
-        let width = text.size(withAttributes: [.font: UIFont.systemFont(ofSize: 16)]).width + 50
-        return CGSize(width: width, height: 30)
+//        let text = items[indexPath.item] as! String
+//        if(indexPath.row > 2){
+//            let spacing: CGFloat = 5
+//            let totalSpacing = spacing * 2 + spacing * 2  // left + right + inter-item spacing * 2
+//            let cellwidth = (collectionView.frame.width - totalSpacing) / 2
+//            return CGSize(width: cellwidth, height: 30)
+//        }
+        let spacing: CGFloat = 5
+        let totalSpacing = spacing * 2 + spacing * 2  // left + right + inter-item spacing * 2
+        let cellwidth = (collectionView.frame.width - totalSpacing) / 3
+        return CGSize(width: cellwidth, height: 30)
+
+        
     }
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if(indexPath.row == 0){
-            delegate?.selectedCellitem(item: "")
+            delegate?.selectedCellitem(item: indexPath.row)
         }
     }
 }

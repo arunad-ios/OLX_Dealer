@@ -75,11 +75,14 @@ public class FilterTableViewController : UIViewController, UITableViewDataSource
         let headerView = UIView()
         headerView.backgroundColor = .white
         let imageview = UIImageView(frame: CGRect(x: 16, y: 0, width: 30, height: 30))
+        imageview.backgroundColor = UIColor.OLXBlueColor
+        imageview.layer.cornerRadius = imageview.frame.size.width / 2
+        imageview.layer.masksToBounds = true
         imageview.image = UIImage(named: "filter")
         headerView.addSubview(imageview)
         let titleLabel = UILabel(frame: CGRect(x: 50, y: 0, width: tableView.frame.width, height: 30))
         titleLabel.text = "Filter"
-        titleLabel.textColor = UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
+        titleLabel.textColor = UIColor.OLXBlueColor
         titleLabel.font = UIFont(name: "Roboto-Medium", size: 16)
         headerView.addSubview(titleLabel)
         return headerView

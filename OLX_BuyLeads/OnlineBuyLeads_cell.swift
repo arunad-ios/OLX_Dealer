@@ -9,7 +9,9 @@ import Foundation
 import UIKit
 
 protocol TableCellDelegate: AnyObject {
-    func collectionViewCellDidSelect(item: String)
+    func chatwithDealer(item: String)
+    func deleteCar(item: [String:Any])
+
 }
 
 class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
@@ -27,6 +29,8 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
     public var chatBtn = UIButton()
     public var editBtn = UIButton()
     public var deleteBtn = UIButton()
+    let status_category = UIButton(type: .system)
+
     var heightconstaint =  NSLayoutConstraint()
     public let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -66,7 +70,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
     func setupUI() {
         selectionStyle = .none
         contentView.backgroundColor = .clear
-//UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0)
+//OLXBlueColor
         // Name Label
         nameLabel.font = UIFont(name: "Roboto-Regular", size: 16)
         nameLabel.textColor =  UIColor.black
@@ -78,6 +82,11 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         phoneLabel.numberOfLines = 0
         phoneLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
 
+      
+
+     
+        
+        
         
         // Status Label
         statusLabel.font = UIFont(name: "Roboto-Regular", size: 14)
@@ -107,7 +116,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         separatorView.backgroundColor = .lightGray
 
         // Car Label
-        carLabel.font = UIFont.systemFont(ofSize: 14)
+        carLabel.font = UIFont(name: "Roboto-Regular", size: 14)
         carLabel.textColor =  UIColor.black
         carLabel.numberOfLines = 0
         
@@ -135,9 +144,9 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
             ])
       
         
-        chatBtn = createButton(title: "sms", color: UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0))
-        editBtn = createButton(title: "edit", color: UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0))
-        deleteBtn = createButton(title: "download", color: UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0))
+           chatBtn = createButton(title: "sms", color: UIColor.OLXBlueColor)
+           editBtn = createButton(title: "edit", color: UIColor.OLXBlueColor)
+           deleteBtn = createButton(title: "download", color: UIColor.OLXBlueColor)
              
              // Create Labels
              let label1 = createLabel(text: "Label 1")
@@ -174,7 +183,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         
         let stackView = UIStackView(arrangedSubviews: [nameLabel, visibleStackView, separatorView,dateLabel,collectionView,carLabel,bottomstackView])
         stackView.axis = .vertical
-        stackView.spacing = 0
+        stackView.spacing = 5
         contentView.addSubview(stackView)
         stackView.backgroundColor = .clear
         
@@ -190,7 +199,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
@@ -201,6 +210,20 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         stackView.layer.cornerRadius = 10
         stackView.layer.masksToBounds = true
         stackView.isUserInteractionEnabled = true
+        
+        status_category.setTitle("", for: .normal)
+        status_category.translatesAutoresizingMaskIntoConstraints = false
+        status_category.setTitleColor(.white, for: .normal)
+        contentView.addSubview(status_category)
+        
+        contentView.bringSubviewToFront(status_category)
+        
+        NSLayoutConstraint.activate([
+            status_category.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            status_category.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            status_category.widthAnchor.constraint(equalToConstant: 70),
+            status_category.heightAnchor.constraint(equalToConstant: 25)
+               ])
     }
 
     func createButton(title: String, color: UIColor) -> UIButton {
@@ -209,7 +232,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         button.setImage(image, for: .normal)
         button.isUserInteractionEnabled = true
         button.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 12)
-          button.setTitleColor(UIColor(red: 0/255, green: 71/255, blue: 149/255, alpha: 1.0), for: .normal)
+        button.setTitleColor(UIColor.OLXBlueColor, for: .normal)
           button.layer.cornerRadius = 10
           button.translatesAutoresizingMaskIntoConstraints = false
           button.widthAnchor.constraint(equalToConstant: 50).isActive = true
@@ -220,7 +243,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
       // Helper Function to Create Labels
       func createLabel(text: String) -> UILabel {
           let label = UILabel()
-          label.text = text
+          label.text = ""
           label.backgroundColor = .white
           label.textAlignment = .center
           label.textColor = .black
@@ -261,6 +284,9 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         cell.configure(title: "\((dic["make"] as! String))")
         cell.chatBtn.tag = indexPath.row
         cell.chatBtn.addTarget(self, action: #selector(chatFunction), for: .touchUpInside)
+        
+        cell.deleteBtn.tag = indexPath.row
+        cell.deleteBtn.addTarget(self, action: #selector(deleteCar), for: .touchUpInside)
         if(self.cars.count > 1){
             cell.deleteBtn.alpha = 1.0
         }
@@ -271,7 +297,12 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
     }
     @objc func chatFunction(sender : UIButton){
         let selectedItem = cars[sender.tag] as! NSDictionary
-        delegate?.collectionViewCellDidSelect(item: NSString(format: "%@", selectedItem["adId"] as! CVarArg) as String)
+        delegate?.chatwithDealer(item: NSString(format: "%@", selectedItem["adId"] as! CVarArg) as String)
+    }
+    @objc func deleteCar(sender : UIButton)
+    {
+        let selectedItem = cars[sender.tag] as! [String:Any]
+        delegate?.deleteCar(item: selectedItem)
     }
     // MARK: - UICollectionView Delegate FlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

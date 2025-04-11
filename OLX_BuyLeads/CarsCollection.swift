@@ -36,14 +36,14 @@ class CarsCollection : UICollectionViewCell {
         chatBtn.setImage(image, for: .normal)
         deleteBtn.setImage(UIImage(named: "delete", in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
         deleteBtn.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.font = UIFont.systemFont(ofSize: 12)
+        titleLabel.font = UIFont(name: "Roboto-Regular", size: 14)
         titleLabel.textColor = UIColor.black
         // Label
                
                // Create StackView
         let stackView = UIStackView(arrangedSubviews: [titleLabel, chatBtn, deleteBtn])
         stackView.axis = .horizontal // Horizontal layout
-        stackView.spacing = 10        // Space between items
+        stackView.spacing = 5        // Space between items
         stackView.distribution = .fillProportionally
         stackView.translatesAutoresizingMaskIntoConstraints = false
                
