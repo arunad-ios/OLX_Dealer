@@ -1,8 +1,19 @@
 {
   "images" : [
     {
-      "filename" : "uncheck.svg",
-      "idiom" : "universal"
+      "filename" : "uncheck.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "uncheck@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "uncheck@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
     }
   ],
   "info" : {

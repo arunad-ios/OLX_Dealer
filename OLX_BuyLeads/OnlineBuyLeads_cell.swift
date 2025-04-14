@@ -10,7 +10,7 @@ import UIKit
 
 protocol TableCellDelegate: AnyObject {
     func chatwithDealer(item: String)
-    func deleteCar(item: [String:Any])
+    func deleteCar(item: [String:Any],tag : Int)
 
 }
 
@@ -72,7 +72,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         contentView.backgroundColor = .clear
 //OLXBlueColor
         // Name Label
-        nameLabel.font = UIFont(name: "Roboto-Regular", size: 16)
+        nameLabel.font = UIFont(name: "Roboto-Medium", size: 15)
         nameLabel.textColor =  UIColor.black
         nameLabel.numberOfLines = 0
         nameLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -94,13 +94,13 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         statusLabel.numberOfLines = 1
         
         // Date Label
-        dateLabel.font = UIFont(name: "Roboto-Bold", size: 14)
+        dateLabel.font = UIFont(name: "Roboto-Regular", size: 14)
         dateLabel.numberOfLines = 0
         dateLabel.textColor =  UIColor.black
 
         // Visited Label
         visitedLabel.text = "VISITED"
-        visitedLabel.font = UIFont(name: "Roboto-Bold", size: 12)
+        visitedLabel.font = UIFont(name: "Roboto-Medium", size: 15)
         visitedLabel.textColor = .systemGreen
         visitedLabel.textAlignment = .right
 
@@ -109,7 +109,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         visibleStackView.axis = .horizontal
         visibleStackView.alignment = .center
         visibleStackView.distribution = .fillProportionally
-        visibleStackView.spacing = 10
+        visibleStackView.spacing = 2
         visibleStackView.translatesAutoresizingMaskIntoConstraints = false
         
         // Separator
@@ -133,9 +133,10 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
 
         
         //bottom View
-        bottomView.backgroundColor = .systemGray6
+        bottomView.backgroundColor =  UIColor(red: 216/255, green: 219/255, blue: 224/255, alpha: 1.0)
         bottomView.translatesAutoresizingMaskIntoConstraints = false
-        
+        bottomView.isUserInteractionEnabled = true
+     
 
         NSLayoutConstraint.activate([
             bottomView.heightAnchor.constraint(equalToConstant: 50),
@@ -162,15 +163,22 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         bottomstackView.distribution = .equalSpacing
         bottomstackView.spacing = 10
         bottomstackView.translatesAutoresizingMaskIntoConstraints = false
-        bottomstackView.backgroundColor = .systemGray6
              
         bottomView.addSubview(bottomstackView)
+        
+        bottomstackView.layer.cornerRadius = 12
+        bottomstackView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        bottomstackView.layer.masksToBounds = true
+        bottomstackView.backgroundColor =   UIColor(red: 216/255, green: 219/255, blue: 224/255, alpha: 1.0)
+
         
         bottomView.isUserInteractionEnabled = true
         
       NSLayoutConstraint.activate([
        label1.widthAnchor.constraint(equalToConstant: 1),
        label2.widthAnchor.constraint(equalToConstant: 1),
+       label1.heightAnchor.constraint(equalToConstant: 46),
+       label2.heightAnchor.constraint(equalToConstant: 46),
        label3.widthAnchor.constraint(equalToConstant: 0),
        label4.widthAnchor.constraint(equalToConstant: 0),
        // Only one height constraint
@@ -189,8 +197,10 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         
         NSLayoutConstraint.activate([
              nameLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 5),
+             nameLabel.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 10),
             separatorView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 0),
             bottomstackView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 0),
+             visitedLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor,constant: -5)
             // Only one height constraint
             ])
        
@@ -199,30 +209,40 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -15),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             separatorView.heightAnchor.constraint(equalToConstant: 1),
            // visitedLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
         ])
+//        stackView.backgroundColor = .white
+//        stackView.layer.cornerRadius = 10
+//        stackView.layer.masksToBounds = true
+//        stackView.isUserInteractionEnabled = true
+        
+        stackView.layer.cornerRadius = 12
+        stackView.layer.shadowColor = UIColor.darkGray.cgColor
+        stackView.layer.shadowOpacity = 0.5
+        stackView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        stackView.layer.shadowRadius = 4
+        stackView.layer.masksToBounds = false
         stackView.backgroundColor = .white
-        stackView.layer.cornerRadius = 10
-        stackView.layer.masksToBounds = true
-        stackView.isUserInteractionEnabled = true
         
         status_category.setTitle("", for: .normal)
         status_category.translatesAutoresizingMaskIntoConstraints = false
         status_category.setTitleColor(.white, for: .normal)
+        status_category.titleLabel?.font = UIFont(name: "Roboto-Bold", size: 12)
         contentView.addSubview(status_category)
-        
+        status_category.contentHorizontalAlignment = .center
+
         contentView.bringSubviewToFront(status_category)
         
         NSLayoutConstraint.activate([
-            status_category.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            status_category.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            status_category.widthAnchor.constraint(equalToConstant: 70),
-            status_category.heightAnchor.constraint(equalToConstant: 25)
+            status_category.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
+            status_category.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            status_category.widthAnchor.constraint(equalToConstant: 75),
+            status_category.heightAnchor.constraint(equalToConstant: 45)
                ])
     }
 
@@ -243,7 +263,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
       // Helper Function to Create Labels
       func createLabel(text: String) -> UILabel {
           let label = UILabel()
-          label.text = ""
+          label.text = " "
           label.backgroundColor = .white
           label.textAlignment = .center
           label.textColor = .black
@@ -255,16 +275,17 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         nameLabel.text = "\(name)(\(phonenumber))"
         statusLabel.text = status
         dateLabel.text =  "Inquired Cars"
+        dateLabel.textColor = .black
       //  carLabel.text = cars
         phoneLabel.text = ""
         self.cars = cars
         self.collectionView.reloadData()
         self.updateCollectionViewHeight()
         if(phonenumber.count != 0){
-            let coloredText = NSMutableAttributedString(string: "\(name)(\(phonenumber))")
+            let coloredText = NSMutableAttributedString(string: "\(name) (\(phonenumber))")
             // 3️⃣ Apply Color to Part of the Text
             coloredText.addAttribute(.foregroundColor, value: UIColor.black, range: NSRange(location: 0, length: name.count)) // "Hello" in blue
-            coloredText.addAttribute(.foregroundColor, value: UIColor.systemBlue, range: NSRange(location: name.count, length: phonenumber.count+2))  // "Swift" in red
+            coloredText.addAttribute(.foregroundColor, value: UIColor(red: 33.0/255.0, green: 44.0/255.0, blue: 243.0/255.0, alpha: 1.0), range: NSRange(location: name.count+1, length: phonenumber.count+2))  // "Swift" in red
             nameLabel.attributedText = coloredText
         }
     }
@@ -302,7 +323,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
     @objc func deleteCar(sender : UIButton)
     {
         let selectedItem = cars[sender.tag] as! [String:Any]
-        delegate?.deleteCar(item: selectedItem)
+        delegate?.deleteCar(item: selectedItem,tag: collectionView.tag)
     }
     // MARK: - UICollectionView Delegate FlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

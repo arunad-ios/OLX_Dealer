@@ -50,9 +50,8 @@ extension UIApplication {
 extension UIColor {
     
     class  var OLXBlueColor : UIColor {
-        return UIColor(red: 0.0/255.0, green: 71.0/255.0, blue: 149.0/255.0, alpha: 1.0)
+        return UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
     }
-    
     class  var CTERedColor: UIColor {
         return UIColor(red: 0.0/255.0, green: 57.0/255.0, blue: 111.0/255.0, alpha: 1.0)
     }
@@ -80,6 +79,13 @@ extension UIColor {
     }
 
 }
+
+extension UIImage {
+    static func named(_ name: String) -> UIImage? {
+        return UIImage(named: name, in: .buyLeadsBundle, compatibleWith: nil)
+    }
+}
+
 @objc extension UIFont {
     
     class  func RobotoBold(fontsize : CGFloat) -> UIFont {

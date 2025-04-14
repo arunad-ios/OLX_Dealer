@@ -88,8 +88,8 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads_cell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "271"
-            endingLineNumber = "271"
+            startingLineNumber = "292"
+            endingLineNumber = "292"
             landmarkName = "updateCollectionViewHeight()"
             landmarkType = "7">
          </BreakpointContent>
@@ -104,8 +104,8 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads_cell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "255"
-            endingLineNumber = "255"
+            startingLineNumber = "275"
+            endingLineNumber = "275"
             landmarkName = "configure(name:status:date:cars:phonenumber:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -120,10 +120,10 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "760"
-            endingLineNumber = "760"
-            landmarkName = "calltoBuyLead(sender:)"
-            landmarkType = "7">
+            startingLineNumber = "932"
+            endingLineNumber = "932"
+            landmarkName = "OnlineBuyLeads"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -136,8 +136,8 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads_cell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "228"
-            endingLineNumber = "228"
+            startingLineNumber = "248"
+            endingLineNumber = "248"
             landmarkName = "OnlineBuyLeads_cell"
             landmarkType = "3">
          </BreakpointContent>
@@ -152,8 +152,8 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads_cell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "227"
-            endingLineNumber = "227"
+            startingLineNumber = "247"
+            endingLineNumber = "247"
             landmarkName = "setupUI()"
             landmarkType = "7">
          </BreakpointContent>
@@ -168,10 +168,10 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "429"
-            endingLineNumber = "429"
-            landmarkName = "OnlineBuyLeads"
-            landmarkType = "3">
+            startingLineNumber = "461"
+            endingLineNumber = "461"
+            landmarkName = "fetchBuyLeads()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -184,8 +184,8 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "408"
-            endingLineNumber = "408"
+            startingLineNumber = "439"
+            endingLineNumber = "439"
             landmarkName = "fetchBuyLeads()"
             landmarkType = "7">
          </BreakpointContent>
@@ -200,8 +200,8 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "395"
-            endingLineNumber = "395"
+            startingLineNumber = "425"
+            endingLineNumber = "425"
             landmarkName = "fetchBuyLeads()"
             landmarkType = "7">
          </BreakpointContent>
@@ -216,9 +216,9 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "372"
-            endingLineNumber = "372"
-            landmarkName = "fetchBuyLeads()"
+            startingLineNumber = "402"
+            endingLineNumber = "402"
+            landmarkName = "loadModels()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -232,8 +232,8 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "219"
-            endingLineNumber = "219"
+            startingLineNumber = "255"
+            endingLineNumber = "255"
             landmarkName = "synchHomeAPI()"
             landmarkType = "7">
          </BreakpointContent>
@@ -248,9 +248,9 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "774"
-            endingLineNumber = "774"
-            landmarkName = "collectionViewCellDidSelect(item:)"
+            startingLineNumber = "946"
+            endingLineNumber = "946"
+            landmarkName = "calltoBuyLead(sender:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -264,9 +264,9 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "776"
-            endingLineNumber = "776"
-            landmarkName = "collectionViewCellDidSelect(item:)"
+            startingLineNumber = "948"
+            endingLineNumber = "948"
+            landmarkName = "calltoBuyLead(sender:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -305,22 +305,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "1B045DFE-2B64-4662-9151-146C858B5A69"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "797"
-            endingLineNumber = "797"
-            landmarkName = "deleteCar(item:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "C9DA0A25-BAA9-42C2-B911-246B82959462"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -337,38 +321,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "14DA3A19-5DD7-45F0-9865-4F18818894DC"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "305"
-            endingLineNumber = "305"
-            landmarkName = "loadCities()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "74444B61-1B0F-482E-84E8-11AD911E6E56"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "303"
-            endingLineNumber = "303"
-            landmarkName = "loadCities()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "226C8922-B7E3-46FE-A92F-A43C406488FF"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -376,8 +328,8 @@
             filePath = "OLX_BuyLeads/OnlineBuyLead_Edit.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1129"
-            endingLineNumber = "1129"
+            startingLineNumber = "1161"
+            endingLineNumber = "1161"
             landmarkName = "updatebuylead()"
             landmarkType = "7">
          </BreakpointContent>
@@ -392,8 +344,8 @@
             filePath = "OLX_BuyLeads/OnlineBuyLead_Edit.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1130"
-            endingLineNumber = "1130"
+            startingLineNumber = "1162"
+            endingLineNumber = "1162"
             landmarkName = "updatebuylead()"
             landmarkType = "7">
          </BreakpointContent>
@@ -433,22 +385,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "208CDC96-F7CF-4A08-9190-9A1EBC790ADE"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "796"
-            endingLineNumber = "796"
-            landmarkName = "deleteCar(item:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "985D5AD8-DB8D-4FAF-8767-E383B5FD2248"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -456,8 +392,8 @@
             filePath = "OLX_BuyLeads/DataBase/InventorySaveDataIntoDB.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "28"
-            endingLineNumber = "28"
+            startingLineNumber = "20"
+            endingLineNumber = "20"
             landmarkName = "saveleadsandsubleadsIntoDB(response:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -472,8 +408,8 @@
             filePath = "OLX_BuyLeads/OnlineBuyLead_Edit.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1073"
-            endingLineNumber = "1073"
+            startingLineNumber = "1076"
+            endingLineNumber = "1076"
             landmarkName = "getFormValues()"
             landmarkType = "7">
          </BreakpointContent>
@@ -488,8 +424,8 @@
             filePath = "OLX_BuyLeads/OnlineBuyLead_Edit.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1110"
-            endingLineNumber = "1110"
+            startingLineNumber = "1142"
+            endingLineNumber = "1142"
             landmarkName = "updatebuylead()"
             landmarkType = "7">
          </BreakpointContent>
@@ -504,8 +440,8 @@
             filePath = "OLX_BuyLeads/OnlineBuyLead_Edit.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "699"
-            endingLineNumber = "699"
+            startingLineNumber = "693"
+            endingLineNumber = "693"
             landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -520,8 +456,8 @@
             filePath = "OLX_BuyLeads/SendSMSPopupViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "161"
-            endingLineNumber = "161"
+            startingLineNumber = "166"
+            endingLineNumber = "166"
             landmarkName = "toggleDropdown(sender:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -536,8 +472,8 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "592"
-            endingLineNumber = "592"
+            startingLineNumber = "603"
+            endingLineNumber = "603"
             landmarkName = "setupTableView()"
             landmarkType = "7">
          </BreakpointContent>
@@ -568,8 +504,8 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "143"
-            endingLineNumber = "143"
+            startingLineNumber = "179"
+            endingLineNumber = "179"
             landmarkName = "dealerDetails()"
             landmarkType = "7">
          </BreakpointContent>
@@ -584,8 +520,8 @@
             filePath = "OLX_BuyLeads/BuyLeadStatus_update.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "271"
-            endingLineNumber = "271"
+            startingLineNumber = "274"
+            endingLineNumber = "274"
             landmarkName = "loadbuylead()"
             landmarkType = "7">
          </BreakpointContent>
@@ -600,8 +536,8 @@
             filePath = "OLX_BuyLeads/BuyLeadStatus_update.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "260"
-            endingLineNumber = "260"
+            startingLineNumber = "263"
+            endingLineNumber = "263"
             landmarkName = "loadbuylead()"
             landmarkType = "7">
          </BreakpointContent>
@@ -616,9 +552,233 @@
             filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "215"
-            endingLineNumber = "215"
+            startingLineNumber = "251"
+            endingLineNumber = "251"
             landmarkName = "synchHomeAPI()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0092423C-BE07-4D7A-8FF7-535367B61422"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OLX_BuyLeads/StockInventoryView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "102"
+            endingLineNumber = "102"
+            landmarkName = "searchBarShouldBeginEditing(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7AC0C6AA-BCCC-42FB-8F2A-99B41DBF6536"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OLX_BuyLeads/StockInventoryView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "107"
+            endingLineNumber = "107"
+            landmarkName = "searchBar(_:textDidChange:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2901A917-8540-49E5-81AE-63F550350B05"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "975"
+            endingLineNumber = "975"
+            landmarkName = "chatwithDealer(item:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "570AE991-BA80-4886-A8B9-20634AD99F0D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OLX_BuyLeads/OnlineBuyLeads_cell.swift"
+            startingColumnNumber = "27"
+            endingColumnNumber = "27"
+            startingLineNumber = "153"
+            endingLineNumber = "153"
+            landmarkName = "setupUI()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5321E0CF-1B5F-4A9A-AF02-4EB1A2D6300F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "973"
+            endingLineNumber = "973"
+            landmarkName = "chatwithDealer(item:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3E5FCD1C-E5CE-4FBF-B412-D3698823A6B8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "426"
+            endingLineNumber = "426"
+            landmarkName = "fetchBuyLeads()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0E43E2C6-A262-4C3F-B5C9-CBA19F4A0EEC"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "763"
+            endingLineNumber = "763"
+            landmarkName = "deselectedCellitem(item:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A58E86E2-6A67-47F1-A74F-9BFFE2AD1699"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OLX_BuyLeads/OnlineBuyLead_Edit.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1114"
+            endingLineNumber = "1114"
+            landmarkName = "updatebuylead()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D411C9B4-0E0F-4FF2-8DAC-365B2FA45A8C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OLX_BuyLeads/BuyLeadStatus_update.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "559"
+            endingLineNumber = "559"
+            landmarkName = "updatebuylead()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7039A3A4-C849-4101-B232-E120D691E361"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "339"
+            endingLineNumber = "339"
+            landmarkName = "loadCities()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "50AA23FA-1B7C-41F4-8B90-3A6AD784442F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OLX_BuyLeads/OnlineBuyLeads.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "864"
+            endingLineNumber = "864"
+            landmarkName = "deleteDealerCar(carid:buyLead_id:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "68005366-F598-496F-A1FC-9252ED824819"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OLX_BuyLeads/OnlineBuyLead_Edit.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "705"
+            endingLineNumber = "705"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "27C1021D-A86A-40C9-9487-57C95E996447"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OLX_BuyLeads/BuyLeadStatus_update.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "322"
+            endingLineNumber = "322"
+            landmarkName = "tableView(_:cellForRowAt:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "90D5C931-AB34-45F9-A3E2-FEED88F11FF9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OLX_BuyLeads/BuyLeadStatus_update.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "321"
+            endingLineNumber = "321"
+            landmarkName = "tableView(_:cellForRowAt:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

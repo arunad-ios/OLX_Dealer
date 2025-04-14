@@ -32,12 +32,13 @@ class CarsCollection : UICollectionViewCell {
        
         chatBtn.translatesAutoresizingMaskIntoConstraints = false
       
-        let image = UIImage(named: "chat", in: .buyLeadsBundle, compatibleWith: nil)
+        let image = UIImage.named( "chat")
         chatBtn.setImage(image, for: .normal)
-        deleteBtn.setImage(UIImage(named: "delete", in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
+        deleteBtn.setImage(UIImage.named( "delete"), for: .normal)
         deleteBtn.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = UIFont(name: "Roboto-Regular", size: 14)
         titleLabel.textColor = UIColor.black
+        titleLabel.textAlignment = .left
         // Label
                
                // Create StackView
@@ -51,14 +52,15 @@ class CarsCollection : UICollectionViewCell {
         contentView.addSubview(stackView)
                
         NSLayoutConstraint.activate([
-            chatBtn.widthAnchor.constraint(equalToConstant: 25),
-            chatBtn.heightAnchor.constraint(equalToConstant: 25),
-            deleteBtn.widthAnchor.constraint(equalToConstant: 25),
-            deleteBtn.heightAnchor.constraint(equalToConstant: 25)
+            chatBtn.widthAnchor.constraint(equalToConstant: 30),
+            chatBtn.heightAnchor.constraint(equalToConstant: 30),
+            deleteBtn.widthAnchor.constraint(equalToConstant: 30),
+            deleteBtn.heightAnchor.constraint(equalToConstant: 30),
             ])
                // Constraints
                NSLayoutConstraint.activate([
                 stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            //    stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
                 stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
                    stackView.widthAnchor.constraint(equalToConstant: 300),
                    stackView.heightAnchor.constraint(equalToConstant: 30)

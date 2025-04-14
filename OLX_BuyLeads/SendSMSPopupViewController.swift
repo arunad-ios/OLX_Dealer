@@ -96,33 +96,38 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
         templateTextField.contentHorizontalAlignment = .left
         templateTextField.backgroundColor = UIColor(red: 243/255, green: 245/255, blue: 246/255, alpha: 1.0)
         
+     
+        
         inventoryButton.addTarget(self, action: #selector(showinventoryView), for: .touchUpInside)
         inventoryButton.setTitleColor(.black, for: .normal)
         inventoryButton.setTitle("Select Inventory", for: .normal)
         inventoryButton.layer.cornerRadius = 5
         inventoryButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 12)
-
+        
+      
         popupView.addSubview(inventoryButton)
         inventoryButton.contentHorizontalAlignment = .left
-        inventoryButton.backgroundColor = UIColor(red: 243/255, green: 245/255, blue: 246/255, alpha: 1.0)
+        inventoryButton.backgroundColor =  UIColor(red: 243/255, green: 245/255, blue: 246/255, alpha: 1.0)
         
         inventoryButtonHeightConstraint = inventoryButton.heightAnchor.constraint(equalToConstant: 0)
         inventoryButtonHeightConstraint.isActive = true
         inventoryButton.isHidden = true
      
         messageTextView.layer.borderColor = UIColor.lightGray.cgColor
-        messageTextView.layer.borderWidth = 1
-        messageTextView.layer.cornerRadius = 6
+     //   messageTextView.layer.borderWidth = 1
+        messageTextView.layer.cornerRadius = 3
         messageTextView.font = UIFont.systemFont(ofSize: 16)
+        messageTextView.backgroundColor =  UIColor(red: 243/255, green: 245/255, blue: 246/255, alpha: 1.0)
         popupView.addSubview(messageTextView)
         messageTextView.font = UIFont(name: "Roboto-Regular", size: 12)
 
         cancelButton.setTitle("CANCEL", for: .normal)
         cancelButton.setTitleColor(.systemBlue, for: .normal)
         cancelButton.backgroundColor = .white
-        cancelButton.layer.borderColor = UIColor.systemBlue.cgColor
-        cancelButton.layer.borderWidth = 1
-        cancelButton.layer.cornerRadius = 8
+        cancelButton.layer.borderColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0).cgColor
+        cancelButton.setTitleColor(UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0), for: .normal)
+        cancelButton.layer.borderWidth = 2
+        cancelButton.layer.cornerRadius = 5
         cancelButton.titleLabel?.font = UIFont(name: "Roboto-Bold", size: 14)
 
         cancelButton.addTarget(self, action: #selector(dismissPopup), for: .touchUpInside)
@@ -130,8 +135,8 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
 
         sendButton.setTitle("SEND", for: .normal)
         sendButton.setTitleColor(.white, for: .normal)
-        sendButton.backgroundColor = .systemBlue
-        sendButton.layer.cornerRadius = 8
+        sendButton.backgroundColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
+        sendButton.layer.cornerRadius = 5
         sendButton.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
         popupView.addSubview(sendButton)
         sendButton.titleLabel?.font = UIFont(name: "Roboto-Bold", size: 14)
@@ -177,16 +182,16 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
                     self.messageTextView.text = "Dear \(self.items["contact_name"] as! String)"
                 }
                 if(selected == "Booking"){
-                    self.messageTextView.text = "Dear \(self.items["contact_name"] as! String), Thanks for your car booking at our showroom. Please feel free to call at any time. Regards,\n \(String(describing: self.dealerinfo?.name))"
+                    self.messageTextView.text = "Dear \(self.items["contact_name"] as! String), Thanks for your car booking at our showroom. Please feel free to call at any time. \nRegards,\n \(self.dealerinfo?.name ?? "")"
                 }
                 if(selected == "Customer Feedback"){
-                    self.messageTextView.text = "Dear Customer,\n\nThank you for choosing {Dealer ship Name}. Please give your valuable feedback on {Tiny Link}\n\nRegards,\n \(String(describing: self.dealerinfo?.name))"
+                    self.messageTextView.text = "Dear Customer,\n\nThank you for choosing {Dealer ship Name}. Please give your valuable feedback on https://www.olx.in/profile/\(MyPodManager.user_id)\n\nRegards,\n \(self.dealerinfo?.name ?? "")"
                 }
                 if(selected == "Thank you"){
-                    self.messageTextView.text = "Dear \(self.items["contact_name"] as! String), Thank you for our phone call just now. Please feel free to call for any future assistance. Regards, \n \(String(describing: self.dealerinfo?.name))"
+                    self.messageTextView.text = "Dear \(self.items["contact_name"] as! String), Thank you for our phone call just now. Please feel free to call for any future assistance. \nRegards, \n \(self.dealerinfo?.name ?? "")"
                 }
                 if(selected == "Visit"){
-                    self.messageTextView.text = "Dear \(self.items["contact_name"] as! String), Thank you for visiting our showroom. We look forward to hearing from you soon. Regards,\n \(String(describing: self.dealerinfo?.name))"
+                    self.messageTextView.text = "Dear \(self.items["contact_name"] as! String), Thank you for visiting our showroom. We look forward to hearing from you soon. \nRegards,\n \(self.dealerinfo?.name ?? "")"
                 }
             }
         }
@@ -206,16 +211,16 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
             popupView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
 
             iconImageView.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 10),
-            iconImageView.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 20),
+            iconImageView.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 5),
             iconImageView.heightAnchor.constraint(equalToConstant: 30),
 
-            titleLabel.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 20),
+            titleLabel.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 10),
             titleLabel.leadingAnchor.constraint(equalTo: iconImageView.leadingAnchor, constant: 30),
             titleLabel.centerXAnchor.constraint(equalTo: popupView.centerXAnchor),
             
 
             contactLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
-            contactLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: 10),
+            contactLabel.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 10),
 
             
             templateTextField.topAnchor.constraint(equalTo: contactLabel.bottomAnchor, constant: 20),
@@ -227,15 +232,15 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
             templetIconImageView.topAnchor.constraint(equalTo: contactLabel.topAnchor, constant: 20),
             templetIconImageView.heightAnchor.constraint(equalToConstant: 30),
             templetIconImageView.widthAnchor.constraint(equalToConstant: 30),
+            
+            
 
 
-            inventoryButton.topAnchor.constraint(equalTo: templateTextField.bottomAnchor, constant: 20),
+            inventoryButton.topAnchor.constraint(equalTo: templateTextField.bottomAnchor, constant: 10),
             inventoryButton.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 16),
             inventoryButton.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -16),
 //            inventoryButton.heightAnchor.constraint(equalToConstant: inventoryButtonHeightConstraint.constant),
             
-          
-
             messageTextView.topAnchor.constraint(equalTo: inventoryButton.bottomAnchor, constant: 10),
             messageTextView.leadingAnchor.constraint(equalTo: templateTextField.leadingAnchor),
             messageTextView.trailingAnchor.constraint(equalTo: templateTextField.trailingAnchor),
@@ -252,6 +257,14 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
             sendButton.widthAnchor.constraint(equalTo: cancelButton.widthAnchor),
             sendButton.leadingAnchor.constraint(equalTo: cancelButton.trailingAnchor, constant: 16)
         ])
+        
+        let inventoryimageView = UIImageView(image:  UIImage.named("downarrow"))
+        inventoryimageView.frame = CGRect(x: self.view.frame.size.width-30, y: 15, width: 20, height: 20)
+        inventoryButton.addSubview(inventoryimageView)
+        
+        let imageView = UIImageView(image:  UIImage.named("downarrow"))
+        imageView.frame = CGRect(x:  self.view.frame.size.width - 30, y: 15, width: 20, height: 20)
+        templateTextField.addSubview(imageView)
     }
     @objc func showinventoryView()
      {
@@ -281,30 +294,6 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
         } else {
             print("Device cannot send SMS.")
         }
-        
-        
-//        dismiss(animated: true, completion: nil)
-//        let parameters = [
-//          "action":"smsclicks",
-//         "regno":"",
-//          "template":self.templateTextField.titleLabel?.text ?? "",
-//         "api_id":"cteolx2024v1.0",
-//         "device_id":"4fee41be780ae0e7",
-//         "mobile":"",
-//         "sms_name": self.items["contact_name"] as! String,
-//          "message": self.messageTextView.text ?? "",
-//         "action_click":"n",
-//         "lead_mobile":self.items["mobile"] as! String,
-//         "share_home":"y",
-//         "lead_type":"2",
-//         "msg_res":"",
-//          "lead_id":self.items["buylead_id"] as! String,
-//          "inventory_id":inventoryid,
-//           "car_id":1485,
-//          "dealer_id":MyPodManager.user_id
-//        ] as! [String:Any]
-        
-        
     }
 }
 extension SendSMSPopupViewController: StockTableViewDelegate {
@@ -313,10 +302,10 @@ extension SendSMSPopupViewController: StockTableViewDelegate {
         print("Selected item: \(name)")
         self.inventoryButton.setTitle(name, for: .normal)
             if(templateTextField.titleLabel?.text == "Appointment fixed"){
-                self.messageTextView.text = "Dear \(self.items["contact_name"] as! String), Thank you for contacting us. Your appointment for \(name) has been fixed {Appointment Time}. Our address is {Dealer Address} \r\nFor any queries, please call. \(String(describing: dealerinfo?.name))-\(String(describing: dealerinfo?.mobile))."
+                self.messageTextView.text = "Dear \(self.items["contact_name"] as! String), Thank you for contacting us. Your appointment for \(name) has been fixed. Our address is \(self.dealerinfo?.address ?? "") \r\nFor any queries, please call. \(self.dealerinfo?.name ?? "")-\(self.dealerinfo?.mobile ?? "")."
                }
             if(templateTextField.titleLabel?.text == "Uncontactable"){
-                self.messageTextView.text = "Dear \(self.items["contact_name"] as! String), we tried to reach you for your enquiry about our \(name). We would be happy to help you in your car buying process. Please feel free to call for any assistance. Regards, \(String(describing: dealerinfo?.name))-\(String(describing: dealerinfo?.mobile))"
+                self.messageTextView.text = "Dear \(self.items["contact_name"] as! String), we tried to reach you for your enquiry about our \(name). We would be happy to help you in your car buying process. Please feel free to call for any assistance. \nRegards, \(self.dealerinfo?.name ?? "")-\(self.dealerinfo?.mobile ?? "")"
               }
         }
 }

@@ -17,6 +17,8 @@ public class LoadInventoryView : UIViewController, UITableViewDataSource, UITabl
 
     private let tableView = UITableView()
     public var items: [Any] = []
+    public var searchAds : [Any] = []
+    var issearchtoggle = false
 
     public override func viewDidLoad() {
         self.view.backgroundColor = .white
@@ -38,7 +40,7 @@ public class LoadInventoryView : UIViewController, UITableViewDataSource, UITabl
         let parameters = [
             "action": "loadallematchinventory",
             "api_id": "cteolx2024v1.0",
-            "device_id":"4fee41be780ae0e7",
+            "device_id":Constant.uuid,
             "dealer_id":MyPodManager.user_id
         ] as! [String:Any]
         let api = ApiServices()
@@ -88,28 +90,28 @@ public class LoadInventoryView : UIViewController, UITableViewDataSource, UITabl
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
         headerView.backgroundColor = .white
-        let imageview = UIImageView(frame: CGRect(x: 16, y: 0, width: 30, height: 30))
-        imageview.backgroundColor = UIColor.OLXBlueColor
+        let imageview = UIImageView(frame: CGRect(x: 16, y: 10, width: 30, height: 30))
         imageview.layer.cornerRadius = imageview.frame.size.width / 2
+        imageview.backgroundColor = UIColor(red: 243/255, green: 245/255, blue: 246/255, alpha: 1.0)
         imageview.layer.masksToBounds = true
-        imageview.image = UIImage(named: "filter")
+        imageview.image = UIImage.named("filter")
         headerView.addSubview(imageview)
-        let titleLabel = UILabel(frame: CGRect(x: 50, y: 0, width: tableView.frame.width, height: 30))
+        let titleLabel = UILabel(frame: CGRect(x: 50, y: 10, width: tableView.frame.width, height: 30))
         titleLabel.text = "Inventory Cars"
         titleLabel.textColor = UIColor.OLXBlueColor
         titleLabel.font = UIFont(name: "Roboto-Medium", size: 16)
         headerView.addSubview(titleLabel)
         
         let button = UIButton(type: .custom)
-        button.frame = CGRect(x: tableView.frame.width - 30, y: 0, width: 25, height: 25)
-        let image = UIImage(named: "close", in: .buyLeadsBundle, compatibleWith: nil)
+        button.frame = CGRect(x: tableView.frame.width - 50, y: 10, width: 25, height: 25)
+        let image = UIImage.named("close")
         button.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         button.setImage(image, for: .normal)
         button.isUserInteractionEnabled = true
         headerView.addSubview(button)
         
         searchBar.delegate = self
-        searchBar.placeholder = "Search"
+        searchBar.placeholder = "Search for Inventory Car"
         searchBar.showsCancelButton = false
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         headerView.addSubview(searchBar)
@@ -122,17 +124,53 @@ public class LoadInventoryView : UIViewController, UITableViewDataSource, UITabl
         ])
         return headerView
     }
+    
+    // MARK: - UISearchBarDelegate
+    public func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        self.issearchtoggle = true
+        return true
+    }
+    
+     public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+       // print("Searching: \(searchText)")
+         if(searchText.count == 0){
+             self.searchAds = self.items
+         }
+         else{
+             let predicate = NSPredicate(format: "name CONTAINS[cd] %@", searchText)
+             let filtered = items.filter { predicate.evaluate(with: $0) }
+             self.searchAds = filtered
+         }
+         self.tableView.reloadData()
+    }
+    public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        self.issearchtoggle = false
+        self.tableView.reloadData()
+    }
+    
    @objc func dismissView()
     {
         self.dismiss(animated: false, completion: nil)
     }
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if(issearchtoggle){
+            return searchAds.count
+        }
         return items.count
     }
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if(issearchtoggle){
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            let dic = searchAds[indexPath.item] as! NSDictionary
+            print((dic["name"] as! String))
+            cell.textLabel?.text = "\((dic["name"] as! String))"
+            cell.textLabel?.font =  UIFont(name: "Roboto-Regular", size: 14)
+            return cell
+        }
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let dic = items[indexPath.item] as! NSDictionary
         print((dic["name"] as! String))
@@ -142,8 +180,14 @@ public class LoadInventoryView : UIViewController, UITableViewDataSource, UITabl
     }
 
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let dic = items[indexPath.item] as! NSDictionary
-        delegate?.didSelectInventory(NSString(format: "%@", dic["id"] as! CVarArg) as String)
+        if(issearchtoggle){
+            let dic = searchAds[indexPath.item] as! NSDictionary
+            delegate?.didSelectInventory(NSString(format: "%@", dic["id"] as! CVarArg) as String)
+        }
+        else{
+            let dic = items[indexPath.item] as! NSDictionary
+            delegate?.didSelectInventory(NSString(format: "%@", dic["id"] as! CVarArg) as String)
+        }
         dismiss(animated: true)
     }
 }

@@ -62,20 +62,21 @@ public class StockInventoryView : UIViewController, UITableViewDataSource, UITab
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
         headerView.backgroundColor = .white
-        let imageview = UIImageView(frame: CGRect(x: 16, y: 0, width: 30, height: 30))
-        imageview.backgroundColor = UIColor.OLXBlueColor
+        let imageview = UIImageView(frame: CGRect(x: 16, y: 10, width: 30, height: 30))
         imageview.layer.cornerRadius = imageview.frame.size.width / 2
+        imageview.backgroundColor = UIColor(red: 243/255, green: 245/255, blue: 246/255, alpha: 1.0)
         imageview.layer.masksToBounds = true
-        imageview.image = UIImage(named: "filter")
+        imageview.image = UIImage(named: "filter", in: .buyLeadsBundle, compatibleWith: nil)
         headerView.addSubview(imageview)
-        let titleLabel = UILabel(frame: CGRect(x: 50, y: 0, width: tableView.frame.width, height: 30))
+        let titleLabel = UILabel(frame: CGRect(x: 50, y: 10, width: tableView.frame.width, height: 30))
         titleLabel.text = "Inventory Cars"
         titleLabel.textColor = UIColor.OLXBlueColor
-        titleLabel.font = UIFont(name: "Roboto-Medium", size: 16)
+        titleLabel.font = .RobotoMedium(fontsize: 16)
         headerView.addSubview(titleLabel)
         
+        
         let button = UIButton(type: .custom)
-        button.frame = CGRect(x: tableView.frame.width - 30, y: 0, width: 25, height: 25)
+        button.frame = CGRect(x: tableView.frame.width - 50, y: 10, width: 25, height: 25)
         let image = UIImage(named: "close", in: .buyLeadsBundle, compatibleWith: nil)
         button.addTarget(self, action: #selector(dismissView), for: .touchUpInside)
         button.setImage(image, for: .normal)
@@ -83,7 +84,7 @@ public class StockInventoryView : UIViewController, UITableViewDataSource, UITab
         headerView.addSubview(button)
         
         searchBar.delegate = self
-        searchBar.placeholder = "Search"
+        searchBar.placeholder = "Search for Inventory Car"
         searchBar.showsCancelButton = false
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         headerView.addSubview(searchBar)
@@ -107,12 +108,20 @@ public class StockInventoryView : UIViewController, UITableViewDataSource, UITab
          let filteredUsers = items.filter {
              $0.name!.localizedCaseInsensitiveContains(searchText)
          }
-         self.searchAds = filteredUsers
+         if(searchText.count == 0){
+             self.searchAds = self.items
+         }
+         else{
+             self.searchAds = filteredUsers
+         }
+         self.tableView.reloadData()
     }
     public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         self.issearchtoggle = false
         self.items = self.getStockList()
+        self.tableView.reloadData()
+
     }
    @objc func dismissView()
     {

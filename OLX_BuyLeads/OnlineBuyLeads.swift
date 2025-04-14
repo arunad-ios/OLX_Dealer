@@ -14,10 +14,13 @@ struct DealerInfo: Codable {
     let name: String
     let email: String
     let mobile: String
+    let address : String
 }
 
 
 public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewDataSource,TableCellDelegate,collectionCellDelegate,UISearchBarDelegate {
+  
+    
    
     
     private let apiService = ApiServices()
@@ -25,7 +28,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     private let tableView = UITableView()
     private var Buyleads = NSArray()
     private var data : [Any] = ["All","Hot","Inv Car","Archive","Appointment Fixed"]
-    private var errorView: ErrorView?
     private var apidata : [Any] = []
     var status = ""
     var inventoryId = ""
@@ -45,22 +47,40 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         
         super.viewDidLoad()
         
-        if let appDomain = Bundle.main.bundleIdentifier {
-            UserDefaults.standard.removePersistentDomain(forName: appDomain)
-            UserDefaults.standard.synchronize()
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchBuyLeads), name: Notification.Name("refreshLeads"), object: nil)
+
+        if let frameworkDefaults = UserDefaults(suiteName: "com.Samplepod.OLX-BuyLeads") {
+            frameworkDefaults.removePersistentDomain(forName: "com.Samplepod.OLX-BuyLeads")
+            frameworkDefaults.synchronize()
         }
-        
         FontLoader.registerFonts()
         self.title = "Online Buy Leads"
         navigationController?.navigationBar.titleTextAttributes = [
                 .foregroundColor: UIColor.white, // Title text color
-                .font: UIFont(name: "Roboto-Bold", size: 14) // Custom font and size
+                .font: UIFont(name: "Roboto-Medium", size: 18)! // Custom font and size
             ]
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.backgroundColor = UIColor.OLXBlueColor
-        view.backgroundColor = .white
+      
         
+        if let statusBarFrame = UIApplication.shared.windows.first?.windowScene?.statusBarManager?.statusBarFrame {
+            let statusBarView = UIView(frame: statusBarFrame)
+            statusBarView.backgroundColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
+            UIApplication.shared.windows.first?.addSubview(statusBarView)
+        }
+       
+        navigationController?.navigationBar.isTranslucent = false
+        
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground() // or .configureWithTransparentBackground()
+        appearance.backgroundColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)// or any color
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white] // 👈 Title color here
+        appearance.shadowColor = .clear // 🔥 removes the bottom line
+
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.backgroundColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
+        view.backgroundColor = .white
         
         
         let backButton = UIButton(type: .system)
@@ -80,15 +100,31 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
        }
 
        func setupSearchBar() {
+           let bgView = UIView.init(frame: CGRect(x: 0, y: 0, width: 200, height: 35))
+           bgView.backgroundColor = .white
+           bgView.layer.cornerRadius = 8
            searchButton.setImage(UIImage(named: "send", in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
            searchButton.removeTarget(self, action:  #selector(didTapSearchButton), for: .touchUpInside)
            searchButton.addTarget(self, action: #selector(searchBuyLeads), for: .touchUpInside)
            // Configure search bar
-           searchBar.placeholder = "Search here..."
+//           searchBar.placeholder = "Search a name"
+//           searchBar.delegate = self
+//           searchBar.sizeToFit()
+//           searchBar.searchBarStyle = .minimal
+//           searchBar.backgroundImage = UIImage()// clean style
+//           searchBar.tintColor = .black
+//           searchBar.backgroundColor = .white
+//           bgView.addSubview(searchBar)
+//           
+           
+//           let searchBar = UISearchBar()
+           searchBar.placeholder = "Search a name"
+           searchBar.searchTextField.backgroundColor = .white
            searchBar.delegate = self
-           searchBar.sizeToFit()
-           searchBar.searchBarStyle = .prominent  // clean style
-           searchBar.tintColor = .white
+
+           // Set a fixed width
+           let searchBarWidth = UIScreen.main.bounds.width - 40
+           searchBar.frame = CGRect(x: 0, y: 0, width: searchBarWidth, height: 36)
          // searchBar.backgroundColor = .white
            // Put it in the navigation bar
            navigationItem.titleView = searchBar
@@ -113,7 +149,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         if(issearchenable){
             issearchenable = false
             self.navigationItem.titleView = nil
-            self.title = "Buy Leads"
+            self.title = "Online Buy Leads"
             self.searchBar.text = ""
             self.searchBar.tintColor = .white
             self.searchBar.resignFirstResponder()
@@ -142,7 +178,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 DispatchQueue.main.async {
                     self.loadingView.hide()
                         if  let dic = data["data"] as? NSDictionary{
-                            self.saveUserToFile(DealerInfo(id: dic["id"] as! String, name: dic["name"]! as! String, email: dic["phone"]! as! String, mobile: dic["email"]! as! String))
+                            self.saveUserToFile(DealerInfo(id: dic["id"] as! String, name: dic["name"]! as! String, email: dic["phone"]! as! String, mobile: dic["email"]! as! String, address: ""))
                         }
                         else{
                             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
@@ -202,7 +238,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         loadingView.show(in: self.view, withText: "Loading Authentiation...")
         self.noleadView.isHidden = true
 
-        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.refresh_token)","Http-User-agent":"postman"] as! [String:String]
+        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.refresh_token)"] as! [String:String]
         
         let parameters = [
             "action": "homeapi",
@@ -211,7 +247,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             "user_id":MyPodManager.user_id,
             "sync_time": UserDefaults.standard.value(forKey: "synchtime") ?? "",
             "system_info":"dflgjdflghdlfuhg",
-            "device_id":  "4fee41be780ae0e7"
+            "device_id": Constant.uuid
         ] as! [String:Any]
         
         let api = ApiServices()
@@ -224,17 +260,23 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                     if((data["status"] as! String == "success")){
                         if  let dic = data["data"] as? NSDictionary{
                             UserDefaults.standard.set(dic["sync_time"], forKey: "synchtime")
+                            self.fetchBuyLeads()
+                            self.dealerDetails()
                             if(dic["sync_done"] as! String == "n"){
                                 self.loadCities()
-                                self.loadModels()
                                 self.loadInventory()
                             }
                             else{
-                                
                             }
                         }
                     }
                     else{
+                        print(data)
+                        let dic = data
+                        if(dic["error"] as! String == "INVALID_TOKEN")
+                        {
+                            self.refreshToken()
+                        }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                             self.loadingView.hide()
                         }
@@ -244,7 +286,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 print("Error: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     self.loadingView.hide()
-                  //  self.showError(message: error.localizedDescription)
                 }
             }
         }
@@ -265,7 +306,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
           let parameters = [
               "action": "loadbuyleadstatus",
               "api_id": "cteolx2024v1.0",
-              "device_id":"4fee41be780ae0e7",
               "dealer_id":MyPodManager.user_id
           ] as! [String:Any]
           
@@ -290,14 +330,13 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     {
         loadingView.show(in: self.view, withText: "Loading Cities...")
         self.noleadView.isHidden = true
-        let headers = ["x-origin-Panamera":"dev"] as! [String:String]
+        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.access_token)","Http-User-agent":"postman"] as! [String:String]
         let parameters = [
             "action":"loadcities",
-                "device_id":"4fee41be780ae0e7",
-            "dealer_id":MyPodManager.user_id,
-                "api_id": "cteolx2024v1.0"
+               "device_id":Constant.uuid,
+               "dealer_id":MyPodManager.user_id,
+               "api_id": "cteolx2024v1.0"
         ] as! [String:Any]
-        
         
         let api = ApiServices()
         api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: Constant.OLXApi,authentication: "") { result in
@@ -321,7 +360,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 print("Error: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     self.loadingView.hide()
-                    //self.showError(message: error.localizedDescription)
                 }
             }
         }
@@ -330,10 +368,11 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     {
         loadingView.show(in: self.view, withText: "Loading Models...")
         self.noleadView.isHidden = true
-        let headers = ["x-origin-Panamera":"dev"] as! [String:String]
+        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.access_token)","Http-User-agent":"postman"] as! [String:String]
+
         let parameters = [
             "action":"loadmodels",
-                "device_id":"4fee41be780ae0e7",
+                "device_id":Constant.uuid,
             "dealer_id":MyPodManager.user_id,
                 "api_id": "cteolx2024v1.0"
         ] as! [String:Any]
@@ -357,7 +396,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 print("Error: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     self.loadingView.hide()
-                  //  self.showError(message: error.localizedDescription)
                 }
             }
         }
@@ -374,7 +412,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         
         let parameters = [ "action":"loadallbuylead",
                            "api_id": "cteolx2024v1.0",
-                           "device_id":"4fee41be780ae0e7",
+                           "device_id":Constant.uuid,
                            "dealer_id":MyPodManager.user_id,
                            "status_filters":self.status,
                            "car_inventory_id":self.inventoryId,
@@ -398,8 +436,9 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                         guard  let result = dic["buyleads"] as? NSDictionary else {return}
                             self.Buyleads = result["buylead"] as! NSArray
                             self.apidata = (result["status_count"] as! NSArray) as! [Any]
-                            let statusString = (self.data[0] as! String).replacingOccurrences(of: "[^a-zA-Z\\s]", with: "", options: .regularExpression)
-                           self.data[0] = "\(statusString)(\(self.Buyleads.count))"
+                            var statusString = (self.data[0] as! String).replacingOccurrences(of: "[^a-zA-Z\\s]", with: "", options: .regularExpression)
+                            statusString = statusString.replacingOccurrences(of: " ", with: "")
+                            self.data[0] = "\(statusString) (\(self.Buyleads.count))"
                             self.tableView.reloadData()
                            if(self.Buyleads.count == 0){
                             self.noleadView.isHidden = false
@@ -423,13 +462,35 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 print("Error: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     self.loadingView.hide()
-                    self.showError(message: error.localizedDescription)
+                    self.showApiError(error.localizedDescription)
+
                  //   self.showCustomErrorPopup(message: error.localizedDescription)
                 }
             }
         }
     }
-    
+    func refreshToken()
+    {
+        
+        let headers = ["x-origin-Panamera":"dev","Api-Version":"134","client-language":"en-in","Authorization":"Bearer \(MyPodManager.refresh_token)"] as! [String:String]
+        let parameters = ["user_id":MyPodManager.user_id] as! [String:Any]
+        let api = ApiServices()
+        api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: "https://fcgapi.olx.in/dealer/v1/auth/refresh_token",authentication: "") { result in
+            switch result {
+            case .success(let data):
+                print("Response Data: \(data)")
+                DispatchQueue.main.async {
+                    MyPodManager.requestDataFromHost(accesstoken: data["access_token"] as! String, userid: data["user_id"] as! String, refreshtoken: data["refresh_token"] as! String)
+                    self.synchHomeAPI()
+                }
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self.showApiError(error.localizedDescription)
+                }
+            }
+        }
+    }
     func showCustomErrorPopup(message: String) {
         let popupView = UIView()
         popupView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
@@ -463,61 +524,20 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             popupView.removeFromSuperview()
         }
     }
-    func refreshToken()
-    {
-        let headers = ["x-origin-Panamera":"dev","Api-Version":"134","client-language":"en-in","Authorization":"Bearer \(MyPodManager.refresh_token)"] as! [String:String]
-        let parameters = ["user_id":MyPodManager.user_id] as! [String:Any]
-        let api = ApiServices()
-        api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: "https://fcgapi.olx.in/dealer/v1/auth/refresh_token",authentication: "") { result in
-            switch result {
-            case .success(let data):
-                print("Response Data: \(data)")
-                DispatchQueue.main.async {
-                    MyPodManager.requestDataFromHost(accesstoken: data["access_token"] as! String, userid: data["user_id"] as! String, refreshtoken: data["refresh_token"] as! String)
-                    self.fetchBuyLeads()
-                }
-            case .failure(let error):
-                print("Error: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    self.showError(message: error.localizedDescription)
-                }
-            }
-        }
+ 
+    func showApiError(_ message: String) {
+        let errorAlert = ApiErrorAlertView(message: message)
+        self.present(errorAlert, animated: true)
     }
-    
-    func showError(message: String) {
-          // Remove existing error view if any
-          errorView?.removeFromSuperview()
-          
-          // Create and add error view
-          let errorView = ErrorView(errorMessage: message)
-//          errorView.retryAction = {
-//              errorView.removeFromSuperview()
-//          }
-          
-          errorView.translatesAutoresizingMaskIntoConstraints = false
-          view.addSubview(errorView)
-        errorView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
-        errorView.messageLabel.text = message
-          NSLayoutConstraint.activate([
-              errorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-              errorView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-              errorView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.9),
-              errorView.heightAnchor.constraint(equalToConstant: errorView.messageLabel.frame.height + 150)
-          ])
-        errorView.retryButton.addTarget(self, action: #selector(retryNetworkRequest), for: .touchUpInside)
-        errorView.messageLabel.text = message
-          self.errorView = errorView
-      }
+  
       
     @objc func retryNetworkRequest() {
           print("Retry button tapped! Retry network request here.")
-          errorView?.removeFromSuperview() // Remove error view on retry
            self.navigationController?.popViewController(animated: true)
       }
     private func setupTableView() {
         
-        tableView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
+        tableView.backgroundColor = UIColor(red: 233/255, green: 237/255, blue: 238/255, alpha: 1.0)
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = UITableView.automaticDimension
@@ -584,10 +604,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         ])
         stackView.layer.cornerRadius = 10
         stackView.layer.masksToBounds = true
-        stackView.isUserInteractionEnabled = true
-        
-        fetchBuyLeads()
-        dealerDetails()
+      
         self.synchHomeAPI()
         print(getStockList())
         if(getStockList().count != 0){
@@ -606,15 +623,16 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         {
             return 0
         }
-        return 60
+        return 35
     }
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
         headerView.backgroundColor = .black
-        let titleLabel = UILabel(frame: CGRect(x: 16, y: 0, width: tableView.frame.width, height: 50))
-        titleLabel.text = "FOLLOWUP"
+        let titleLabel = UILabel(frame: CGRect(x: 16, y: 0, width: tableView.frame.width, height: 30))
+        let statusString = (self.data[0] as! String).replacingOccurrences(of: "[^a-zA-Z\\s]", with: "", options: .regularExpression)
+        titleLabel.text = statusString.uppercased()
         titleLabel.textColor = .white
-        titleLabel.font = UIFont(name: "Roboto-Medium", size: 14)
+        titleLabel.font = UIFont(name: "Roboto-Bold", size: 14)
         headerView.addSubview(titleLabel)
         return headerView
     }
@@ -650,30 +668,37 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 }
             }
 //            cell.configure(with: response["contact_name"]! as! String, statustext: response["status_text"]! as! String,make_text: make,cars)
+            cell.collectionView.tag = indexPath.row
             cell.configure(name: response["contact_name"]! as! String, status: response["status_text"]! as! String, date: make, cars: cars as! [Any],phonenumber: response["mobile"]! as! String)
             
-            cell.status_category.setTitle((response["status_category"]! as! String), for: .normal)
+            cell.status_category.setTitle("\((response["status_category"]! as! String)) ", for: .normal)
             if let original = UIImage(named: "tag", in: .buyLeadsBundle, compatibleWith: nil) {
                     if((response["status_category"]! as! String).count == 0){
                         cell.status_category.isHidden = true
                     }else{
                         cell.status_category.isHidden = false
-                        if((response["status_category"]! as! String) == "HOT"){
+                        if((response["status_category"]! as! String) == "HOT" || (response["status_category"]! as! String) == "VERY HOT"){
                             let tinted = original.tinted(with: .systemRed)
                             cell.status_category.setBackgroundImage(tinted, for: .normal)
                         }
                         else if((response["status_category"]! as! String) == "COLD"){
-                            let tinted = original.tinted(with: UIColor(red: 0.0/255.0, green: 71.0/255.0, blue: 149.0/255.0, alpha: 1.0))
+                            let tinted = original.tinted(with: UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0))
                             cell.status_category.setBackgroundImage(tinted, for: .normal)
                         }
                         else{
-                            let tinted = original.tinted(with: .green)
+                            let tinted = original.tinted(with: .systemOrange)
                             cell.status_category.setBackgroundImage(tinted, for: .normal)
+
                         }
                     }
             }
             cell.delegate = self
-
+            if((response["customer_visited"]! as! String).count != 0){
+                cell.visitedLabel.alpha = 1.0
+            }
+            else{
+                cell.visitedLabel.alpha = 0.0
+            }
             cell.visitedLabel.tag = indexPath.row
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(visitingStatus))
             cell.visitedLabel.addGestureRecognizer(tapGesture)
@@ -742,11 +767,167 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     //Delete BuyLead
     @objc func deleteBuyLead(sender : UIButton)
     {
-        let deleteVC = AlertViewController()
-        deleteVC.items =  Buyleads[sender.tag] as! [String : Any]
-        deleteVC.message = "Are you sure do you want to delete this lead?"
-        deleteVC.modalPresentationStyle = .overCurrentContext
-        present(deleteVC, animated: false)
+        let response =  Buyleads[sender.tag] as! [String : Any]
+        let alert = CustomAlertViewController(
+            title: "Delete Lead",
+            message: "Do you want to delete this Lead?",
+            confirmTitle: "Delete",
+            cancelTitle: "Cancel",
+            confirmAction: {
+                print("Deleted")
+                self.deleteDealer(dealer_id: response["buylead_id"] as! String)
+            },
+            cancelAction: {
+                print("Cancelled")
+            })
+
+        self.present(alert, animated: true)
+        
+//        let deleteVC = AlertViewController()
+//        deleteVC.items =  Buyleads[sender.tag] as! [String : Any]
+//        deleteVC.message = "Are you sure do you want to delete this lead?"
+//        deleteVC.modalPresentationStyle = .overCurrentContext
+//        present(deleteVC, animated: false)
+    }
+    
+    func deleteDealer(dealer_id : String)
+    {
+        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.access_token)","Http-User-agent":"postman"] as! [String:String]
+            let parameters = [
+                               "api_id":"cteolx2024v1.0",
+                                 "device_id":Constant.uuid,
+                                 "action":"archivebuylead",
+                                 "buylead_id":dealer_id,
+                               "dealer_id":MyPodManager.user_id
+            ] as! [String:Any]
+            let api = ApiServices()
+            api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: Constant.OLXApi,authentication: "") { result in
+                switch result {
+                case .success(let data):
+                    print("Response Data: \(data)")
+                    DispatchQueue.main.async {
+                        if  let dic = data["data"] as? NSDictionary{
+                            if(data["status"] as! String == "success"){
+                            let alert = CustomAlertViewController(
+                                title: "Success",
+                                message: dic["message"] as! String,
+                                confirmTitle: "Ok",
+                                cancelTitle: "Cancel",
+                                confirmAction: {
+                                    print("Deleted")
+                                    self.fetchBuyLeads()
+                                },
+                                cancelAction: {
+                                    print("Cancelled")
+                                })
+                            alert.cancelButton.alpha = 1.0
+                            self.present(alert, animated: true)
+                            }
+                            else{
+                                let alert = CustomAlertViewController(
+                                    title: "Failed",
+                                    message: dic["error"] as! String,
+                                    confirmTitle: "Ok",
+                                    cancelTitle: "Cancel",
+                                    confirmAction: {
+                                        print("Deleted")
+                                        self.fetchBuyLeads()
+                                    },
+                                    cancelAction: {
+                                        print("Cancelled")
+                                    })
+                                alert.cancelButton.alpha = 0.0
+                                self.present(alert, animated: true)
+                            }
+                        }
+                        else{
+                            let dic = data
+                            if(dic["error"] as! String == "INVALID_TOKEN")
+                            {
+                                self.refreshToken()
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                self.loadingView.hide()
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    print("Error: \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        self.showApiError(error.localizedDescription)
+                    }
+                }
+            }
+    }
+    func deleteDealerCar(carid : String,buyLead_id:String)
+    {
+        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.access_token)","Http-User-agent":"postman"] as! [String:String]
+            let parameters = [
+                "action":"archivebuyleadcar",
+               "api_id":"cteolx2024v1.0",
+                "device_id":Constant.uuid,
+                "buylead_id":buyLead_id,
+                "carid":carid,
+                "dealer_id":MyPodManager.user_id
+             ] as! [String:Any]
+            let api = ApiServices()
+        api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: Constant.OLXApi,authentication: "") { result in
+                switch result {
+                case .success(let data):
+                    print("Response Data: \(data)")
+                    DispatchQueue.main.async {
+                        if  let dic = data["data"] as? NSDictionary{
+                            if(data["status"] as! String == "success"){
+                                let alert = CustomAlertViewController(
+                                    title: "Success",
+                                    message: "BuyLead Car Deleted Successfully!",
+                                    confirmTitle: "Ok",
+                                    cancelTitle: "Cancel",
+                                    confirmAction: {
+                                        print("Deleted")
+                                        self.fetchBuyLeads()
+                                    },
+                                    cancelAction: {
+                                        print("Cancelled")
+                                    })
+                                alert.cancelButton.alpha = 0.0
+                                self.present(alert, animated: true)
+                            }
+                            else{
+                                let alert = CustomAlertViewController(
+                                    title: "Failed",
+                                    message: dic["error"] as! String,
+                                    confirmTitle: "Ok",
+                                    cancelTitle: "Cancel",
+                                    confirmAction: {
+                                        print("Deleted")
+                                        self.fetchBuyLeads()
+                                    },
+                                    cancelAction: {
+                                        print("Cancelled")
+                                    })
+                                alert.cancelButton.alpha = 0.0
+                                self.present(alert, animated: true)
+                            }
+                        }
+                        else{
+                            let dic = data
+                            if(dic["error"] as! String == "INVALID_TOKEN")
+                            {
+                                self.refreshToken()
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                self.loadingView.hide()
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    print("Error: \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        self.showApiError(error.localizedDescription)
+                    }
+                }
+            }
     }
     
     //redirect to edit page
@@ -766,10 +947,11 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             UIApplication.shared.open(phoneURL)
         } else {
             print("📵 Calling not supported on this device")
+            let response = Buyleads[sender.view!.tag] as! NSDictionary
+            UserDefaults.standard.set(response["buylead_id"]!, forKey: "buylead_id")
             let popup = BuyLeadStatus_update()
-            popup.items = Buyleads[sender.view!.tag] as! [String : Any] as NSDictionary
-            popup.modalPresentationStyle = .overCurrentContext
-            popup.modalTransitionStyle = .crossDissolve
+            popup.items = response as! [String : Any] as NSDictionary
+            popup.modalPresentationStyle = .automatic
             present(popup, animated: true)
         }
     }
@@ -792,14 +974,32 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         ]
         MyPodManager.navigatetoHost(userinfo: userInfo_host)
     }
-    
     //delete car
-    func deleteCar(item: [String:Any]) {
-        let deleteVC = AlertViewController()
-        deleteVC.items = item
-        deleteVC.message = "Are you sure do you want to delete this car?"
-        deleteVC.modalPresentationStyle = .overCurrentContext
-        present(deleteVC, animated: false)
+    func deleteCar(item: [String : Any], tag: Int) {
+    
+        let response =  Buyleads[tag] as! [String : Any]
+
+        let alert = CustomAlertViewController(
+            title: "Delete Car",
+            message: "Do you want to remove this \(item["make"] ?? "")?",
+            confirmTitle: "Delete",
+            cancelTitle: "Cancel",
+            confirmAction: {
+                print("Deleted")
+                self.deleteDealerCar(carid: item["id"] as! String,buyLead_id:  response["buylead_id"] as! String)
+            },
+            cancelAction: {
+                print("Cancelled")
+            })
+
+        self.present(alert, animated: true)
+        
+        
+//        let deleteVC = AlertViewController()
+//        deleteVC.items = item
+//        deleteVC.message = "Are you sure do you want to delete \(item["make"])?"
+//        deleteVC.modalPresentationStyle = .overCurrentContext
+//        present(deleteVC, animated: false)
     }
     
     @objc func navigateToHostVC(sender : UITapGestureRecognizer) {
@@ -813,14 +1013,16 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     {
         let response = Buyleads[sender.view!.tag] as! NSDictionary
         if((response["customer_visited"]! as! String).count != 0){
-            self.showPopup(title: "Message!", message: "Customer Visited On: \n \(response["customer_visited"]! as! String)")
+          //  self.showPopup(title: "Message!", message: "Customer Visited On: \n \(response["customer_visited"]! as! String)")
+            
+            self.showApiError( "Customer Visited On: \n \(response["customer_visited"]! as! String)")
         }
     }
     func showPopup(title: String, message: String) {
-        let popup = CustomView(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
-        popup.center = self.view.center
-        popup.configure(title: title, message: message)
-        self.view.addSubview(popup)
+//        let popup = CustomView(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
+//        popup.center = self.view.center
+//        popup.configure(title: title, message: message)
+//        self.view.addSubview(popup)
     }
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let customCell = cell as? OnlineBuyLeads_collection {

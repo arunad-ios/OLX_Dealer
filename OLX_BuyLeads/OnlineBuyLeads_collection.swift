@@ -104,11 +104,11 @@ class OnlineBuyLeads_collection : UITableViewCell, UICollectionViewDelegate, UIC
             if let index = selectionitems.firstIndex(where: { ($0 as? String) == (items[sender.tag] as! String) }) {
                 selectionitems.remove(at: index)
             }
-            UserDefaults.standard.set("n", forKey: keyvalues[sender.tag] as! String)
+            UserDefaults.standard.set("n", forKey: keyvalues[sender.tag] )
             delegate?.deselectedCellitem(item: sender.tag)
         }
         else{
-            UserDefaults.standard.set("y", forKey: keyvalues[sender.tag] as! String)
+            UserDefaults.standard.set("y", forKey: keyvalues[sender.tag] )
             selectionitems.append(items[sender.tag] as! String)
             delegate?.selectedCellitem(item: sender.tag)
         }
@@ -117,12 +117,12 @@ class OnlineBuyLeads_collection : UITableViewCell, UICollectionViewDelegate, UIC
     // MARK: - UICollectionView Delegate FlowLayout
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 //        let text = items[indexPath.item] as! String
-//        if(indexPath.row > 2){
-//            let spacing: CGFloat = 5
-//            let totalSpacing = spacing * 2 + spacing * 2  // left + right + inter-item spacing * 2
-//            let cellwidth = (collectionView.frame.width - totalSpacing) / 2
-//            return CGSize(width: cellwidth, height: 30)
-//        }
+        if(indexPath.row > 2){
+            let spacing: CGFloat = 5
+            let totalSpacing = spacing * 2 + spacing * 2  // left + right + inter-item spacing * 2
+            let cellwidth = (collectionView.frame.width - totalSpacing) / 2
+            return CGSize(width: cellwidth, height: 30)
+        }
         let spacing: CGFloat = 5
         let totalSpacing = spacing * 2 + spacing * 2  // left + right + inter-item spacing * 2
         let cellwidth = (collectionView.frame.width - totalSpacing) / 3

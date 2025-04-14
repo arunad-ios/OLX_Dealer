@@ -15,7 +15,7 @@ class OnlineBuyLeads_collectioncell : UICollectionViewCell {
         static let identifier = "CustomCollectionViewCell"
         
         public let checkBox: UIButton = {
-            let button = UIButton(type: .system)
+            let button = UIButton(type: .custom)
             button.setImage(UIImage(named: "uncheck", in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
             return button
         }()
@@ -23,14 +23,14 @@ class OnlineBuyLeads_collectioncell : UICollectionViewCell {
         public let titleLabel: UILabel = {
             let label = UILabel()
             label.text = "Label"
-            label.textAlignment = .center
-            label.font = UIFont(name: "Roboto-Medium", size: 14)
+            label.textAlignment = .left
+            label.font = UIFont(name: "Roboto-Medium", size: 13)
             label.textColor = .black
             return label
         }()
         
         public let bottomArrow: UIButton = {
-            let button = UIButton(type: .system)
+            let button = UIButton(type: .custom)
             button.setImage(UIImage(named: "downarrow", in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
             return button
         }()
@@ -39,7 +39,7 @@ class OnlineBuyLeads_collectioncell : UICollectionViewCell {
             let stackView = UIStackView()
             stackView.axis = .horizontal
             stackView.alignment = .center
-            stackView.spacing = 1
+            stackView.spacing = 10
             stackView.distribution = .fillProportionally
             return stackView
         }()
@@ -66,9 +66,11 @@ class OnlineBuyLeads_collectioncell : UICollectionViewCell {
             contentView.addSubview(stackView)
             
             NSLayoutConstraint.activate([
-                checkBox.widthAnchor.constraint(equalToConstant: 20),
-                checkBox.heightAnchor.constraint(equalToConstant: 20),
-              
+                checkBox.widthAnchor.constraint(equalToConstant: 15),
+                checkBox.heightAnchor.constraint(equalToConstant: 15),
+                bottomArrow.widthAnchor.constraint(equalToConstant: 15),
+                bottomArrow.heightAnchor.constraint(equalToConstant: 15),
+                bottomArrow.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -5),
                 ])
             
             stackView.translatesAutoresizingMaskIntoConstraints = false

@@ -33,6 +33,7 @@ class VehicleinfoCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         label.text = ""
         label.numberOfLines = 0
+        label.font = UIFont(name: "Roboto-Regular", size: 14)
         contentView.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -42,7 +43,6 @@ class VehicleinfoCell: UITableViewCell {
             label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
         ])
     }
-
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }
 class HistoryCell: UITableViewCell {
@@ -124,6 +124,7 @@ class TextFieldCell: UITableViewCell, UITextFieldDelegate {
         textField.borderStyle = .roundedRect
         contentView.addSubview(textField)
         textField.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
+        textField.font = UIFont(name: "Roboto-Regular", size: 14)
         textField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
@@ -155,7 +156,7 @@ class DatePickerCell: UITableViewCell,UITextFieldDelegate {
         contentView.addSubview(textField)
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.borderStyle = .roundedRect
-
+        textField.font = UIFont(name: "Roboto-Regular", size: 14)
         NSLayoutConstraint.activate([
             textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
@@ -190,12 +191,14 @@ class DatePickerCell: UITableViewCell,UITextFieldDelegate {
 
     @objc private func dateChanged(_ sender: UIDatePicker) {
         let formatter = DateFormatter()
-        formatter.dateStyle = .medium
+        formatter.dateFormat = "yyyy-MM-dd"
         textField.text = formatter.string(from: sender.date)
+        textDidChange(textField)
     }
 
     @objc private func doneTapped() {
         textField.resignFirstResponder()
+        textDidChange(textField)
     }
 
     required init?(coder: NSCoder) {
@@ -205,12 +208,12 @@ class DatePickerCell: UITableViewCell,UITextFieldDelegate {
 class CheckboxCell: UITableViewCell {
     
     let titleLabel = UILabel()
-    let checkboxButton = UIButton(type: .system)
+    let checkboxButton = UIButton(type: .custom)
     
     var isChecked = false {
         didSet {
             let imageName = isChecked ? "check" : "uncheck"
-            checkboxButton.setImage(UIImage(named: imageName, in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
+            checkboxButton.setImage(UIImage.named(imageName), for: .normal)
         }
     }
     
@@ -224,10 +227,11 @@ class CheckboxCell: UITableViewCell {
         // Setup
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         checkboxButton.translatesAutoresizingMaskIntoConstraints = false
-        checkboxButton.setImage(UIImage(named: "uncheck", in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
+        checkboxButton.setImage(UIImage.named("uncheck"), for: .normal)
 
         titleLabel.font = UIFont(name: "Roboto-Regular", size: 12)
         titleLabel.textColor = .black
+        
         // Layout
         NSLayoutConstraint.activate([
             checkboxButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -255,7 +259,7 @@ class CheckboxCell: UITableViewCell {
 
 
 class ButtonCell: UITableViewCell {
-    let button = UIButton(type: .system)
+    let button = UIButton(type: .custom)
     var buttonAction: (() -> Void)?
     var imgView = UIImageView()
     let titleLabel = UILabel()
@@ -270,22 +274,21 @@ class ButtonCell: UITableViewCell {
         titleLabel.numberOfLines = 0
         titleLabel.font = UIFont(name: "Roboto-Regular", size: 12)
         
-      //  imgView.translatesAutoresizingMaskIntoConstraints = false
-      //  imgView.image = UIImage(named: "downarrow", in: .buyLeadsBundle, compatibleWith: nil)
+    
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(.black, for: .normal)
       //  button.layer.cornerRadius = 4
         button.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
         button.contentHorizontalAlignment = .leading
         
-        
+        button.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 12)
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
         contentView.addSubview(containerView)
         
         
-        imgView = UIImageView(image: UIImage(named: "downarrow", in: .buyLeadsBundle, compatibleWith: nil))
+        imgView = UIImageView(image: UIImage.named("downarrow"))
         imgView.tintColor = .systemYellow
         imgView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(imgView)
@@ -307,10 +310,10 @@ class ButtonCell: UITableViewCell {
 
             // Image at top center
            // imgView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
-            imgView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: 0),
-            imgView.widthAnchor.constraint(equalToConstant: 30),
-            imgView.heightAnchor.constraint(equalToConstant: 30),
-         //   imgView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            imgView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
+            imgView.widthAnchor.constraint(equalToConstant: 15),
+            imgView.heightAnchor.constraint(equalToConstant: 15),
+            imgView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
 
             // Button at bottom
             button.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 5),
@@ -330,13 +333,11 @@ class ButtonCell: UITableViewCell {
 
         
         NSLayoutConstraint.activate([
-            
             stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             stackView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 5),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5)
-
         ])
     
     }
@@ -414,9 +415,9 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
         .button(title: "Lead Classification",key:"clasification",ishidden: false),
        .button(title: "Lead Status",key:"leadstatus",ishidden: false),
        .button(title: "other",key:"leadsubstatus",ishidden: false),
-       .textField(placeholder: "Date", text: "Date",ishidden: false),
+       .textField(placeholder: "Select Status Date", text: "Date",ishidden: false),
        .button(title: "customerVisitedstatus",key:"visitedDate", ishidden: false),
-       .textField(placeholder: "VisitedDate", text: "",ishidden: false),
+       .textField(placeholder: "VisitedDate", text: "",ishidden: true),
         .textField(placeholder: "Note Against Status", text: "",ishidden: false),
         .button(title: "sendsms",key:"sendsms", ishidden: false)
 
@@ -436,14 +437,14 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
                    SectionModel(title: "Lead History", isExpanded: true,type: .custom)
                ]
         let backButton = UIButton(type: .system)
-        backButton.setImage(UIImage(named: "back_arrow", in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
+        backButton.setImage(UIImage.named("back_arrow"), for: .normal)
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         let backBArButton = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItem = backBArButton
         
         
         self.setupViews()
-        self.setupLayout(topviewheight: 100)
+        self.setupLayout(topviewheight: 60)
         self.loadbuylead()
     }
     @objc func backButtonTapped()
@@ -477,10 +478,9 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
         
            // Bottom Button
         updateButton.setTitle("Update", for: .normal)
-        updateButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        updateButton.backgroundColor = .systemBlue
+        updateButton.titleLabel?.font =  UIFont(name: "Roboto-Bold", size: 16)
+        updateButton.backgroundColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
         updateButton.setTitleColor(.white, for: .normal)
-        updateButton.layer.cornerRadius = 10
         updateButton.addTarget(self, action: #selector(updatebuylead), for: .touchUpInside)
            view.addSubview(updateButton)
        }
@@ -498,9 +498,9 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
                topView.heightAnchor.constraint(equalToConstant: topviewheight),
 
                // Bottom Button
-               updateButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
-               updateButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-               updateButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+               updateButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+               updateButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+               updateButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
                updateButton.heightAnchor.constraint(equalToConstant: 50),
 
                // TableView
@@ -518,7 +518,7 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
     
     func setupLabels() {
           // Common style
-        let allLabels = [contactname, contactnumber, statusLbl, bottomLabel2]
+        let allLabels = [contactname, contactnumber, statusLbl]
           for label in allLabels {
               label.textAlignment = .left
               label.textColor = .black
@@ -530,14 +530,10 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
         closeBtn.addTarget(self, action: #selector(closeTopView), for: .touchUpInside)
         contactname.text =  (items["contact_name"]! as! String)
         contactnumber.text = "\(items["mobile_clicked"]! as! String)\(items["mobile"]! as! String)"
-        closeBtn.setImage(UIImage(named: "close", in: .buyLeadsBundle, compatibleWith: nil),for: .normal)
-        statusLbl.text = (items["status_text"]! as! String)
-          bottomLabel2.text = (items["addeddate"]! as! String)
-        bottomLabel2.backgroundColor = .blue
-        let boldFont = UIFont(name: "Roboto-Bold", size: 12)
-        let regular = UIFont(name: "Roboto-Regular", size: 12)
-
-        
+        closeBtn.setImage(UIImage.named("close"),for: .normal)
+        statusLbl.text = "\(items["status_text"]! as! String)\n\(items["addeddate"]! as! String)"
+       
+    
         if((items["contact_name"]! as! String).count != 0){
             let coloredText = NSMutableAttributedString(string:  "N : \(items["contact_name"]! as! String)")
             // 3️⃣ Apply Color to Part of the Text
@@ -576,8 +572,8 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
 
           let bottomStack = UIStackView(arrangedSubviews: [statusLbl, bottomLabel2])
           bottomStack.axis = .vertical
-          bottomStack.spacing = 5
-          bottomStack.distribution = .fillProportionally
+          bottomStack.spacing = 0
+          bottomStack.distribution = .fillEqually
 
           topView.addSubview(topStack)
           topView.addSubview(bottomStack)
@@ -590,7 +586,7 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
               topStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
               topStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
               topStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-              topStack.heightAnchor.constraint(equalToConstant: 40),
+              topStack.heightAnchor.constraint(equalToConstant: 20),
               
               // Bottom vertical labels
               bottomStack.topAnchor.constraint(equalTo: topStack.bottomAnchor, constant: 0),
@@ -634,18 +630,16 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
                                 self.formData[0] = .textField(placeholder: "First Name", text: self.buyLeadData["name"] as? String ?? "",ishidden: false)
                                 self.formData[1] = .textField(placeholder: "Mobile", text: self.buyLeadData["mobile"] as? String ?? "",ishidden: false)
                                 self.formData[2] = .textField(placeholder: "Enter Email", text: self.buyLeadData["email"] as? String ?? "",ishidden: false)
-                                self.formData[3] = .button(title: self.buyLeadData["state"] as? String ?? "",key : "State",ishidden: false)
-                                self.formData[4] = .button(title: self.buyLeadData["city"] as? String ?? "",key : "City",ishidden: false)
-                         
+                                self.formData[3] = .button(title: self.buyLeadData["state"] as? String ?? "Select State",key : "State",ishidden: false)
+                                self.formData[4] = .button(title: self.buyLeadData["city"] as? String ?? "Select City",key : "City",ishidden: false)
                                 
-                                self.leadStatus[0] = .button(title: self.buyLeadData["status_category"] as? String ?? "",key:"clasification",ishidden: false)
-                                self.leadStatus[1] = .button(title: self.buyLeadData["status"] as? String ?? "",key:"leadstatus",ishidden: false)
-                                self.leadStatus[2] = .button(title: self.buyLeadData["substatus"] as? String ?? "",key:"leadsubstatus",ishidden: false)
-                                self.leadStatus[3] = .textField(placeholder: "Date", text: self.buyLeadData["status_date"] as? String ?? "",ishidden: false)
-                                self.leadStatus[5] = .textField(placeholder: "customer visited Date", text: self.buyLeadData["customer_visited"] as? String ?? "",ishidden: false)
+                                self.leadStatus[0] = .button(title: self.buyLeadData["status_category"] as? String ?? "Select Classification",key:"clasification",ishidden: false)
+                                self.leadStatus[1] = .button(title: self.buyLeadData["status"] as? String ?? "Select Lead Status",key:"leadstatus",ishidden: false)
+                                self.leadStatus[2] = .button(title: self.buyLeadData["substatus"] as? String ?? "Select Lead SubStatus",key:"leadsubstatus",ishidden: false)
+                                self.leadStatus[3] = .textField(placeholder: "Select Status Date", text: self.buyLeadData["status_date"] as? String ?? "",ishidden: false)
+                                self.leadStatus[5] = .textField(placeholder: "VisitedDate", text: self.buyLeadData["customer_visited"] as? String ?? "",ishidden: false)
                                 self.leadStatus[6] = .textField(placeholder: "Note Against Status", text: self.buyLeadData["statustext"] as? String ?? "",ishidden: false)
                                 self.tableView.reloadData()
-                                
                             }
                             else{
                                 print(data)
@@ -704,7 +698,9 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
                     else{
                             let cell = tableView.dequeueReusableCell(withIdentifier: "DatePickerCell", for: indexPath) as! DatePickerCell
                             cell.textField.placeholder = placeholder
+                            if(text.count != 0){
                             cell.textField.text = text
+                            }
                             cell.textChanged = { [weak self] updatedText in
                                 self!.leadStatus[indexPath.row] = .textField(placeholder: placeholder, text: updatedText,ishidden: false)
                             }
@@ -727,17 +723,7 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
                         cell.checkboxButton.isSelected = cell.isChecked
                         cell.checkboxButton.addTarget(self, action: #selector(togglecustomerVisited), for: .touchUpInside)
                         cell.checkboxButton.tag = indexPath.row
-//                        if(cell.isChecked)
-//                        {
-//                        self.leadStatus[indexPath.row+1] = .button(title: "",ishidden: true)
-//                            let indexPath = IndexPath(row: indexPath.row+1, section: indexPath.section)
-//                        self.tableView.reloadRows(at: [indexPath], with: .automatic)
-//                        }
-//                        else{
-//                            self.leadStatus[indexPath.row+1] = .button(title: "",ishidden: false)
-//                            let indexPath = IndexPath(row: indexPath.row+1, section: indexPath.section)
-//                            self.tableView.reloadRows(at: [indexPath], with: .automatic)
-//                        }
+
                         cell.selectionStyle = .none
                         return cell
                     }
@@ -754,20 +740,20 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
                     let cell = tableView.dequeueReusableCell(withIdentifier: "ButtonCell", for: indexPath) as! ButtonCell
 
                     if(indexPath.row == 0){
-                        cell.button.setTitle(title, for: .normal)
+                        cell.button.setTitle(title.count == 0 ? "Select Lead Classification" : title, for: .normal)
                         cell.titleLabel.text = "Lead Classification"
                         cell.titleLabel.isHidden = false
                         cell.button.addTarget(self, action: #selector(clasifiedsDropdown), for: .touchUpInside)
                     }
                     if(indexPath.row == 1){
-                        cell.button.setTitle(title, for: .normal)
+                        cell.button.setTitle(title.count == 0 ? "Select Lead Status" : title, for: .normal)
                         cell.titleLabel.text = "Lead Status"
                         cell.titleLabel.isHidden = false
                         cell.button.addTarget(self, action: #selector(leadstatusDropdown), for: .touchUpInside)
                         cell.button.tag = indexPath.row
                     }
                     if(indexPath.row == 2){
-                        cell.button.setTitle(title, for: .normal)
+                        cell.button.setTitle(title.count == 0 ? "Select Lead SubStatus" : title, for: .normal)
                         cell.titleLabel.isHidden = false
                         cell.button.addTarget(self, action: #selector(subleadstatusDropdown), for: .touchUpInside)
                         cell.button.tag = indexPath.row
@@ -792,13 +778,14 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
                           return cell
                         case .button(let title,_,_):
                           let cell = tableView.dequeueReusableCell(withIdentifier: "ButtonCell", for: indexPath) as! ButtonCell
-                          cell.button.setTitle(title, for: .normal)
                     if(indexPath.row == 3){
+                        cell.button.setTitle(title.count == 0 ? "State" : title , for: .normal)
                         cell.button.removeTarget(self, action: #selector(showcitiesDropdown), for: .touchUpInside)
                         cell.button.addTarget(self, action: #selector(showDropdown), for: .touchUpInside)
                         cell.titleLabel.isHidden = true
                     }
                     if(indexPath.row == 4){
+                        cell.button.setTitle(title.count == 0 ? "City" : title , for: .normal)
                         cell.button.removeTarget(self, action: #selector(showDropdown), for: .touchUpInside)
                         cell.button.addTarget(self, action: #selector(showcitiesDropdown), for: .touchUpInside)
                         cell.titleLabel.isHidden = true
@@ -856,17 +843,23 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 50))
-        headerView.backgroundColor = UIColor(red: 243/255, green: 245/255, blue: 246/255, alpha: 1.0)
+        headerView.backgroundColor = UIColor(red: 236/255, green: 241/255, blue: 255/255, alpha: 1.0)
         let titleLabel = UILabel(frame: CGRect(x: 16, y: 10, width: tableView.frame.width - 50, height: 30))
         titleLabel.text = data[section].title
         titleLabel.textColor = UIColor.OLXBlueColor
+        titleLabel.font = UIFont(name: "Roboto-Medium", size: 14)
         headerView.addSubview(titleLabel)
 
         let expandButton = UIButton(frame: CGRect(x: tableView.frame.width - 40, y: 10, width: 30, height: 30))
-        expandButton.setImage(UIImage(named: expandedSections.contains(section) ? "uparrow" : "downarrow_new", in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
+        expandButton.setImage(UIImage.named(expandedSections.contains(section) ? "uparrow" : "downarrow_new"), for: .normal)
         expandButton.addTarget(self, action: #selector(toggleSection(_:)), for: .touchUpInside)
         expandButton.tag = section
         headerView.addSubview(expandButton)
+        
+        headerView.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(toggleViewSection))
+        headerView.addGestureRecognizer(tapGesture)
+        headerView.tag = section
         return headerView
     }
 
@@ -875,7 +868,19 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
     }
 
     // MARK: - Expand/Collapse Logic
-
+    @objc func toggleViewSection(_ sender: UITapGestureRecognizer) {
+        for i in 0..<data.count{
+            if(i == sender.view!.tag)
+            {
+                data[i].isExpanded.toggle()
+            }
+            else{
+                data[i].isExpanded = false
+            }
+            tableView.reloadData()
+        }
+    }
+    
     @objc func toggleSection(_ sender: UIButton) {
         for i in 0..<data.count{
             if(i == sender.tag)
@@ -887,7 +892,6 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
             }
             tableView.reloadData()
         }
-      
     }
     
     
@@ -911,7 +915,6 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
             
             break
         case .button(_,_,_):
-            
             print(sender.tag)
             if(sender.isSelected){
                 self.leadStatus[sender.tag] = .button(title: "sendsmsStatus", key: "y", ishidden: false)
@@ -930,17 +933,17 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
         switch leadStatus[sender.tag+1] {
         case .textField(_, let text,_):
             print(sender.tag)
-            if(sender.isSelected){
+            if(!sender.isSelected){
+                sender.isSelected = true
                 self.leadStatus[sender.tag+1] = .textField(placeholder: "VisitedDate", text: text, ishidden: true)
                 self.leadStatus[sender.tag] = .button(title: "customerVisitedstatus", key: "y", ishidden: false)
-
                 let indexPath = IndexPath(row: sender.tag+1, section: 2)
                 self.tableView.reloadRows(at: [indexPath], with: .automatic)
             }
             else{
-                self.leadStatus[sender.tag+1] = .textField(placeholder: "VisitedDate", text: text, ishidden: true)
+                sender.isSelected = false
+                self.leadStatus[sender.tag+1] = .textField(placeholder: "VisitedDate", text: text, ishidden: false)
                 self.leadStatus[sender.tag] = .button(title: "customerVisitedstatus", key: "n", ishidden: false)
-
                 let indexPath = IndexPath(row: sender.tag+1, section: 2)
                 self.tableView.reloadRows(at: [indexPath], with: .automatic)
             }
@@ -1099,47 +1102,109 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
         return result
     }
     
-    
+    func showApiError(_ message: String) {
+        let errorAlert = ApiErrorAlertView(message: message)
+        self.present(errorAlert, animated: true)
+    }
    @objc func updatebuylead()
     {
         print(getFormValues())
         print(getleadStatusValues())
         let dic = getFormValues()
-        let buyleadstatusDic = getFormValues()
-
-//        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.access_token)","Http-User-agent":"postman"] as! [String:String]
-//        let parameters = [
-//            "action":"updatebuylead",
-//              "dealer_id":MyPodManager.user_id,
-//              "api_id":"cteolx2024v1.0",
-//             "device_id":"4fee41be780ae0e7",
-//              "buylead_id":UserDefaults.standard.value(forKey: "buylead_id")!,
-//            "state":dic["State"]!,
-//            "name":dic["First Name"]!,
-//            "mobile":dic["Mobile"]!,
-//            "city":dic["City"]!,
-//            "customer_visited":buyleadstatusDic["City"]!,
-//            "status_date":buyleadstatusDic["City"]!,
-//            "status":buyleadstatusDic["City"]!,
-//            "substatus":buyleadstatusDic["City"]!,
-//            "statustext":buyleadstatusDic["City"]!,
-//            "status_category":buyleadstatusDic[""]!
-//        ] as! [String:Any]
-//        
-//        let api = ApiServices()
-//        api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: Constant.OLXApi,authentication: "") { result in
-//            switch result {
-//            case .success(let data):
-//                print("Response Data: \(data)")
-//                if(data["status"] as! String == "success"){
-//                    DispatchQueue.main.async {
-//                      
-//                    }
-//                }
-//            case .failure(let error):
-//                print("Error: \(error.localizedDescription)")
-//              
-//            }
-//        }
+        let buyleadstatusDic = getleadStatusValues()
+         var message = ""
+        if(dic["State"]!.count == 0){
+            message = "State\n"
+        }
+        if(dic["City"]!.count == 0){
+            message = "\(message)City\n"
+        }
+        if(buyleadstatusDic["clasification"]!.count == 0){
+            message = "\(message)Classification\n"
+        }
+        if(buyleadstatusDic["leadstatus"]!.count == 0){
+            message = "\(message)Lead Status\n"
+        }
+        if(buyleadstatusDic["leadsubstatus"]!.count == 0){
+            message = "\(message)Lead SubStatus\n"
+        }
+        if(buyleadstatusDic["Select Status Date"]!.count == 0){
+            message = "\(message)Status Date\n"
+        }
+        if(buyleadstatusDic["Note Against Status"]!.count == 0){
+            message = "\(message)Status Text\n"
+        }
+        if(message.count != 0){
+            self.showApiError(message)
+            return
+        }
+        if(message.count == 0){
+            let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.access_token)","Http-User-agent":"postman"] as! [String:String]
+            let parameters = [
+                "action":"updatebuylead",
+                "dealer_id":MyPodManager.user_id,
+                "api_id":"cteolx2024v1.0",
+                "device_id":Constant.uuid,
+                "buylead_id":UserDefaults.standard.value(forKey: "buylead_id")!,
+                "state":dic["State"]!,
+                "name":dic["First Name"]!,
+                "mobile":dic["Mobile"]!,
+                "city":dic["City"]!,
+                "customer_visited":buyleadstatusDic["VisitedDate"]!,
+                "status_date":buyleadstatusDic["Select Status Date"]!,
+                "status":buyleadstatusDic["leadstatus"]!,
+                "substatus":buyleadstatusDic["leadsubstatus"]!,
+                "statustext":buyleadstatusDic["Note Against Status"]!,
+                "status_category":buyleadstatusDic["clasification"]!
+            ] as! [String:Any]
+            
+            let api = ApiServices()
+            api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: Constant.OLXApi,authentication: "") { result in
+                switch result {
+                case .success(let data):
+                    print("Response Data: \(data)")
+                    if(data["status"] as! String == "success"){
+                        DispatchQueue.main.async {
+                            let alert = CustomAlertViewController(
+                                title: "Success",
+                                message: data["data"]! as! String,
+                                confirmTitle: "Ok",
+                                cancelTitle: "",
+                                confirmAction: {
+                                    print("Deleted")
+                                    self.navigationController?.popViewController(animated: true)
+                                    NotificationCenter.default.post(name:Notification.Name("refreshLeads"), object: nil)
+                                },
+                                cancelAction: {
+                                    print("Cancelled")
+                                })
+                            alert.cancelButton.alpha = 0
+                            self.present(alert, animated: true)
+                        }
+                    }
+                    else{
+                        DispatchQueue.main.async {
+                            let alert = CustomAlertViewController(
+                                title: "Failed",
+                                message: data["data"]! as! String,
+                                confirmTitle: "Ok",
+                                cancelTitle: "",
+                                confirmAction: {
+                                    print("Deleted")
+                                    self.navigationController?.popViewController(animated: true)
+                                },
+                                cancelAction: {
+                                    print("Cancelled")
+                                })
+                            alert.cancelButton.alpha = 0
+                            self.present(alert, animated: true)
+                        }
+                    }
+                case .failure(let error):
+                    print("Error: \(error.localizedDescription)")
+                    
+                }
+            }
+        }
     }
 }

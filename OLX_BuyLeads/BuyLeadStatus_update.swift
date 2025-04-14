@@ -44,9 +44,9 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
         .button(title: "Lead Classification",key:"clasification",ishidden: false),
        .button(title: "Lead Status",key:"leadstatus",ishidden: false),
        .button(title: "other",key:"leadsubstatus",ishidden: false),
-       .textField(placeholder: "Date", text: "Date",ishidden: false),
+       .textField(placeholder: "Select Status Date", text: "",ishidden: false),
        .button(title: "customerVisitedstatus",key:"visitedDate", ishidden: false),
-       .textField(placeholder: "VisitedDate", text: "",ishidden: false),
+       .textField(placeholder: "VisitedDate", text: "",ishidden: true),
         .textField(placeholder: "Note Against Status", text: "",ishidden: false),
         .button(title: "sendsms",key:"sendsms", ishidden: false)
    ]
@@ -69,16 +69,16 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
     }
     func setupViews() {
         
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+      //  view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
 
-        popupView.backgroundColor = .clear
+        popupView.backgroundColor = .white
         popupView.layer.cornerRadius = 12
         popupView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(popupView)
         
         
            // Top View
-          // self.view.backgroundColor = .white
+      //  self.view.backgroundColor = .white
            topView.backgroundColor = .white
         self.view.addSubview(topView)
 
@@ -103,7 +103,7 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
            // Bottom Button
         updateButton.setTitle("Update", for: .normal)
         updateButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        updateButton.backgroundColor = .systemBlue
+        updateButton.backgroundColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
         updateButton.setTitleColor(.white, for: .normal)
         updateButton.layer.cornerRadius = 10
         updateButton.addTarget(self, action: #selector(updatebuylead), for: .touchUpInside)
@@ -122,12 +122,15 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
             popupView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             popupView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
             popupView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -25),
+            popupView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -25),
+
 //
                // Top View
                topView.topAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.topAnchor,constant: 25),
                topView.leadingAnchor.constraint(equalTo:  self.view.leadingAnchor,constant: 25),
                topView.trailingAnchor.constraint(equalTo:  self.view.trailingAnchor,constant: -50),
                topView.heightAnchor.constraint(equalToConstant: topviewheight),
+            
 
                // Bottom Button
                updateButton.bottomAnchor.constraint(equalTo:  self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
@@ -162,7 +165,7 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
         closeBtn.addTarget(self, action: #selector(closeTopView), for: .touchUpInside)
         contactname.text =  (items["contact_name"]! as! String)
         contactnumber.text = "\(items["mobile_clicked"]! as! String)\(items["mobile"]! as! String)"
-        closeBtn.setImage(UIImage(named: "close", in: .buyLeadsBundle, compatibleWith: nil),for: .normal)
+        closeBtn.setImage(UIImage.named( "close"),for: .normal)
         statusLbl.text = (items["status_text"]! as! String)
           bottomLabel2.text = (items["addeddate"]! as! String)
         bottomLabel2.backgroundColor = .blue
@@ -265,8 +268,8 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
                                 self.leadStatus[0] = .button(title: self.buyLeadData["status_category"] as? String ?? "",key:"clasification",ishidden: false)
                                 self.leadStatus[1] = .button(title: self.buyLeadData["status"] as? String ?? "",key:"leadstatus",ishidden: false)
                                 self.leadStatus[2] = .button(title: self.buyLeadData["substatus"] as? String ?? "",key:"leadsubstatus",ishidden: false)
-                                self.leadStatus[3] = .textField(placeholder: "Date", text: self.buyLeadData["status_date"] as? String ?? "",ishidden: false)
-                                self.leadStatus[5] = .textField(placeholder: "customer visited Date", text: self.buyLeadData["customer_visited"] as? String ?? "",ishidden: false)
+                                self.leadStatus[3] = .textField(placeholder: "Select Status Date", text: self.buyLeadData["status_date"] as? String ?? "",ishidden: false)
+                                self.leadStatus[5] = .textField(placeholder: "VisitedDate", text: self.buyLeadData["customer_visited"] as? String ?? "",ishidden: false)
                                 self.leadStatus[6] = .textField(placeholder: "Note Against Status", text: self.buyLeadData["statustext"] as? String ?? "",ishidden: false)
                                 self.tableView.reloadData()
                             }
@@ -277,7 +280,6 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
                     }
                     else{
                         OnlineBuyLeads().refreshToken()
-                        self.navigationController?.popViewController(animated: true)
                     }
                 }
             case .failure(let error):
@@ -352,22 +354,21 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
                         return cell
                     }
                     let cell = tableView.dequeueReusableCell(withIdentifier: "ButtonCell", for: indexPath) as! ButtonCell
-
                     if(indexPath.row == 0){
-                        cell.button.setTitle(title, for: .normal)
+                        cell.button.setTitle(title.count == 0 ? "Select Lead Classification" : title, for: .normal)
                         cell.titleLabel.text = "Lead Classification"
                         cell.titleLabel.isHidden = false
                         cell.button.addTarget(self, action: #selector(clasifiedsDropdown), for: .touchUpInside)
                     }
                     if(indexPath.row == 1){
-                        cell.button.setTitle(title, for: .normal)
+                        cell.button.setTitle(title.count == 0 ? "Select Lead Status" : title, for: .normal)
                         cell.titleLabel.text = "Lead Status"
                         cell.titleLabel.isHidden = false
                         cell.button.addTarget(self, action: #selector(leadstatusDropdown), for: .touchUpInside)
                         cell.button.tag = indexPath.row
                     }
                     if(indexPath.row == 2){
-                        cell.button.setTitle(title, for: .normal)
+                        cell.button.setTitle(title.count == 0 ? "Select Lead SubStatus" : title, for: .normal)
                         cell.titleLabel.isHidden = false
                         cell.button.addTarget(self, action: #selector(subleadstatusDropdown), for: .touchUpInside)
                         cell.button.tag = indexPath.row
@@ -399,22 +400,7 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
     }
    
 
-    // MARK: - Expand/Collapse Logic
-
-    @objc func toggleSection(_ sender: UIButton) {
-        for i in 0..<data.count{
-            if(i == sender.tag)
-            {
-                data[i].isExpanded.toggle()
-            }
-            else{
-                data[i].isExpanded = false
-            }
-            tableView.reloadData()
-        }
-      
-    }
-    
+   
     
     public func getStatesList()->[String]{
         return InventoryAPIManager.sharedInstance.getstates() as! [String]
@@ -454,18 +440,18 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
         switch leadStatus[sender.tag+1] {
         case .textField(_, let text,_):
             print(sender.tag)
-            if(sender.isSelected){
+            if(!sender.isSelected){
+                sender.isSelected = true
                 self.leadStatus[sender.tag+1] = .textField(placeholder: "VisitedDate", text: text, ishidden: true)
                 self.leadStatus[sender.tag] = .button(title: "customerVisitedstatus", key: "y", ishidden: false)
-
-                let indexPath = IndexPath(row: sender.tag+1, section: 2)
+                let indexPath = IndexPath(row: sender.tag+1, section: 0)
                 self.tableView.reloadRows(at: [indexPath], with: .automatic)
             }
             else{
-                self.leadStatus[sender.tag+1] = .textField(placeholder: "VisitedDate", text: text, ishidden: true)
+                sender.isSelected = false
+                self.leadStatus[sender.tag+1] = .textField(placeholder: "VisitedDate", text: text, ishidden: false)
                 self.leadStatus[sender.tag] = .button(title: "customerVisitedstatus", key: "n", ishidden: false)
-
-                let indexPath = IndexPath(row: sender.tag+1, section: 2)
+                let indexPath = IndexPath(row: sender.tag+1, section: 0)
                 self.tableView.reloadRows(at: [indexPath], with: .automatic)
             }
         case .button(_,_,_):
@@ -512,12 +498,12 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
                self.subleads = self.getsubleadstatus(leadState: "\(selected)")
                if(self.subleads.count == 0){
                    self.leadStatus[sender.tag+1] = .button(title: "Select Lead SubStatus", key: "leadsubstatus",ishidden: true)
-                   let indexPath = IndexPath(row: sender.tag+1, section: 2)
+                   let indexPath = IndexPath(row: sender.tag+1, section: 0)
                    self.tableView.reloadRows(at: [indexPath], with: .automatic)
                }
                else{
                    self.leadStatus[sender.tag+1] = .button(title: "Select Lead SubStatus",key: "leadsubstatus",ishidden: false)
-                   let indexPath = IndexPath(row: sender.tag+1, section: 2)
+                   let indexPath = IndexPath(row: sender.tag+1, section: 0)
                    self.tableView.reloadRows(at: [indexPath], with: .automatic)
                }
            }
@@ -564,45 +550,96 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
         return result
     }
     
-    
+    func showApiError(_ message: String) {
+        let errorAlert = ApiErrorAlertView(message: message)
+        self.present(errorAlert, animated: true)
+    }
    @objc func updatebuylead()
     {
         print(getleadStatusValues())
         let buyleadstatusDic = getleadStatusValues()
 
-//        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.access_token)","Http-User-agent":"postman"] as! [String:String]
-//        let parameters = [
-//            "action":"updatebuylead",
-//              "dealer_id":MyPodManager.user_id,
-//              "api_id":"cteolx2024v1.0",
-//             "device_id":"4fee41be780ae0e7",
-//              "buylead_id":UserDefaults.standard.value(forKey: "buylead_id")!,
-//            "state":dic["State"]!,
-//            "name":dic["First Name"]!,
-//            "mobile":dic["Mobile"]!,
-//            "city":dic["City"]!,
-//            "customer_visited":buyleadstatusDic["City"]!,
-//            "status_date":buyleadstatusDic["City"]!,
-//            "status":buyleadstatusDic["City"]!,
-//            "substatus":buyleadstatusDic["City"]!,
-//            "statustext":buyleadstatusDic["City"]!,
-//            "status_category":buyleadstatusDic[""]!
-//        ] as! [String:Any]
-//
-//        let api = ApiServices()
-//        api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: Constant.OLXApi,authentication: "") { result in
-//            switch result {
-//            case .success(let data):
-//                print("Response Data: \(data)")
-//                if(data["status"] as! String == "success"){
-//                    DispatchQueue.main.async {
-//
-//                    }
-//                }
-//            case .failure(let error):
-//                print("Error: \(error.localizedDescription)")
-//
-//            }
-//        }
+         var message = ""
+     
+        if(buyleadstatusDic["clasification"]!.count == 0){
+            message = "\(message)Classification\n"
+        }
+        if(buyleadstatusDic["leadstatus"]!.count == 0){
+            message = "\(message)Lead Status\n"
+        }
+        if(buyleadstatusDic["leadsubstatus"]!.count == 0){
+            message = "\(message)Lead SubStatus\n"
+        }
+        if(buyleadstatusDic["Select Status Date"]!.count == 0){
+            message = "\(message)Status Date\n"
+        }
+        if(buyleadstatusDic["Note Against Status"]!.count == 0){
+            message = "\(message)Status Text\n"
+        }
+        if(message.count != 0){
+            self.showApiError(message)
+            return
+        }
+        
+        let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.access_token)","Http-User-agent":"postman"] as! [String:String]
+        let parameters = [
+                "status_date": buyleadstatusDic["Select Status Date"]!,
+                "status": buyleadstatusDic["leadstatus"]!,
+                "substatus": buyleadstatusDic["leadsubstatus"]!,
+                "status_category": buyleadstatusDic["clasification"]!,
+                "customer_visited": buyleadstatusDic["VisitedDate"]!,
+                "statustext": buyleadstatusDic["Note Against Status"]!,
+                "buylead_id": UserDefaults.standard.value(forKey: "buylead_id")!,
+                "action": "updatebuyleadstatus",
+                "dealer_id": MyPodManager.user_id,
+            "api_id":"cteolx2024v1.0"] as! [String:Any]
+
+        let api = ApiServices()
+        api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: Constant.OLXApi,authentication: "") { result in
+            switch result {
+            case .success(let data):
+                print("Response Data: \(data)")
+                if(data["status"] as! String == "success"){
+                    DispatchQueue.main.async {
+                        let alert = CustomAlertViewController(
+                            title: "Update Successful",
+                            message: "BuyLead has been updated successfully",
+                            confirmTitle: "Ok",
+                            cancelTitle: "",
+                            confirmAction: {
+                                print("Deleted")
+                                self.dismiss(animated: false)
+                                NotificationCenter.default.post(name:Notification.Name("refreshLeads"), object: nil)
+                            },
+                            cancelAction: {
+                                print("Cancelled")
+                            })
+                        alert.cancelButton.alpha = 0
+                        self.present(alert, animated: true)
+                    }
+                }
+                else{
+                    DispatchQueue.main.async {
+                        let alert = CustomAlertViewController(
+                            title: "Failed",
+                            message: data["data"]! as! String,
+                            confirmTitle: "Ok",
+                            cancelTitle: "",
+                            confirmAction: {
+                                print("Deleted")
+                                self.navigationController?.popViewController(animated: true)
+                            },
+                            cancelAction: {
+                                print("Cancelled")
+                            })
+                        alert.cancelButton.alpha = 0
+                        self.present(alert, animated: true)
+                    }
+                }
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+
+            }
+        }
     }
 }
