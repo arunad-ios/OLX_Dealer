@@ -56,16 +56,6 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
         templetIconImageView.contentMode = .scaleAspectFit
         popupView.addSubview(templetIconImageView)
         
-        
-        inventoryIconImageView.tintColor = .systemBlue
-        inventoryIconImageView.contentMode = .scaleAspectFit
-        popupView.addSubview(inventoryIconImageView)
-        
-        iconImageView.tintColor = .systemBlue
-        iconImageView.contentMode = .scaleAspectFit
-        popupView.addSubview(iconImageView)
-        
-        
         iconImageView.tintColor = .systemBlue
         iconImageView.contentMode = .scaleAspectFit
         popupView.addSubview(iconImageView)
@@ -74,26 +64,27 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
         titleLabel.font = .appFont(.bold, size: 16)
         popupView.addSubview(titleLabel)
 
-        contactLabel.text = "\(items["contact_name"] as! String) (\(items["mobile"] as! String))"
+        
+        if let name = items["contact_name"] as? String,
+           let mobile = items["mobile"] as? String {
+            contactLabel.text = "\(name) (\(mobile))"
+        }
         contactLabel.font = .appFont(.regular, size: 16)
         contactLabel.textColor = .black
         popupView.addSubview(contactLabel)
-        
-        
-        
 
-//        templateTextField.placeholder = "Select Message Template"
-//        templateTextField.borderStyle = .roundedRect
-//       // templateTextField.inputView = templatePicker
+        
+        
         templateTextField.addTarget(self, action: #selector(toggleDropdown), for: .touchUpInside)
         templateTextField.setTitle("Select Message Template", for: .normal)
         templateTextField.setTitleColor(.black, for: .normal)
         templateTextField.layer.cornerRadius = 5
         templateTextField.titleLabel?.font = .appFont(.regular, size: 12)
         popupView.addSubview(templateTextField)
-        templateTextField.contentHorizontalAlignment = .left
+        templateTextField.contentHorizontalAlignment = .leading
         templateTextField.backgroundColor = .sendsms
-        
+      
+
      
         
         inventoryButton.addTarget(self, action: #selector(showinventoryView), for: .touchUpInside)
@@ -101,10 +92,10 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
         inventoryButton.setTitle("Select Inventory", for: .normal)
         inventoryButton.layer.cornerRadius = 5
         inventoryButton.titleLabel?.font = .appFont(.regular, size: 12)
-
-      
         popupView.addSubview(inventoryButton)
-        inventoryButton.contentHorizontalAlignment = .left
+        inventoryButton.contentHorizontalAlignment = .leading
+
+        
         inventoryButton.backgroundColor =  .sendsms
         
         inventoryButtonHeightConstraint = inventoryButton.heightAnchor.constraint(equalToConstant: 0)
@@ -114,7 +105,6 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
         messageTextView.layer.borderColor = UIColor.lightGray.cgColor
      //   messageTextView.layer.borderWidth = 1
         messageTextView.layer.cornerRadius = 3
-        messageTextView.font = UIFont.systemFont(ofSize: 16)
         messageTextView.backgroundColor =  .sendsms
         popupView.addSubview(messageTextView)
         messageTextView.font = .appFont(.regular, size: 12)
@@ -162,16 +152,11 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
         dropdown = DropdownView(items: items,headertitle: "Select Lead Status", frame: dropdownFrame)
         dropdown?.onItemSelected = { selected in
             sender.setTitle(selected, for: .normal)
-           
+            self.inventoryButton.setTitle("Select Inventory", for: .normal)
+            self.messageTextView.text = ""
             if(selected == "Appointment fixed" || selected == "Uncontactable"){
                 self.inventoryButtonHeightConstraint.constant = 40
                 self.inventoryButton.isHidden = false
-//                if(selected == "Appointment fixed"){
-//                    self.messageTextView.text = "Dear \(self.items["contact_name"] as! String), Thank you for contacting us. Your appointment for {Make} {Model} {Year} has been fixed {Appointment Time}. Our address is {Dealer Address} \r\nFor any queries, please call. {Dealer ship Name}."
-//                }
-//                if(selected == "Uncontactable"){
-//                    self.messageTextView.text = "Dear \(self.items["contact_name"] as! String), we tried to reach you for your enquiry about our {Make} {Model}. We would be happy to help you in your car buying process. Please feel free to call for any assistance. Regards,{Dealer ship Name}"
-//                }
             }
             else{
                 self.inventoryButtonHeightConstraint.constant = 0
@@ -183,7 +168,7 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
                     self.messageTextView.text = "Dear \(self.items["contact_name"] as! String), Thanks for your car booking at our showroom. Please feel free to call at any time. \nRegards,\n \(self.dealerinfo?.name ?? "")"
                 }
                 if(selected == "Customer Feedback"){
-                    self.messageTextView.text = "Dear Customer,\n\nThank you for choosing {Dealer ship Name}. Please give your valuable feedback on https://www.olx.in/profile/\(MyPodManager.user_id)\n\nRegards,\n \(self.dealerinfo?.name ?? "")"
+                    self.messageTextView.text = "Dear Customer,\n\nThank you for choosing \(self.dealerinfo?.name ?? ""). Please give your valuable feedback on https://www.olx.in/profile/\(MyPodManager.user_id)\n\nRegards,\n \(self.dealerinfo?.name ?? "")"
                 }
                 if(selected == "Thank you"){
                     self.messageTextView.text = "Dear \(self.items["contact_name"] as! String), Thank you for our phone call just now. Please feel free to call for any future assistance. \nRegards, \n \(self.dealerinfo?.name ?? "")"
@@ -284,6 +269,10 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
     @objc private func sendMessage() {
         print("SMS Sent to: \(contactLabel.text ?? "")")
         
+        guard let body = contactLabel.text, !body.isEmpty else {
+            // Show alert
+            return
+        }
         if MFMessageComposeViewController.canSendText() {
             messageVC.messageComposeDelegate = self
             messageVC.recipients = ["\(self.items["mobile"] as! String)"] // Optional: phone number

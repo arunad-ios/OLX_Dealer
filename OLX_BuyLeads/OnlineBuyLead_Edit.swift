@@ -28,20 +28,47 @@ enum SectionType {
 }
 class VehicleinfoCell: UITableViewCell {
     let label = UILabel()
-    
+    let deleteBtn = UIButton()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         label.text = ""
-        label.numberOfLines = 0
+      //  label.numberOfLines = 0
         label.font = .appFont(.regular, size: 14)
-        contentView.addSubview(label)
+      //  contentView.addSubview(label)
+        label.textColor = UIColor.black
         label.translatesAutoresizingMaskIntoConstraints = false
+        deleteBtn.setImage(UIImage.named( "delete"), for: .normal)
+
+        let stackView = UIStackView(arrangedSubviews: [label,deleteBtn])
+        stackView.axis = .horizontal // Horizontal layout
+        stackView.spacing = 5        // Space between items
+        stackView.distribution = .fillProportionally
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+               
+               // Add StackView to the View
+        contentView.addSubview(stackView)
+               
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
-        ])
+            deleteBtn.widthAnchor.constraint(equalToConstant: 30),
+            deleteBtn.heightAnchor.constraint(equalToConstant: 30),
+            ])
+               // Constraints
+               NSLayoutConstraint.activate([
+                stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+               stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+                stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+                stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+                 //  stackView.widthAnchor.constraint(equalToConstant: 300),
+                   stackView.heightAnchor.constraint(equalToConstant: 30)
+               ])
+        
+//        NSLayoutConstraint.activate([
+//            label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+//            label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+//            label.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+//            label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
+//        ])
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 }
@@ -399,11 +426,10 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
        .textField(placeholder: "VisitedDate", text: "",ishidden: true),
         .textField(placeholder: "Note Against Status", text: "",ishidden: false),
         .button(title: "sendsms",key:"sendsms", ishidden: false)
-
    ]
  
     
-    var expandedSections: Set<Int> = [] // Track expanded sections
+    var expandedSections: Set<Int> = [3] // Track expanded sections
     var dropdown: DropdownView?
 
     override func viewDidLoad() {
@@ -420,8 +446,6 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
         backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         let backBArButton = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItem = backBArButton
-        
-        
         self.setupViews()
         self.setupLayout(topviewheight: 60)
         self.loadbuylead()
@@ -443,7 +467,9 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
            view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.sectionHeaderTopPadding = 1
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 1
+        }
         tableView.separatorColor = .none
         tableView.separatorStyle = .none
         tableView.register(HistoryCell.self, forCellReuseIdentifier: "HistoryCell")
@@ -614,6 +640,7 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
                                 
                                 self.leadStatus[0] = .button(title: self.buyLeadData["status_category"] as? String ?? "Select Classification",key:"clasification",ishidden: false)
                                 self.leadStatus[1] = .button(title: self.buyLeadData["status"] as? String ?? "Select Lead Status",key:"leadstatus",ishidden: false)
+                                self.subleads = self.getsubleadstatus(leadState: "\(self.buyLeadData["status"] as? String ?? "")")
                                 self.leadStatus[2] = .button(title: self.buyLeadData["substatus"] as? String ?? "Select Lead SubStatus",key:"leadsubstatus",ishidden: false)
                                 self.leadStatus[3] = .textField(placeholder: "Select Status Date", text: self.buyLeadData["status_date"] as? String ?? "",ishidden: false)
                                 self.leadStatus[5] = .textField(placeholder: "VisitedDate", text: self.buyLeadData["customer_visited"] as? String ?? "",ishidden: false)
@@ -734,6 +761,7 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
                     if(indexPath.row == 2){
                         cell.button.setTitle(title.count == 0 ? "Select Lead SubStatus" : title, for: .normal)
                         cell.titleLabel.isHidden = false
+                        cell.titleLabel.text = ""
                         cell.button.addTarget(self, action: #selector(subleadstatusDropdown), for: .touchUpInside)
                         cell.button.tag = indexPath.row
                     }
@@ -826,7 +854,7 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
         let titleLabel = UILabel(frame: CGRect(x: 16, y: 10, width: tableView.frame.width - 50, height: 30))
         titleLabel.text = data[section].title
         titleLabel.textColor = .appPrimary
-        titleLabel.font = .appFont(.regular, size: 12)
+        titleLabel.font = .appFont(.regular, size: 14)
         headerView.addSubview(titleLabel)
 
         let expandButton = UIButton(frame: CGRect(x: tableView.frame.width - 40, y: 10, width: 30, height: 30))
@@ -848,15 +876,21 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
 
     // MARK: - Expand/Collapse Logic
     @objc func toggleViewSection(_ sender: UITapGestureRecognizer) {
-        self.expandedSections.removeAll()
-        expandedSections.insert(sender.view!.tag)
+        
         for i in 0..<data.count{
             if(i == sender.view!.tag)
             {
                 data[i].isExpanded.toggle()
+                if(expandedSections.contains(i))
+                {
+                    expandedSections.remove(i)
+                }
+                else{
+                    expandedSections.insert(i)
+                }
             }
             else{
-                expandedSections.remove(sender.view!.tag)
+                expandedSections.remove(i)
                 data[i].isExpanded = false
             }
             tableView.reloadData()
@@ -864,16 +898,21 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     @objc func toggleSection(_ sender: UIButton) {
-        self.expandedSections.removeAll()
-        expandedSections.insert(sender.tag)
-
+    
         for i in 0..<data.count{
             if(i == sender.tag)
             {
                 data[i].isExpanded.toggle()
+                if(expandedSections.contains(i))
+                {
+                    expandedSections.remove(i)
+                }
+                else{
+                    expandedSections.insert(i)
+                }
             }
             else{
-                expandedSections.remove(sender.tag)
+                expandedSections.remove(i)
                 data[i].isExpanded = false
             }
             tableView.reloadData()
@@ -910,7 +949,6 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
             }
             break
         }
-       
     }
     
     @objc func togglecustomerVisited(sender : UIButton){

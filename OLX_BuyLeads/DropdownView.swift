@@ -2,7 +2,7 @@
 //  DropdownView.swift
 //  OLX_BuyLeads
 //
-//  Created by Chandini on 09/04/25.
+//  Created by Aruna on 09/04/25.
 //
 
 import Foundation
@@ -40,8 +40,9 @@ class DropdownView: UIView, UITableViewDataSource, UITableViewDelegate {
         tableView.layer.cornerRadius = 8
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         addSubview(tableView)
-        tableView.sectionHeaderTopPadding = 0
-
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),

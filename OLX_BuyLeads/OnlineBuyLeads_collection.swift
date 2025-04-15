@@ -120,7 +120,7 @@ class OnlineBuyLeads_collection : UITableViewCell, UICollectionViewDelegate, UIC
         if(indexPath.row > 2){
             let spacing: CGFloat = 5
             let totalSpacing = spacing * 2 + spacing * 2  // left + right + inter-item spacing * 2
-            let cellwidth = (collectionView.frame.width - totalSpacing) / 2
+            let cellwidth = (collectionView.frame.width - totalSpacing) / 3
             return CGSize(width: cellwidth, height: 30)
         }
         let spacing: CGFloat = 5

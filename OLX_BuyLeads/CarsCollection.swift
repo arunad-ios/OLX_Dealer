@@ -32,7 +32,7 @@ class CarsCollection : UICollectionViewCell {
        
         chatBtn.translatesAutoresizingMaskIntoConstraints = false
       
-        let image = UIImage.named( "chat")
+        let image = UIImage.named( "olxchat")
         chatBtn.setImage(image, for: .normal)
         deleteBtn.setImage(UIImage.named( "delete"), for: .normal)
         deleteBtn.translatesAutoresizingMaskIntoConstraints = false
@@ -60,9 +60,11 @@ class CarsCollection : UICollectionViewCell {
                // Constraints
                NSLayoutConstraint.activate([
                 stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            //    stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+               stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 40),
+                stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
+
                 stackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-                   stackView.widthAnchor.constraint(equalToConstant: 300),
+                 //  stackView.widthAnchor.constraint(equalToConstant: 300),
                    stackView.heightAnchor.constraint(equalToConstant: 30)
                ])
     }

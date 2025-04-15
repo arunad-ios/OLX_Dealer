@@ -100,7 +100,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
 
         // Visited Label
         visitedLabel.text = "VISITED"
-        visitedLabel.font = .appFont(.medium, size: 15)
+        visitedLabel.font = .appFont(.medium, size: 14)
         visitedLabel.textColor = .systemGreen
         visitedLabel.textAlignment = .right
 
@@ -119,7 +119,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
             separatorView.heightAnchor.constraint(equalToConstant: 1)
         ])
         // Car Label
-        carLabel.font = .RobotoRegular
+        carLabel.font = .appFont(.regular, size: 14)
         carLabel.textColor =  UIColor.black
         carLabel.numberOfLines = 0
         
@@ -157,29 +157,8 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         let spacer2 = UIView()
         let spacer3 = UIView()
         let spacer4 = UIView()
-//        spacer1.backgroundColor = .white
-//        spacer2.backgroundColor = .white
-//        spacer3.backgroundColor = .white
-//        spacer4.backgroundColor = .white
-//
-//        spacer1.translatesAutoresizingMaskIntoConstraints = false
-//        spacer2.translatesAutoresizingMaskIntoConstraints = false
-//        spacer3.translatesAutoresizingMaskIntoConstraints = false
-//        spacer4.translatesAutoresizingMaskIntoConstraints = false
-//      
-//
-//        NSLayoutConstraint.activate([
-//            spacer1.widthAnchor.constraint(equalToConstant: 1),
-//            spacer4.widthAnchor.constraint(equalToConstant: 1),
-//            spacer2.widthAnchor.constraint(equalToConstant: 1),
-//            spacer3.widthAnchor.constraint(equalToConstant: 1),
-//        ])
-   
-      
-
         spacer2.backgroundColor = .white
         spacer3.backgroundColor = .white
-
         // Set fixed width and full height
         NSLayoutConstraint.activate([
             spacer2.widthAnchor.constraint(equalToConstant: 1),
@@ -195,10 +174,10 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
              
         bottomView.addSubview(bottomstackView)
         
-        bottomstackView.layer.cornerRadius = 12
-        bottomstackView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        bottomstackView.layer.masksToBounds = true
-        bottomstackView.backgroundColor =   UIColor(red: 216/255, green: 219/255, blue: 224/255, alpha: 1.0)
+        bottomView.layer.cornerRadius = 12
+        bottomView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        bottomView.layer.masksToBounds = true
+        bottomView.backgroundColor =   UIColor(red: 216/255, green: 219/255, blue: 224/255, alpha: 1.0)
         
         bottomView.isUserInteractionEnabled = true
         
@@ -210,11 +189,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
             bottomstackView.heightAnchor.constraint(equalToConstant: 50),
         ])
         
-   
-//        let stackView = UIStackView(arrangedSubviews: [nameLabel, visibleStackView, separatorView,dateLabel,collectionView,carLabel,bottomstackView])
-        
-        
-        
+
         
         
         let stackView = UIStackView(arrangedSubviews: [nameLabel, visibleStackView, separatorView, dateLabel, collectionView, carLabel])
@@ -233,7 +208,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         containerView.layer.shadowColor = UIColor.darkGray.cgColor
         containerView.layer.shadowOpacity = 0.5
         containerView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        containerView.layer.shadowRadius = 4
+        containerView.layer.shadowRadius = 5
         containerView.layer.masksToBounds = false
 
         contentView.addSubview(containerView)
@@ -274,7 +249,6 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         status_category.titleLabel?.font = .appFont(.bold, size: 12)
         contentView.addSubview(status_category)
         status_category.contentHorizontalAlignment = .center
-
         contentView.bringSubviewToFront(status_category)
         
         NSLayoutConstraint.activate([
@@ -327,8 +301,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CarsCollection.identifier, for: indexPath) as! CarsCollection
-        let dic = cars[indexPath.item] as! NSDictionary
-        print((dic["make"] as! String))
+        guard let dic = cars[indexPath.item] as? [String: Any] else { return cell }
         cell.configure(title: "\((dic["make"] as! String))")
         cell.chatBtn.tag = indexPath.row
         cell.chatBtn.addTarget(self, action: #selector(chatFunction), for: .touchUpInside)
@@ -360,6 +333,11 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
 
 extension Bundle {
     public static var buyLeadsBundle: Bundle {
-        return Bundle(for: OnlineBuyLeads.self)
+        if let bundleURL = Bundle.main.url(forResource: "OLX_BuyLeads", withExtension: "bundle"),
+                  let bundle = Bundle(url: bundleURL) {
+                   return bundle
+               } else {
+                   return Bundle(for: OnlineBuyLeads.self)
+               }
     }
 }

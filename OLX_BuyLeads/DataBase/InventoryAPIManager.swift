@@ -281,7 +281,7 @@ class InventoryAPIManager: NSObject {
                 print([])
             }
         
-        let modelsArray:[Models] = (m_Models as NSDictionary).allValues as! [Models]
+    //    let modelsArray:[Models] = (m_Models as NSDictionary).allValues as! [Models]
         let returnModelsArry:[String] = [String]()
         let orderedSet = NSOrderedSet(array: returnModelsArry)
         let arrayWithoutDuplicates: [Any] = orderedSet.array

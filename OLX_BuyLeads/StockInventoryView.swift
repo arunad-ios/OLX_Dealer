@@ -2,7 +2,7 @@
 //  StockInventoryView.swift
 //  OLX_BuyLeads
 //
-//  Created by Chandini on 11/04/25.
+//  Created by Aruna on 11/04/25.
 //
 
 import Foundation
@@ -41,7 +41,9 @@ public class StockInventoryView : UIViewController, UITableViewDataSource, UITab
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 60
-        tableView.sectionHeaderTopPadding = 0
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -143,14 +145,14 @@ public class StockInventoryView : UIViewController, UITableViewDataSource, UITab
             let Adstock = searchAds[indexPath.row]
             let name = Adstock.name ?? ""
             cell.textLabel?.text = "\(items[indexPath.row].adId!) \(name)"
-            cell.textLabel?.font =  .RobotoRegular
+            cell.textLabel?.font =  .appFont(.regular, size: 14)
             return cell
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let Adstock = items[indexPath.row] 
         let name = Adstock.name ?? ""
         cell.textLabel?.text = "\(items[indexPath.row].adId!) \(name)"
-        cell.textLabel?.font =  .RobotoRegular
+        cell.textLabel?.font =  .appFont(.regular, size: 14)
         return cell
     }
 

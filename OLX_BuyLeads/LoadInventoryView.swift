@@ -2,7 +2,7 @@
 //  LoadInventoryView.swift
 //  OLX_BuyLeads
 //
-//  Created by Chandini on 05/04/25.
+//  Created by Aruna on 05/04/25.
 //
 
 import Foundation
@@ -68,7 +68,9 @@ public class LoadInventoryView : UIViewController, UITableViewDataSource, UITabl
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 60
-        tableView.sectionHeaderTopPadding = 0
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -168,14 +170,14 @@ public class LoadInventoryView : UIViewController, UITableViewDataSource, UITabl
             let dic = searchAds[indexPath.item] as! NSDictionary
             print((dic["name"] as! String))
             cell.textLabel?.text = "\((dic["name"] as! String))"
-            cell.textLabel?.font =  .RobotoRegular
+            cell.textLabel?.font = .appFont(.regular, size: 14)
             return cell
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let dic = items[indexPath.item] as! NSDictionary
         print((dic["name"] as! String))
         cell.textLabel?.text = "\((dic["name"] as! String))"
-        cell.textLabel?.font =  .RobotoRegular
+        cell.textLabel?.font =  .appFont(.regular, size: 14)
         return cell
     }
 

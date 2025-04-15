@@ -18,7 +18,7 @@ struct DealerInfo: Codable {
 }
 
 
-public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewDataSource,TableCellDelegate,collectionCellDelegate,UISearchBarDelegate {
+public class OnlineBuyLeads: UIViewController,TableCellDelegate,collectionCellDelegate,UISearchBarDelegate {
   
     
    
@@ -106,6 +106,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         setupTableView()
        }
 
+    //MARK : navigation titleview
        func setupSearchBar() {
            let bgView = UIView.init(frame: CGRect(x: 0, y: 0, width: 200, height: 35))
            bgView.backgroundColor = .white
@@ -171,8 +172,21 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 print("Response Dealer Details: \(data)")
                 DispatchQueue.main.async {
                     self.loadingView.hide()
+                    var fullAddress = ""
                         if  let dic = data["data"] as? NSDictionary{
-                            self.saveUserToFile(DealerInfo(id: dic["id"] as! String, name: dic["name"]! as! String, email: dic["phone"]! as! String, mobile: dic["email"]! as! String, address: ""))
+                            if let addressDict = (dic["address"] as! NSArray).firstObject as? [String:Any] {
+                                let street = addressDict["street_address"] as? String ?? ""
+                                let city = addressDict["city"] as? String ?? ""
+                                let state = addressDict["state"] as? String ?? ""
+                                let postalCode = addressDict["postal_code"] as? Int ?? 0
+                                let country = addressDict["country_code"] as? String ?? ""
+                                fullAddress = [street, city, state, postalCode == 0 ? nil : "\(postalCode)", country]
+                                    .compactMap { $0?.isEmpty == false ? $0 : nil }
+                                    .joined(separator: ", ")
+                                print("Full Address: \(fullAddress)")
+                            }
+                            
+                            self.saveUserToFile(DealerInfo(id: dic["id"] as! String, name: dic["name"]! as! String, email: dic["phone"]! as! String, mobile: dic["email"]! as! String, address: fullAddress))
                         }
                         else{
                             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
@@ -284,15 +298,15 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
-    public func getMakeList()->[String]{
-        return InventoryAPIManager.sharedInstance.getMakes() as! [String]
-    }
-    public func getModelList()->[String]{
-        return InventoryAPIManager.sharedInstance.getModels() as! [String]
-    }
-    public func getStatesList()->[String]{
-        return InventoryAPIManager.sharedInstance.getstates() as! [String]
-    }
+//    public func getMakeList()->[String]{
+//        return InventoryAPIManager.sharedInstance.getMakes() as! [String]
+//    }
+//    public func getModelList()->[String]{
+//        return InventoryAPIManager.sharedInstance.getModels() as! [String]
+//    }
+//    public func getStatesList()->[String]{
+//        return InventoryAPIManager.sharedInstance.getstates() as! [String]
+//    }
     
       func loadInventory()
       {
@@ -393,14 +407,10 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
-    
-    
    @objc func fetchBuyLeads()
     {
-        
         loadingView.show(in: self.view, withText: "Loading Leads...")
         self.noleadView.isHidden = true
-
         let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.access_token)","Http-User-agent":"postman"] as! [String:String]
         
         let parameters = [ "action":"loadallbuylead",
@@ -415,8 +425,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                            "app_type":"olx",
                            "search_key":self.searchBar.text ?? "",
                            "android_version":"15"] as! [String:Any]
-     
-     
         let api = ApiServices()
         api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: Constant.OLXApi,authentication: "") { result in
             switch result {
@@ -462,7 +470,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     }
     func refreshToken()
     {
-        
         let headers = ["x-origin-Panamera":"dev","Api-Version":"134","client-language":"en-in","Authorization":"Bearer \(MyPodManager.refresh_token)"] as! [String:String]
         let parameters = ["user_id":MyPodManager.user_id] as! [String:Any]
         let api = ApiServices()
@@ -511,7 +518,9 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         tableView.separatorStyle = .none
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.sectionHeaderTopPadding = 5
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 5
+        }
         tableView.register(OnlineBuyLeads_cell.self, forCellReuseIdentifier: "CustomCell")
         tableView.register(OnlineBuyLeads_collection.self, forCellReuseIdentifier: OnlineBuyLeads_collection.identifier)
       //  tableView.register(LeadTableViewCell.self, forCellReuseIdentifier: "LeadCell")
@@ -577,6 +586,32 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         return InventoryAPIManager.sharedInstance.getStocks() as! [Ads]
     }
     
+  
+}
+extension OnlineBuyLeads: PopupTableViewDelegate {
+    public func didSelectItem(_ item: String) {
+        print("Selected item: \(item)")
+        self.status = item
+        self.data[0] = item
+        self.fetchBuyLeads()
+    }
+}
+extension OnlineBuyLeads: InventoryTableViewDelegate {
+    public func didSelectInventory(_ item: String) {
+        print("Selected item: \(item)")
+        if(self.inventoryId == ""){
+            self.inventoryId = item
+        }
+        else{
+            self.inventoryId = ""
+        }
+        self.fetchBuyLeads()
+    }
+}
+// MARK: - UITableViewDelegate & DataSource
+
+extension OnlineBuyLeads: UITableViewDelegate, UITableViewDataSource {
+    
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if(section == 0)
         {
@@ -610,11 +645,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     public func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
-//    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "LeadCell", for: indexPath) as! LeadTableViewCell
-//        // Optionally customize data
-//        return cell
-//    }
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if(indexPath.section == 1){
             let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! OnlineBuyLeads_cell
@@ -630,11 +660,11 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                     make = "\(make)\n\(car["make"] as! String)"
                 }
             }
-//            cell.configure(with: response["contact_name"]! as! String, statustext: response["status_text"]! as! String,make_text: make,cars)
             cell.collectionView.tag = indexPath.row
             cell.configure(name: response["contact_name"]! as! String, status: response["status_text"]! as! String, date: make, cars: cars as! [Any],phonenumber: response["mobile"]! as! String)
             
-            cell.status_category.setTitle("\((response["status_category"]! as! String)) ", for: .normal)
+            //change status category backgourd based on category
+            cell.status_category.setTitle(" \((response["status_category"]! as! String)) ", for: .normal)
             if let original = UIImage(named: "tag", in: .buyLeadsBundle, compatibleWith: nil) {
                     if((response["status_category"]! as! String).count == 0){
                         cell.status_category.isHidden = true
@@ -651,7 +681,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                         else{
                             let tinted = original.tinted(with: .systemOrange)
                             cell.status_category.setBackgroundImage(tinted, for: .normal)
-
                         }
                     }
             }
@@ -663,6 +692,8 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 cell.visitedLabel.alpha = 0.0
             }
             cell.visitedLabel.tag = indexPath.row
+            
+            //show visiting popup
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(visitingStatus))
             cell.visitedLabel.addGestureRecognizer(tapGesture)
             cell.visitedLabel.isUserInteractionEnabled = true
@@ -685,6 +716,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             cell.deleteBtn.tag = indexPath.row
             cell.deleteBtn.addTarget(self, action: #selector(deleteBuyLead), for: .touchUpInside)
             
+            //update BuyLead
             cell.editBtn.tag = indexPath.row
             cell.editBtn.addTarget(self, action: #selector(editBuylead), for: .touchUpInside)
             return cell
@@ -905,6 +937,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     }
     @objc func calltoBuyLead(sender : UITapGestureRecognizer){
         let response = Buyleads[sender.view!.tag] as! NSDictionary
+        self.phoneClicked(dic: response)
         if let phoneURL = URL(string: "tel://\(response["mobile"]! as! String)"),
            UIApplication.shared.canOpenURL(phoneURL) {
             UIApplication.shared.open(phoneURL)
@@ -912,11 +945,56 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             print("📵 Calling not supported on this device")
             let response = Buyleads[sender.view!.tag] as! NSDictionary
             UserDefaults.standard.set(response["buylead_id"]!, forKey: "buylead_id")
-            let popup = BuyLeadStatus_update()
-            popup.items = response as! [String : Any] as NSDictionary
-            popup.modalPresentationStyle = .automatic
-            present(popup, animated: true)
         }
+    }
+    func phoneClicked(dic : NSDictionary)
+    {
+        let response = dic
+
+            self.noleadView.isHidden = true
+            let headers = ["x-origin-Panamera":"dev","Api-Version":"155","Client-Platform":"web","Client-Language":"en-in","Authorization":"Bearer \(MyPodManager.access_token)","Http-User-agent":"postman"] as! [String:String]
+
+            let parameters = [
+                "action":"submitbuyleadphoneclicksv1",
+                "dealer_id":MyPodManager.user_id,
+                    "api_id": "cteolx2024v1.0",
+                   "buylead_id":response["buylead_id"]!,
+                "name":response["contact_name"]!,
+                   "start_time":"2025-01-29 10:05:27",
+                   "mobile":response["mobile"]!,
+                   "date_app":response["addeddate"]!,
+                   "status_text":response["status_text"]!
+            ] as! [String:Any]
+            let api = ApiServices()
+            api.sendRawDataWithHeaders(parameters: parameters, headers: headers,url: Constant.OLXApi,authentication: "") { result in
+                switch result {
+                case .success(let data):
+                    print("Response Data: \(data)")
+                    DispatchQueue.main.async {
+                        self.loadingView.hide()
+                        if  let dic = data["data"] as? NSDictionary{
+                            if(data["status"] as! String == "success"){
+                                let popup = BuyLeadStatus_update()
+                                popup.items = response as! [String : Any] as NSDictionary
+                                popup.modalPresentationStyle = .automatic
+                                self.present(popup, animated: true)
+                            }
+                            else{
+                            }
+                        }
+                        else{
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                self.loadingView.hide()
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    print("Error: \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        self.loadingView.hide()
+                    }
+                }
+            }
     }
     func collectionViewCellDidSelect(item: String) {
         print("Selected item from collectionView: \(item)")
@@ -995,24 +1073,5 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
     }
-}
-extension OnlineBuyLeads: PopupTableViewDelegate {
-    public func didSelectItem(_ item: String) {
-        print("Selected item: \(item)")
-        self.status = item
-        self.data[0] = item
-        self.fetchBuyLeads()
-    }
-}
-extension OnlineBuyLeads: InventoryTableViewDelegate {
-    public func didSelectInventory(_ item: String) {
-        print("Selected item: \(item)")
-        if(self.inventoryId == ""){
-            self.inventoryId = item
-        }
-        else{
-            self.inventoryId = ""
-        }
-        self.fetchBuyLeads()
-    }
+    
 }

@@ -2,7 +2,7 @@
 //  BuyLeadStatus_update.swift
 //  OLX_BuyLeads
 //
-//  Created by Chandini on 11/04/25.
+//  Created by Aruna on 11/04/25.
 
 
 import Foundation
@@ -89,7 +89,9 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
         self.view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.sectionHeaderTopPadding = 1
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 1
+        }
         tableView.separatorColor = .none
         tableView.separatorStyle = .none
         tableView.register(HistoryCell.self, forCellReuseIdentifier: "HistoryCell")
@@ -102,7 +104,7 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
         
            // Bottom Button
         updateButton.setTitle("Update", for: .normal)
-        updateButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
+        updateButton.titleLabel?.font = .appFont(.bold, size: 18)
         updateButton.backgroundColor = .appPrimary
         updateButton.setTitleColor(.white, for: .normal)
         updateButton.layer.cornerRadius = 10
@@ -158,7 +160,7 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
               label.textAlignment = .left
               label.textColor = .black
               label.backgroundColor = .clear
-              label.font = .RobotoRegular
+              label.font = .appFont(.regular, size: 14)
               label.layer.cornerRadius = 8
               label.clipsToBounds = true
           }
@@ -167,7 +169,7 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
         contactnumber.text = "\(items["mobile_clicked"]! as! String)\(items["mobile"]! as! String)"
         closeBtn.setImage(UIImage.named( "close"),for: .normal)
         statusLbl.text = (items["status_text"]! as! String)
-          bottomLabel2.text = (items["addeddate"]! as! String)
+        bottomLabel2.text = (items["addeddate"]! as! String)
         bottomLabel2.backgroundColor = .blue
       
 
