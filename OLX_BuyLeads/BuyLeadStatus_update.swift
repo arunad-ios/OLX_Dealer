@@ -103,7 +103,7 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
            // Bottom Button
         updateButton.setTitle("Update", for: .normal)
         updateButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18)
-        updateButton.backgroundColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
+        updateButton.backgroundColor = .appPrimary
         updateButton.setTitleColor(.white, for: .normal)
         updateButton.layer.cornerRadius = 10
         updateButton.addTarget(self, action: #selector(updatebuylead), for: .touchUpInside)
@@ -158,7 +158,7 @@ class BuyLeadStatus_update : UIViewController, UITableViewDelegate, UITableViewD
               label.textAlignment = .left
               label.textColor = .black
               label.backgroundColor = .clear
-              label.font = UIFont(name: "Roboto-Regular", size: 14)
+              label.font = .RobotoRegular
               label.layer.cornerRadius = 8
               label.clipsToBounds = true
           }

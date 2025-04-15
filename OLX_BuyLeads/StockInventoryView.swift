@@ -36,7 +36,7 @@ public class StockInventoryView : UIViewController, UITableViewDataSource, UITab
    
     private func setupTableView() {
         
-        tableView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
+        tableView.backgroundColor = .cellbg
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = UITableView.automaticDimension
@@ -64,14 +64,14 @@ public class StockInventoryView : UIViewController, UITableViewDataSource, UITab
         headerView.backgroundColor = .white
         let imageview = UIImageView(frame: CGRect(x: 16, y: 10, width: 30, height: 30))
         imageview.layer.cornerRadius = imageview.frame.size.width / 2
-        imageview.backgroundColor = UIColor(red: 243/255, green: 245/255, blue: 246/255, alpha: 1.0)
+        imageview.backgroundColor = .sendsms
         imageview.layer.masksToBounds = true
         imageview.image = UIImage(named: "filter", in: .buyLeadsBundle, compatibleWith: nil)
         headerView.addSubview(imageview)
         let titleLabel = UILabel(frame: CGRect(x: 50, y: 10, width: tableView.frame.width, height: 30))
         titleLabel.text = "Inventory Cars"
         titleLabel.textColor = UIColor.OLXBlueColor
-        titleLabel.font = .RobotoMedium(fontsize: 16)
+        titleLabel.font = .appFont(.medium, size: 14)
         headerView.addSubview(titleLabel)
         
         
@@ -143,14 +143,14 @@ public class StockInventoryView : UIViewController, UITableViewDataSource, UITab
             let Adstock = searchAds[indexPath.row]
             let name = Adstock.name ?? ""
             cell.textLabel?.text = "\(items[indexPath.row].adId!) \(name)"
-            cell.textLabel?.font =  UIFont(name: "Roboto-Regular", size: 14)
+            cell.textLabel?.font =  .RobotoRegular
             return cell
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let Adstock = items[indexPath.row] 
         let name = Adstock.name ?? ""
         cell.textLabel?.text = "\(items[indexPath.row].adId!) \(name)"
-        cell.textLabel?.font =  UIFont(name: "Roboto-Regular", size: 14)
+        cell.textLabel?.font =  .RobotoRegular
         return cell
     }
 

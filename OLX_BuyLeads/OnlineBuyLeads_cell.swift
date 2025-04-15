@@ -72,12 +72,12 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         contentView.backgroundColor = .clear
 //OLXBlueColor
         // Name Label
-        nameLabel.font = UIFont(name: "Roboto-Medium", size: 15)
+        nameLabel.font = .appFont(.medium, size: 15)
         nameLabel.textColor =  UIColor.black
         nameLabel.numberOfLines = 0
         nameLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         // Name Label
-        phoneLabel.font = UIFont(name: "Roboto-Regular", size: 16)
+        phoneLabel.font = .appFont(.regular, size: 16)
         phoneLabel.textColor =  .systemBlue
         phoneLabel.numberOfLines = 0
         phoneLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -89,18 +89,18 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         
         
         // Status Label
-        statusLabel.font = UIFont(name: "Roboto-Regular", size: 14)
+        statusLabel.font = .appFont(.regular, size: 14)
         statusLabel.textColor =   UIColor.black
         statusLabel.numberOfLines = 1
         
         // Date Label
-        dateLabel.font = UIFont(name: "Roboto-Regular", size: 14)
+        dateLabel.font = .appFont(.regular, size: 14)
         dateLabel.numberOfLines = 0
         dateLabel.textColor =  UIColor.black
 
         // Visited Label
         visitedLabel.text = "VISITED"
-        visitedLabel.font = UIFont(name: "Roboto-Medium", size: 15)
+        visitedLabel.font = .appFont(.medium, size: 15)
         visitedLabel.textColor = .systemGreen
         visitedLabel.textAlignment = .right
 
@@ -113,10 +113,13 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         visibleStackView.translatesAutoresizingMaskIntoConstraints = false
         
         // Separator
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
         separatorView.backgroundColor = .lightGray
-
+        NSLayoutConstraint.activate([
+            separatorView.heightAnchor.constraint(equalToConstant: 1)
+        ])
         // Car Label
-        carLabel.font = UIFont(name: "Roboto-Regular", size: 14)
+        carLabel.font = .RobotoRegular
         carLabel.textColor =  UIColor.black
         carLabel.numberOfLines = 0
         
@@ -128,18 +131,18 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         collectionView.register(CarsCollection.self, forCellWithReuseIdentifier: CarsCollection.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
 
-        heightconstaint = collectionView.heightAnchor.constraint(equalToConstant: 100)
+        heightconstaint = collectionView.heightAnchor.constraint(equalToConstant: 50)
         heightconstaint.isActive = true
-
         
+        collectionView.setContentHuggingPriority(.required, for: .vertical)
+        collectionView.setContentCompressionResistancePriority(.required, for: .vertical)
         //bottom View
-        bottomView.backgroundColor =  UIColor(red: 216/255, green: 219/255, blue: 224/255, alpha: 1.0)
+       // bottomView.backgroundColor =  UIColor(red: 216/255, green: 219/255, blue: 224/255, alpha: 1.0)
         bottomView.translatesAutoresizingMaskIntoConstraints = false
         bottomView.isUserInteractionEnabled = true
      
 
         NSLayoutConstraint.activate([
-            bottomView.heightAnchor.constraint(equalToConstant: 50),
             cellseparatorView.heightAnchor.constraint(equalToConstant: 20),
             // Only one height constraint
             ])
@@ -150,16 +153,42 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
            deleteBtn = createButton(title: "download", color: UIColor.OLXBlueColor)
              
              // Create Labels
-             let label1 = createLabel(text: "Label 1")
-             let label2 = createLabel(text: "Label 2")
-             let label3 = createLabel(text: "Label 1")
-             let label4 = createLabel(text: "Label 2")
+        let spacer1 = UIView()
+        let spacer2 = UIView()
+        let spacer3 = UIView()
+        let spacer4 = UIView()
+//        spacer1.backgroundColor = .white
+//        spacer2.backgroundColor = .white
+//        spacer3.backgroundColor = .white
+//        spacer4.backgroundColor = .white
+//
+//        spacer1.translatesAutoresizingMaskIntoConstraints = false
+//        spacer2.translatesAutoresizingMaskIntoConstraints = false
+//        spacer3.translatesAutoresizingMaskIntoConstraints = false
+//        spacer4.translatesAutoresizingMaskIntoConstraints = false
+//      
+//
+//        NSLayoutConstraint.activate([
+//            spacer1.widthAnchor.constraint(equalToConstant: 1),
+//            spacer4.widthAnchor.constraint(equalToConstant: 1),
+//            spacer2.widthAnchor.constraint(equalToConstant: 1),
+//            spacer3.widthAnchor.constraint(equalToConstant: 1),
+//        ])
    
-   
+      
+
+        spacer2.backgroundColor = .white
+        spacer3.backgroundColor = .white
+
+        // Set fixed width and full height
+        NSLayoutConstraint.activate([
+            spacer2.widthAnchor.constraint(equalToConstant: 1),
+            spacer3.widthAnchor.constraint(equalToConstant: 1),
+        ])
              // Add Stack View
-        let bottomstackView = UIStackView(arrangedSubviews: [label3, chatBtn, label1, editBtn, label2, deleteBtn,label4])
+        let bottomstackView = UIStackView(arrangedSubviews: [spacer1, chatBtn, spacer2, editBtn,spacer3, deleteBtn,spacer4])
         bottomstackView.axis = .horizontal
-        bottomstackView.alignment = .center
+        bottomstackView.alignment = .fill
         bottomstackView.distribution = .equalSpacing
         bottomstackView.spacing = 10
         bottomstackView.translatesAutoresizingMaskIntoConstraints = false
@@ -170,107 +199,106 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         bottomstackView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         bottomstackView.layer.masksToBounds = true
         bottomstackView.backgroundColor =   UIColor(red: 216/255, green: 219/255, blue: 224/255, alpha: 1.0)
-
         
         bottomView.isUserInteractionEnabled = true
         
-      NSLayoutConstraint.activate([
-       label1.widthAnchor.constraint(equalToConstant: 1),
-       label2.widthAnchor.constraint(equalToConstant: 1),
-       label1.heightAnchor.constraint(equalToConstant: 46),
-       label2.heightAnchor.constraint(equalToConstant: 46),
-       label3.widthAnchor.constraint(equalToConstant: 0),
-       label4.widthAnchor.constraint(equalToConstant: 0),
-       // Only one height constraint
-       ])
-        
         NSLayoutConstraint.activate([
-            bottomstackView.heightAnchor.constraint(equalToConstant: 50), // Only one height constraint
-            visibleStackView.heightAnchor.constraint(equalToConstant: 35) // Only one height constraint
-               ])
+            bottomstackView.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor, constant: 0),
+            bottomstackView.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor, constant: 0),
+            bottomstackView.topAnchor.constraint(equalTo: bottomView.topAnchor),
+            bottomstackView.bottomAnchor.constraint(equalTo: bottomView.bottomAnchor),
+            bottomstackView.heightAnchor.constraint(equalToConstant: 50),
+        ])
         
-        let stackView = UIStackView(arrangedSubviews: [nameLabel, visibleStackView, separatorView,dateLabel,collectionView,carLabel,bottomstackView])
+   
+//        let stackView = UIStackView(arrangedSubviews: [nameLabel, visibleStackView, separatorView,dateLabel,collectionView,carLabel,bottomstackView])
+        
+        
+        
+        
+        
+        let stackView = UIStackView(arrangedSubviews: [nameLabel, visibleStackView, separatorView, dateLabel, collectionView, carLabel])
         stackView.axis = .vertical
         stackView.spacing = 5
         contentView.addSubview(stackView)
         stackView.backgroundColor = .clear
-        
-        NSLayoutConstraint.activate([
-             nameLabel.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 5),
-             nameLabel.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 10),
-            separatorView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 0),
-            bottomstackView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor, constant: 0),
-             visitedLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor,constant: -5)
-            // Only one height constraint
-            ])
-       
-
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        separatorView.translatesAutoresizingMaskIntoConstraints = false
+
+
         
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.backgroundColor = .white
+        containerView.layer.cornerRadius = 12
+        containerView.layer.shadowColor = UIColor.darkGray.cgColor
+        containerView.layer.shadowOpacity = 0.5
+        containerView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        containerView.layer.shadowRadius = 4
+        containerView.layer.masksToBounds = false
+
+        contentView.addSubview(containerView)
+
+        // 2. Constraints for containerView
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            separatorView.heightAnchor.constraint(equalToConstant: 1),
-           // visitedLabel.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
+            containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 10),
+            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10)
         ])
-//        stackView.backgroundColor = .white
-//        stackView.layer.cornerRadius = 10
-//        stackView.layer.masksToBounds = true
-//        stackView.isUserInteractionEnabled = true
         
-        stackView.layer.cornerRadius = 12
-        stackView.layer.shadowColor = UIColor.darkGray.cgColor
-        stackView.layer.shadowOpacity = 0.5
-        stackView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        stackView.layer.shadowRadius = 4
-        stackView.layer.masksToBounds = false
-        stackView.backgroundColor = .white
+        containerView.addSubview(stackView)
+        containerView.addSubview(bottomView)
+
+        // Set stackView constraints inside containerView
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 0),
+            stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 0),
+            stackView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: 0),
+        ])
+
+        // Set bottomView constraints under stackView
+        NSLayoutConstraint.activate([
+            bottomView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 0),
+            bottomView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            bottomView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            bottomView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            bottomView.heightAnchor.constraint(equalToConstant: 50) // if fixed height
+        ])
+
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.layoutMargins = UIEdgeInsets(top: 10, left: 5, bottom: 0, right: 5)
         
         status_category.setTitle("", for: .normal)
         status_category.translatesAutoresizingMaskIntoConstraints = false
         status_category.setTitleColor(.white, for: .normal)
-        status_category.titleLabel?.font = UIFont(name: "Roboto-Bold", size: 12)
+        status_category.titleLabel?.font = .appFont(.bold, size: 12)
         contentView.addSubview(status_category)
         status_category.contentHorizontalAlignment = .center
 
         contentView.bringSubviewToFront(status_category)
         
         NSLayoutConstraint.activate([
-            status_category.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
+            status_category.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
             status_category.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
             status_category.widthAnchor.constraint(equalToConstant: 75),
             status_category.heightAnchor.constraint(equalToConstant: 45)
                ])
     }
-
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateCollectionViewHeight()
+    }
     func createButton(title: String, color: UIColor) -> UIButton {
         let button = UIButton(type: .custom)
         let image = UIImage(named: title, in: .buyLeadsBundle, compatibleWith: nil)
         button.setImage(image, for: .normal)
         button.isUserInteractionEnabled = true
-        button.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 12)
+        button.titleLabel?.font = .appFont(.regular, size: 12)
         button.setTitleColor(UIColor.OLXBlueColor, for: .normal)
-          button.layer.cornerRadius = 10
-          button.translatesAutoresizingMaskIntoConstraints = false
-          button.widthAnchor.constraint(equalToConstant: 50).isActive = true
-          button.heightAnchor.constraint(equalToConstant: 25).isActive = true
-          return button
+        button.layer.cornerRadius = 10
+        return button
       }
-      
-      // Helper Function to Create Labels
-      func createLabel(text: String) -> UILabel {
-          let label = UILabel()
-          label.text = " "
-          label.backgroundColor = .white
-          label.textAlignment = .center
-          label.textColor = .black
-          label.font = UIFont(name: "Roboto-Bold", size: 14)
-          label.translatesAutoresizingMaskIntoConstraints = false
-          return label
-      }
+     
     func configure(name: String, status: String, date: String, cars:  [Any] ,phonenumber : String) {
         nameLabel.text = "\(name)(\(phonenumber))"
         statusLabel.text = status
@@ -280,7 +308,7 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         phoneLabel.text = ""
         self.cars = cars
         self.collectionView.reloadData()
-        self.updateCollectionViewHeight()
+     //   self.updateCollectionViewHeight()
         if(phonenumber.count != 0){
             let coloredText = NSMutableAttributedString(string: "\(name) (\(phonenumber))")
             // 3️⃣ Apply Color to Part of the Text
@@ -290,10 +318,9 @@ class OnlineBuyLeads_cell : UITableViewCell,UICollectionViewDelegate,UICollectio
         }
     }
     func updateCollectionViewHeight() {
-          collectionView.layoutIfNeeded()
-          heightconstaint.constant = collectionView.contentSize.height
-          superview?.layoutIfNeeded() // Refresh parent tableView
-      }
+        collectionView.layoutIfNeeded()
+        heightconstaint.constant = collectionView.collectionViewLayout.collectionViewContentSize.height
+    }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return cars.count
     }

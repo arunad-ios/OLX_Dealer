@@ -16,5 +16,69 @@ struct Constant {
 
 extension UIColor {
     static let appPrimary = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
-    static let appSecondary = UIColor(named: "AppSecondary") ?? UIColor.gray
+    static let sendsms =  UIColor(red: 243/255, green: 245/255, blue: 246/255, alpha: 1.0)
+    static let cellbg = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
+}
+enum AppFontStyle {
+    case regular
+    case bold
+    case italic
+    case medium
+    case custom(String) // Optional: for custom font names
+}
+extension UIFont {
+        static func appFont(_ style: AppFontStyle, size: CGFloat) -> UIFont {
+            switch style {
+            case .regular:
+                return  UIFont(name: "Roboto-Regular", size: size)!
+            case .bold:
+                return UIFont(name: "Roboto-Bold", size: size)!
+            case .medium:
+                return UIFont(name: "Roboto-Medium", size: size)!
+            case .italic:
+                return  UIFont(name: "Roboto-Italic", size: size)!
+            case .custom(let fontName):
+                return UIFont(name: fontName, size: size) ?? UIFont.systemFont(ofSize: size)
+            }
+        }
+    static let RobotoRegular = UIFont(name: "Roboto-Regular", size: 14)
+    static let RobotoBold =  UIFont(name: "Roboto-Bold", size: 14)
+    static let cellbg = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
+}
+extension UIButton {
+    func addLeftAndRightBorders(color: UIColor, width: CGFloat) {
+        // Left Border
+        let leftBorder = CALayer()
+        leftBorder.backgroundColor = color.cgColor
+        leftBorder.frame = CGRect(x: 0, y: 0, width: width, height: self.frame.height)
+        self.layer.addSublayer(leftBorder)
+
+        // Right Border
+        let rightBorder = CALayer()
+        rightBorder.backgroundColor = color.cgColor
+        rightBorder.frame = CGRect(x: self.frame.width - width, y: 0, width: width, height: self.frame.height)
+        self.layer.addSublayer(rightBorder)
+    }
+}
+extension UIImage {
+    func tinted(with color: UIColor) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        color.setFill()
+        guard let context = UIGraphicsGetCurrentContext(), let cgImage = cgImage else { return self }
+
+        context.translateBy(x: 0, y: size.height)
+        context.scaleBy(x: 1, y: -1)
+        let rect = CGRect(origin: .zero, size: size)
+
+        context.setBlendMode(.normal)
+        context.draw(cgImage, in: rect)
+
+        context.setBlendMode(.sourceIn)
+        context.fill(rect)
+
+        let coloredImage = UIGraphicsGetImageFromCurrentImageContext() ?? self
+        UIGraphicsEndImageContext()
+
+        return coloredImage
+    }
 }

@@ -41,9 +41,9 @@ class ApiErrorAlertView: UIViewController {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Message !"
-        label.font = UIFont(name: "Roboto-Bold", size: 18)
+        label.font = .appFont(.bold, size: 18)
         label.textAlignment = .left
-        label.textColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
+        label.textColor = .appPrimary
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -51,7 +51,7 @@ class ApiErrorAlertView: UIViewController {
     private lazy var messageLabel: UILabel = {
         let label = UILabel()
         label.text = message
-        label.font = UIFont(name: "Roboto-Regular", size: 16)
+        label.font = .appFont(.regular, size: 16)
         label.numberOfLines = 0
         label.textAlignment = .left
         label.textColor = .darkGray
@@ -66,7 +66,7 @@ class ApiErrorAlertView: UIViewController {
         button.layer.cornerRadius = 8
         button.addTarget(self, action: #selector(dismissAlert), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
+        button.backgroundColor = .appPrimary
         button.layer.cornerRadius = 5
         button.setTitleColor(.white, for: .normal)
         return button

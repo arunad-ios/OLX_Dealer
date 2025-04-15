@@ -59,7 +59,7 @@ class DropdownView: UIView, UITableViewDataSource, UITableViewDelegate {
         let titleLabel = UILabel(frame: CGRect(x: 16, y: 0, width: tableView.frame.width, height: 50))
         titleLabel.text = self.headerTitle
         titleLabel.textColor = .white
-        titleLabel.font = UIFont(name: "Roboto-Medium", size: 12)
+        titleLabel.font = .appFont(.medium, size: 12)
         headerView.addSubview(titleLabel)
         return headerView
     }
@@ -73,7 +73,7 @@ class DropdownView: UIView, UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         cell.textLabel?.text = items[indexPath.row]
         cell.textLabel?.textColor = UIColor(red: 0.0/255.0, green: 71.0/255.0, blue: 149.0/255.0, alpha: 1.0)
-        cell.textLabel?.font = UIFont(name: "Roboto-Medium", size: 12)
+        cell.textLabel?.font = .appFont(.medium, size: 12)
         return cell
     }
 

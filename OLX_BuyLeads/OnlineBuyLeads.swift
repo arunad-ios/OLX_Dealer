@@ -60,18 +60,25 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 .font: UIFont(name: "Roboto-Medium", size: 18)! // Custom font and size
             ]
       
-        
-        if let statusBarFrame = UIApplication.shared.windows.first?.windowScene?.statusBarManager?.statusBarFrame {
-            let statusBarView = UIView(frame: statusBarFrame)
-            statusBarView.backgroundColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
-            UIApplication.shared.windows.first?.addSubview(statusBarView)
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first {
+            // Now you can access the window
+            print("Got the window: \(window)")
+            if let statusBarFrame = window.windowScene?.statusBarManager?.statusBarFrame {
+                let statusBarView = UIView(frame: statusBarFrame)
+                statusBarView.backgroundColor = .appPrimary
+                window.addSubview(statusBarView)
+            }
         }
+        
+        
+       
        
         navigationController?.navigationBar.isTranslucent = false
         
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground() // or .configureWithTransparentBackground()
-        appearance.backgroundColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)// or any color
+        appearance.backgroundColor = .appPrimary
         appearance.titleTextAttributes = [.foregroundColor: UIColor.white] // 👈 Title color here
         appearance.shadowColor = .clear // 🔥 removes the bottom line
 
@@ -79,7 +86,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         
         navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.backgroundColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
+        navigationController?.navigationBar.backgroundColor = .appPrimary
         view.backgroundColor = .white
         
         
@@ -106,18 +113,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
            searchButton.setImage(UIImage(named: "send", in: .buyLeadsBundle, compatibleWith: nil), for: .normal)
            searchButton.removeTarget(self, action:  #selector(didTapSearchButton), for: .touchUpInside)
            searchButton.addTarget(self, action: #selector(searchBuyLeads), for: .touchUpInside)
-           // Configure search bar
-//           searchBar.placeholder = "Search a name"
-//           searchBar.delegate = self
-//           searchBar.sizeToFit()
-//           searchBar.searchBarStyle = .minimal
-//           searchBar.backgroundImage = UIImage()// clean style
-//           searchBar.tintColor = .black
-//           searchBar.backgroundColor = .white
-//           bgView.addSubview(searchBar)
-//           
-           
-//           let searchBar = UISearchBar()
            searchBar.placeholder = "Search a name"
            searchBar.searchTextField.backgroundColor = .white
            searchBar.delegate = self
@@ -125,7 +120,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
            // Set a fixed width
            let searchBarWidth = UIScreen.main.bounds.width - 40
            searchBar.frame = CGRect(x: 0, y: 0, width: searchBarWidth, height: 36)
-         // searchBar.backgroundColor = .white
            // Put it in the navigation bar
            navigationItem.titleView = searchBar
        }
@@ -216,7 +210,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 DispatchQueue.main.async {
                     self.loadingView.hide()
                     if  let dic = data["data"] as? NSArray{
-                        InventorySaveDataIntoDB.sharedInstance.saveStockTitles(dic as! Any)
+                        InventorySaveDataIntoDB.sharedInstance.saveStockTitles(dic as Any)
                         }
                         else{
                             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
@@ -247,7 +241,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             "user_id":MyPodManager.user_id,
             "sync_time": UserDefaults.standard.value(forKey: "synchtime") ?? "",
             "system_info":"dflgjdflghdlfuhg",
-            "device_id": Constant.uuid
+            "device_id": Constant.uuid ?? ""
         ] as! [String:Any]
         
         let api = ApiServices()
@@ -350,7 +344,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                     }
                     else{
                         print(data)
-                        let dic = data
                         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                             self.loadingView.hide()
                         }
@@ -412,7 +405,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         
         let parameters = [ "action":"loadallbuylead",
                            "api_id": "cteolx2024v1.0",
-                           "device_id":Constant.uuid,
+                           "device_id":Constant.uuid!,
                            "dealer_id":MyPodManager.user_id,
                            "status_filters":self.status,
                            "car_inventory_id":self.inventoryId,
@@ -463,8 +456,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                 DispatchQueue.main.async {
                     self.loadingView.hide()
                     self.showApiError(error.localizedDescription)
-
-                 //   self.showCustomErrorPopup(message: error.localizedDescription)
                 }
             }
         }
@@ -491,39 +482,6 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             }
         }
     }
-    func showCustomErrorPopup(message: String) {
-        let popupView = UIView()
-        popupView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
-        popupView.layer.cornerRadius = 12
-        popupView.translatesAutoresizingMaskIntoConstraints = false
-
-        let label = UILabel()
-        label.text = message
-        label.textColor = .white
-        label.numberOfLines = 0
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-
-        popupView.addSubview(label)
-        view.addSubview(popupView)
-
-        NSLayoutConstraint.activate([
-            popupView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            popupView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            popupView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 30),
-            popupView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -30),
-
-            label.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 20),
-            label.bottomAnchor.constraint(equalTo: popupView.bottomAnchor, constant: -20),
-            label.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 16),
-            label.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -16),
-        ])
-
-        // Auto dismiss after 2 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            popupView.removeFromSuperview()
-        }
-    }
  
     func showApiError(_ message: String) {
         let errorAlert = ApiErrorAlertView(message: message)
@@ -537,7 +495,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
       }
     private func setupTableView() {
         
-        tableView.backgroundColor = UIColor(red: 233/255, green: 237/255, blue: 238/255, alpha: 1.0)
+        tableView.backgroundColor = .cellbg
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.rowHeight = UITableView.automaticDimension
@@ -556,7 +514,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         tableView.sectionHeaderTopPadding = 5
         tableView.register(OnlineBuyLeads_cell.self, forCellReuseIdentifier: "CustomCell")
         tableView.register(OnlineBuyLeads_collection.self, forCellReuseIdentifier: OnlineBuyLeads_collection.identifier)
-        
+      //  tableView.register(LeadTableViewCell.self, forCellReuseIdentifier: "LeadCell")
         
         noleadView.backgroundColor = .clear
         // Add the view to the parent view
@@ -613,6 +571,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         else{
             self.stockFetchAPI()
         }
+      //  print(view.constraints)
     }
     public func getStockList()->[Ads]{
         return InventoryAPIManager.sharedInstance.getStocks() as! [Ads]
@@ -632,7 +591,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
         let statusString = (self.data[0] as! String).replacingOccurrences(of: "[^a-zA-Z\\s]", with: "", options: .regularExpression)
         titleLabel.text = statusString.uppercased()
         titleLabel.textColor = .white
-        titleLabel.font = UIFont(name: "Roboto-Bold", size: 14)
+        titleLabel.font = .appFont(.bold, size: 14)
         headerView.addSubview(titleLabel)
         return headerView
     }
@@ -651,7 +610,11 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
     public func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
-
+//    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "LeadCell", for: indexPath) as! LeadTableViewCell
+//        // Optionally customize data
+//        return cell
+//    }
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if(indexPath.section == 1){
             let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! OnlineBuyLeads_cell
@@ -682,7 +645,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
                             cell.status_category.setBackgroundImage(tinted, for: .normal)
                         }
                         else if((response["status_category"]! as! String) == "COLD"){
-                            let tinted = original.tinted(with: UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0))
+                            let tinted = original.tinted(with: .appPrimary)
                             cell.status_category.setBackgroundImage(tinted, for: .normal)
                         }
                         else{
@@ -703,7 +666,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(visitingStatus))
             cell.visitedLabel.addGestureRecognizer(tapGesture)
             cell.visitedLabel.isUserInteractionEnabled = true
-            cell.contentView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
+            cell.contentView.backgroundColor = .cellbg
             
             //navigate to chat screen from SDK to OLX App
             cell.chatBtn.isUserInteractionEnabled = true
@@ -730,7 +693,7 @@ public class OnlineBuyLeads: UIViewController, UITableViewDelegate, UITableViewD
             let cell = tableView.dequeueReusableCell(withIdentifier: OnlineBuyLeads_collection.identifier, for: indexPath) as! OnlineBuyLeads_collection
             cell.delegate = self
             cell.configure(with: data)  // Pass data to cell
-            cell.contentView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
+            cell.contentView.backgroundColor = .cellbg
             return cell
         }
     }

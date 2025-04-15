@@ -281,15 +281,8 @@ class InventoryAPIManager: NSObject {
                 print([])
             }
         
-        var returnArray:[Models] = [Models]()
         let modelsArray:[Models] = (m_Models as NSDictionary).allValues as! [Models]
-        var returnModelsArry:[String] = [String]()
-        for obj:Models in modelsArray {
-//            if obj.gf == "y" {
-//                returnArray.append(obj)
-//                returnModelsArry.append(obj.name ?? "")
-//            }
-        }
+        let returnModelsArry:[String] = [String]()
         let orderedSet = NSOrderedSet(array: returnModelsArry)
         let arrayWithoutDuplicates: [Any] = orderedSet.array
         let sortedArray = arrayWithoutDuplicates.sorted { ($0 as AnyObject).localizedCaseInsensitiveCompare($1 as! String) == ComparisonResult.orderedAscending }

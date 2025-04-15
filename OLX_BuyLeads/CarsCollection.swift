@@ -36,7 +36,7 @@ class CarsCollection : UICollectionViewCell {
         chatBtn.setImage(image, for: .normal)
         deleteBtn.setImage(UIImage.named( "delete"), for: .normal)
         deleteBtn.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.font = UIFont(name: "Roboto-Regular", size: 14)
+        titleLabel.font = .appFont(.regular, size: 14)
         titleLabel.textColor = UIColor.black
         titleLabel.textAlignment = .left
         // Label

@@ -40,8 +40,6 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
     // MARK: - UI Setup
     private func setupUI() {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        
-        
 
         popupView.backgroundColor = .white
         popupView.layer.cornerRadius = 12
@@ -73,11 +71,11 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
         popupView.addSubview(iconImageView)
 
         titleLabel.text = "Send SMS"
-        titleLabel.font = UIFont(name: "Roboto-Bold", size: 16)
+        titleLabel.font = .appFont(.bold, size: 16)
         popupView.addSubview(titleLabel)
 
         contactLabel.text = "\(items["contact_name"] as! String) (\(items["mobile"] as! String))"
-        contactLabel.font = UIFont(name: "Roboto-Regular", size: 16)
+        contactLabel.font = .appFont(.regular, size: 16)
         contactLabel.textColor = .black
         popupView.addSubview(contactLabel)
         
@@ -91,10 +89,10 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
         templateTextField.setTitle("Select Message Template", for: .normal)
         templateTextField.setTitleColor(.black, for: .normal)
         templateTextField.layer.cornerRadius = 5
-        templateTextField.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 12)
+        templateTextField.titleLabel?.font = .appFont(.regular, size: 12)
         popupView.addSubview(templateTextField)
         templateTextField.contentHorizontalAlignment = .left
-        templateTextField.backgroundColor = UIColor(red: 243/255, green: 245/255, blue: 246/255, alpha: 1.0)
+        templateTextField.backgroundColor = .sendsms
         
      
         
@@ -102,12 +100,12 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
         inventoryButton.setTitleColor(.black, for: .normal)
         inventoryButton.setTitle("Select Inventory", for: .normal)
         inventoryButton.layer.cornerRadius = 5
-        inventoryButton.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 12)
-        
+        inventoryButton.titleLabel?.font = .appFont(.regular, size: 12)
+
       
         popupView.addSubview(inventoryButton)
         inventoryButton.contentHorizontalAlignment = .left
-        inventoryButton.backgroundColor =  UIColor(red: 243/255, green: 245/255, blue: 246/255, alpha: 1.0)
+        inventoryButton.backgroundColor =  .sendsms
         
         inventoryButtonHeightConstraint = inventoryButton.heightAnchor.constraint(equalToConstant: 0)
         inventoryButtonHeightConstraint.isActive = true
@@ -117,29 +115,29 @@ class SendSMSPopupViewController: UIViewController,MFMessageComposeViewControlle
      //   messageTextView.layer.borderWidth = 1
         messageTextView.layer.cornerRadius = 3
         messageTextView.font = UIFont.systemFont(ofSize: 16)
-        messageTextView.backgroundColor =  UIColor(red: 243/255, green: 245/255, blue: 246/255, alpha: 1.0)
+        messageTextView.backgroundColor =  .sendsms
         popupView.addSubview(messageTextView)
-        messageTextView.font = UIFont(name: "Roboto-Regular", size: 12)
+        messageTextView.font = .appFont(.regular, size: 12)
 
         cancelButton.setTitle("CANCEL", for: .normal)
         cancelButton.setTitleColor(.systemBlue, for: .normal)
         cancelButton.backgroundColor = .white
-        cancelButton.layer.borderColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0).cgColor
-        cancelButton.setTitleColor(UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0), for: .normal)
+        cancelButton.layer.borderColor =  UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0).cgColor
+        cancelButton.setTitleColor(.appPrimary, for: .normal)
         cancelButton.layer.borderWidth = 2
         cancelButton.layer.cornerRadius = 5
-        cancelButton.titleLabel?.font = UIFont(name: "Roboto-Bold", size: 14)
+        cancelButton.titleLabel?.font = .appFont(.bold, size: 14)
 
         cancelButton.addTarget(self, action: #selector(dismissPopup), for: .touchUpInside)
         popupView.addSubview(cancelButton)
 
         sendButton.setTitle("SEND", for: .normal)
         sendButton.setTitleColor(.white, for: .normal)
-        sendButton.backgroundColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
+        sendButton.backgroundColor = .appPrimary
         sendButton.layer.cornerRadius = 5
         sendButton.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
         popupView.addSubview(sendButton)
-        sendButton.titleLabel?.font = UIFont(name: "Roboto-Bold", size: 14)
+        sendButton.titleLabel?.font = .appFont(.bold, size: 14)
 
         self.dealerinfo = loadUserFromFile()
     }

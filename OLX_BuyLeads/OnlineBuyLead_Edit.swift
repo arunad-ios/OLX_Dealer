@@ -33,7 +33,7 @@ class VehicleinfoCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         label.text = ""
         label.numberOfLines = 0
-        label.font = UIFont(name: "Roboto-Regular", size: 14)
+        label.font = .appFont(.regular, size: 14)
         contentView.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -69,12 +69,12 @@ class HistoryCell: UITableViewCell {
         containerView.layer.cornerRadius = 4
         containerView.backgroundColor = UIColor.systemBackground
         
-        dateLabel.font = UIFont(name: "Roboto-Bold", size: 14)
-        followupLabel.font = UIFont(name: "Roboto-Regular", size: 14)
-        hotLabel.font = UIFont(name: "Roboto-Regular", size: 14)
+        dateLabel.font = .appFont(.bold, size: 14)
+        followupLabel.font = .appFont(.regular, size: 14)
+        hotLabel.font = .appFont(.regular, size: 14)
         hotLabel.textColor = .systemRed
-        notesLabel.font = UIFont(name: "Roboto-Regular", size: 14)
-        remarksLabel.font = UIFont(name: "Roboto-Regular", size: 14)
+        notesLabel.font = .appFont(.regular, size: 14)
+        remarksLabel.font = .appFont(.regular, size: 14)
         notesLabel.numberOfLines = 0
         remarksLabel.numberOfLines = 0
         
@@ -123,8 +123,8 @@ class TextFieldCell: UITableViewCell, UITextFieldDelegate {
 
         textField.borderStyle = .roundedRect
         contentView.addSubview(textField)
-        textField.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
-        textField.font = UIFont(name: "Roboto-Regular", size: 14)
+        textField.backgroundColor = .cellbg
+        textField.font = .appFont(.regular, size: 14)
         textField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
@@ -156,7 +156,7 @@ class DatePickerCell: UITableViewCell,UITextFieldDelegate {
         contentView.addSubview(textField)
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.borderStyle = .roundedRect
-        textField.font = UIFont(name: "Roboto-Regular", size: 14)
+        textField.font = .appFont(.regular, size: 14)
         NSLayoutConstraint.activate([
             textField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             textField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
@@ -164,7 +164,7 @@ class DatePickerCell: UITableViewCell,UITextFieldDelegate {
             textField.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
             textField.heightAnchor.constraint(equalToConstant: 40)
         ])
-        textField.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
+        textField.backgroundColor = .cellbg
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.delegate = self
         textField.addTarget(self, action: #selector(textDidChange(_:)), for: .editingChanged)
@@ -220,32 +220,32 @@ class CheckboxCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        // Add subviews
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(checkboxButton)
-        
         // Setup
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        checkboxButton.translatesAutoresizingMaskIntoConstraints = false
-        checkboxButton.setImage(UIImage.named("uncheck"), for: .normal)
-
-        titleLabel.font = UIFont(name: "Roboto-Regular", size: 12)
+        titleLabel.font = .appFont(.regular, size: 12)
         titleLabel.textColor = .black
+        titleLabel.numberOfLines = 0
         
-        // Layout
+        checkboxButton.setImage(UIImage.named("uncheck"), for: .normal)
+        checkboxButton.addTarget(self, action: #selector(toggleCheck), for: .touchUpInside)
+        
+        checkboxButton.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        contentView.addSubview(checkboxButton)
+        contentView.addSubview(titleLabel)
+        
+        // Constraint Layout
         NSLayoutConstraint.activate([
             checkboxButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            checkboxButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            checkboxButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
             checkboxButton.widthAnchor.constraint(equalToConstant: 24),
             checkboxButton.heightAnchor.constraint(equalToConstant: 24),
             
             titleLabel.leadingAnchor.constraint(equalTo: checkboxButton.trailingAnchor, constant: 12),
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)
         ])
-        
-        checkboxButton.addTarget(self, action: #selector(toggleCheck), for: .touchUpInside)
-        isChecked = false
     }
     
     @objc private func toggleCheck() {
@@ -261,92 +261,71 @@ class CheckboxCell: UITableViewCell {
 class ButtonCell: UITableViewCell {
     let button = UIButton(type: .custom)
     var buttonAction: (() -> Void)?
-    var imgView = UIImageView()
+    let imgView = UIImageView()
     let titleLabel = UILabel()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-       // contentView.addSubview(button)
-      //  contentView.addSubview(titleLabel)
-        
         titleLabel.textColor = .black
         titleLabel.numberOfLines = 0
-        titleLabel.font = UIFont(name: "Roboto-Regular", size: 12)
-        
-    
+        titleLabel.font = .appFont(.regular, size: 12)
+
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitleColor(.black, for: .normal)
-      //  button.layer.cornerRadius = 4
-        button.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
         button.contentHorizontalAlignment = .leading
-        
-        button.titleLabel?.font = UIFont(name: "Roboto-Regular", size: 12)
-        let containerView = UIView()
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.backgroundColor = UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
-        contentView.addSubview(containerView)
-        
-        
-        imgView = UIImageView(image: UIImage.named("downarrow"))
+        button.titleLabel?.font = .appFont(.regular, size: 12)
+        button.backgroundColor = .cellbg
+
+        imgView.image = UIImage.named("downarrow")
         imgView.tintColor = .systemYellow
         imgView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.addSubview(imgView)
-        
-     
-        containerView.addSubview(button)
 
-        // Optional: style container
-        containerView.backgroundColor =  UIColor(red: 239/255, green: 239/255, blue: 239/255, alpha: 1.0)
+        let containerView = UIView()
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.backgroundColor = .cellbg
         containerView.layer.cornerRadius = 5
-        
-        
-        NSLayoutConstraint.activate([
-            // Container in center of main view
-            containerView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 8),
-            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
-            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            containerView.heightAnchor.constraint(equalToConstant: 40),
 
-            // Image at top center
-           // imgView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+        containerView.addSubview(button)
+        containerView.addSubview(imgView)
+
+        // Constraints inside containerView
+        NSLayoutConstraint.activate([
+            button.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+            button.trailingAnchor.constraint(equalTo: imgView.leadingAnchor, constant: -10),
+            button.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
+            button.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -8),
+
             imgView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
+            imgView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             imgView.widthAnchor.constraint(equalToConstant: 15),
             imgView.heightAnchor.constraint(equalToConstant: 15),
-            imgView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-
-            // Button at bottom
-            button.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 5),
-            button.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant:-30),
-            button.heightAnchor.constraint(equalToConstant: 40),
-            button.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-
         ])
-        
+
+        // StackView containing title and container
         let stackView = UIStackView(arrangedSubviews: [titleLabel, containerView])
         stackView.axis = .vertical
         stackView.spacing = 8
         stackView.alignment = .fill
-
-        contentView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        
+        contentView.addSubview(stackView)
+
         NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            stackView.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 5),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
             stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 30),
             stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30),
-            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -5)
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
-    
     }
 
     @objc func didTap() {
         buttonAction?()
     }
 
-    required init?(coder: NSCoder) { fatalError() }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 
@@ -478,8 +457,8 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
         
            // Bottom Button
         updateButton.setTitle("Update", for: .normal)
-        updateButton.titleLabel?.font =  UIFont(name: "Roboto-Bold", size: 16)
-        updateButton.backgroundColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
+        updateButton.titleLabel?.font =  .appFont(.bold, size: 16)
+        updateButton.backgroundColor = .appPrimary
         updateButton.setTitleColor(.white, for: .normal)
         updateButton.addTarget(self, action: #selector(updatebuylead), for: .touchUpInside)
            view.addSubview(updateButton)
@@ -523,7 +502,7 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
               label.textAlignment = .left
               label.textColor = .black
               label.backgroundColor = .clear
-              label.font = UIFont(name: "Roboto-Regular", size: 14)
+              label.font = .appFont(.regular, size: 14)
               label.layer.cornerRadius = 8
               label.clipsToBounds = true
           }
@@ -846,8 +825,8 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
         headerView.backgroundColor = UIColor(red: 236/255, green: 241/255, blue: 255/255, alpha: 1.0)
         let titleLabel = UILabel(frame: CGRect(x: 16, y: 10, width: tableView.frame.width - 50, height: 30))
         titleLabel.text = data[section].title
-        titleLabel.textColor = UIColor.OLXBlueColor
-        titleLabel.font = UIFont(name: "Roboto-Medium", size: 14)
+        titleLabel.textColor = .appPrimary
+        titleLabel.font = .appFont(.regular, size: 12)
         headerView.addSubview(titleLabel)
 
         let expandButton = UIButton(frame: CGRect(x: tableView.frame.width - 40, y: 10, width: 30, height: 30))
@@ -869,12 +848,15 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
 
     // MARK: - Expand/Collapse Logic
     @objc func toggleViewSection(_ sender: UITapGestureRecognizer) {
+        self.expandedSections.removeAll()
+        expandedSections.insert(sender.view!.tag)
         for i in 0..<data.count{
             if(i == sender.view!.tag)
             {
                 data[i].isExpanded.toggle()
             }
             else{
+                expandedSections.remove(sender.view!.tag)
                 data[i].isExpanded = false
             }
             tableView.reloadData()
@@ -882,12 +864,16 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     @objc func toggleSection(_ sender: UIButton) {
+        self.expandedSections.removeAll()
+        expandedSections.insert(sender.tag)
+
         for i in 0..<data.count{
             if(i == sender.tag)
             {
                 data[i].isExpanded.toggle()
             }
             else{
+                expandedSections.remove(sender.tag)
                 data[i].isExpanded = false
             }
             tableView.reloadData()
@@ -1144,7 +1130,7 @@ class OnlineBuyLead_Edit : UIViewController, UITableViewDelegate, UITableViewDat
                 "action":"updatebuylead",
                 "dealer_id":MyPodManager.user_id,
                 "api_id":"cteolx2024v1.0",
-                "device_id":Constant.uuid,
+                "device_id":Constant.uuid!,
                 "buylead_id":UserDefaults.standard.value(forKey: "buylead_id")!,
                 "state":dic["State"]!,
                 "name":dic["First Name"]!,

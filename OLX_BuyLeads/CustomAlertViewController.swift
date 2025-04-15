@@ -51,8 +51,8 @@ class CustomAlertViewController: UIViewController {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = titleText
-        label.textColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
-        label.font = UIFont(name: "Roboto-Bold", size: 16)
+        label.textColor = .appPrimary
+        label.font = .appFont(.bold, size: 16)
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -61,7 +61,7 @@ class CustomAlertViewController: UIViewController {
     private lazy var messageLabel: UILabel = {
         let label = UILabel()
         label.text = messageText
-        label.font = UIFont(name: "Roboto-Regular", size: 12)
+        label.font = .appFont(.regular, size: 12)
         label.textAlignment = .left
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -73,7 +73,7 @@ class CustomAlertViewController: UIViewController {
         button.setTitle(confirmTitle, for: .normal)
         button.addTarget(self, action: #selector(confirmTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
+        button.backgroundColor = .appPrimary
         button.layer.cornerRadius = 5
         button.setTitleColor(.white, for: .normal)
         return button
@@ -82,10 +82,10 @@ class CustomAlertViewController: UIViewController {
     public lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(cancelTitle, for: .normal)
-        button.setTitleColor(UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0), for: .normal)
+        button.setTitleColor(.appPrimary, for: .normal)
         button.addTarget(self, action: #selector(cancelTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.layer.borderColor = UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0).cgColor
+        button.layer.borderColor =  UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0).cgColor
         button.layer.borderWidth = 2
         button.layer.cornerRadius = 5
         return button

@@ -75,7 +75,6 @@ public class FilterTableViewController : UIViewController, UITableViewDataSource
         let headerView = UIView()
         headerView.backgroundColor = .white
         let imageview = UIImageView(frame: CGRect(x: 16, y: 0, width: 30, height: 30))
-      //  imageview.backgroundColor = UIColor.OLXBlueColor
         imageview.layer.cornerRadius = imageview.frame.size.width / 2
         imageview.layer.masksToBounds = true
         imageview.image = UIImage(named: "filter", in: .buyLeadsBundle, compatibleWith: nil)
@@ -83,7 +82,7 @@ public class FilterTableViewController : UIViewController, UITableViewDataSource
         let titleLabel = UILabel(frame: CGRect(x: 50, y: 0, width: tableView.frame.width, height: 30))
         titleLabel.text = "Filter"
         titleLabel.textColor = UIColor.OLXBlueColor
-        titleLabel.font = UIFont(name: "Roboto-Medium", size: 16)
+        titleLabel.font = .appFont(.medium, size: 16)
         headerView.addSubview(titleLabel)
         return headerView
     }
@@ -98,7 +97,7 @@ public class FilterTableViewController : UIViewController, UITableViewDataSource
         let dic = items[indexPath.item] as! NSDictionary
         print((dic["name"] as! String))
         cell.textLabel?.text = "\((dic["name"] as! String))(\((dic["count"] as! CVarArg)))"
-        cell.textLabel?.font =  UIFont(name: "Roboto-Regular", size: 12)
+        cell.textLabel?.font =  .appFont(.regular, size: 12)
         return cell
     }
 

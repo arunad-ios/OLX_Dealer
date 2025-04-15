@@ -19,9 +19,9 @@ public class LoadingView: UIView {
     private let loadingLabel: UILabel = {
         let label = UILabel()
         label.text = "Loading..."
-        label.font = UIFont(name: "Roboto-Regular", size: 14)
+        label.font = .RobotoRegular
         label.textAlignment = .center
-        label.textColor = .lightGray
+        label.textColor = .black
         return label
     }()
 

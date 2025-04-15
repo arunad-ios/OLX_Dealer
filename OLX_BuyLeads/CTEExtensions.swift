@@ -29,26 +29,7 @@ extension UIApplication {
         return viewController
     }
 }
-//extension UILabel {
-////    class var localisedText:UILabel{
-////        let label = UILabel()
-////        label.text = LocalisationManager.localisedString(self.text)
-////        return label
-////    }
-//    
-//    
-//    public var localisedText: String? {
-//        get {
-//            return self.text
-//        }
-//        set {
-//            self.text = LocalisationManager.localisedString(newValue!)
-//        }
-//    }
-//
-//}
 extension UIColor {
-    
     class  var OLXBlueColor : UIColor {
         return UIColor(red: 23.0/255.0, green: 73.0/255.0, blue: 152.0/255.0, alpha: 1.0)
     }
@@ -77,78 +58,13 @@ extension UIColor {
     class   var AAOrangeColor: UIColor {
         return UIColor(red: 215.0/255.0, green: 137.0/255.0, blue: 21.0/255.0, alpha: 1.0)
     }
-
 }
-
 extension UIImage {
     static func named(_ name: String) -> UIImage? {
         return UIImage(named: name, in: .buyLeadsBundle, compatibleWith: nil)
     }
 }
-
-@objc extension UIFont {
-    
-    class  func RobotoBold(fontsize : CGFloat) -> UIFont {
-        return UIFont(name: "Roboto-Bold", size: fontsize)!
-    }
-    class  func RobotoLite(fontsize : CGFloat) -> UIFont {
-        return UIFont(name: "Roboto-Light", size: fontsize)!
-    }
-    class  func RobotoRegular(fontsize : CGFloat) -> UIFont {
-        return UIFont(name: "Roboto-Regular", size: fontsize)!
-    }
-    class  func RobotoRegularItalic(fontsize : CGFloat) -> UIFont {
-        return UIFont(name: "Roboto-Italic", size: fontsize)!
-    }
-    class  func RobotoLiteItalic(fontsize : CGFloat) -> UIFont {
-        return UIFont(name: "Roboto-LightItalic", size: fontsize)!
-    }
-    class  func RobotoCondRegular(fontsize : CGFloat) -> UIFont {
-        return UIFont(name: "RobotoCondensed-Regular", size: fontsize)!
-    }
-    class  func RobotoMedium(fontsize : CGFloat) -> UIFont {
-        return UIFont(name: "Roboto-Medium", size: fontsize)!
-    }
-    class  func RobotoMediumItalic(fontsize : CGFloat) -> UIFont {
-        return UIFont(name: "Roboto-MediumItalic", size: fontsize)!
-    }
-    class  func RobotoItalic(fontsize : CGFloat) -> UIFont {
-        return UIFont(name: "Roboto-Italic", size: fontsize)!
-    }
-    
-}
-extension UIImage {
-    func tinted(with color: UIColor) -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(size, false, scale)
-        color.setFill()
-        guard let context = UIGraphicsGetCurrentContext(), let cgImage = cgImage else { return self }
-
-        context.translateBy(x: 0, y: size.height)
-        context.scaleBy(x: 1, y: -1)
-        let rect = CGRect(origin: .zero, size: size)
-
-        context.setBlendMode(.normal)
-        context.draw(cgImage, in: rect)
-
-        context.setBlendMode(.sourceIn)
-        context.fill(rect)
-
-        let coloredImage = UIGraphicsGetImageFromCurrentImageContext() ?? self
-        UIGraphicsEndImageContext()
-
-        return coloredImage
-    }
-}
 extension String {
-    
-//    func validateNullString(checkstr: String?) -> String {
-//        var returnstr: String? = "\(checkstr!)"
-//        if (returnstr?.count) == 0 || (returnstr == "<null>") || (returnstr?.isEqual(NSNull()))! || returnstr == nil {
-//            returnstr = ""
-//        }
-//        return returnstr!
-//    }
-    
     func checkValidationBasedOnRegexAngText(text:String , regex:String) -> Bool {
         let emailTest = NSPredicate(format: "SELF MATCHES %@", regex)
         return emailTest.evaluate(with: text)

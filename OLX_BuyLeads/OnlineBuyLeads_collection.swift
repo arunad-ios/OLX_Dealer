@@ -47,7 +47,7 @@ class OnlineBuyLeads_collection : UITableViewCell, UICollectionViewDelegate, UIC
     }
     
     private func setupCollectionView() {
-        contentView.backgroundColor = .red
+        contentView.backgroundColor = .white
         contentView.addSubview(collectionView)
         
         

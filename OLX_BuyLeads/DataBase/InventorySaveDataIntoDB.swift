@@ -20,7 +20,7 @@ class InventorySaveDataIntoDB: NSObject {
         guard let responseDic = response as? [String: Any] else { return }
         guard let statesArray = responseDic["buyleadstatus"]! as? [[String: Any]] else { return }
         let context = CoreDataStack.shared.persistentContainer.viewContext
-        for (index, stateDict) in statesArray.enumerated() {
+        for (_, stateDict) in statesArray.enumerated() {
             let statuses = NSEntityDescription.insertNewObject(forEntityName: "LeadStatus", into: InventoryModelManager.sharedInstance.context) as! LeadStatus
             statuses.name = stateDict["name"] as? String
             for sublead in stateDict["substatus"] as! NSArray{
@@ -67,7 +67,7 @@ class InventorySaveDataIntoDB: NSObject {
         guard let responseDic = response as? [String: Any] else { return }
         guard let statesArray = responseDic["data"]! as? [[String: Any]] else { return }
         let context = CoreDataStack.shared.persistentContainer.viewContext
-        for (index, stateDict) in statesArray.enumerated() {
+        for (_, stateDict) in statesArray.enumerated() {
             let states = NSEntityDescription.insertNewObject(forEntityName: "States", into: InventoryModelManager.sharedInstance.context) as! States
             states.name = stateDict["state"] as? String
             for city in stateDict["cities"] as! NSArray{
@@ -94,7 +94,7 @@ class InventorySaveDataIntoDB: NSObject {
         
         guard let modelsArray = response as? [[String: Any]] else { return }
         let context = CoreDataStack.shared.persistentContainer.viewContext
-        for (index, modelDict) in modelsArray.enumerated() {
+        for (_, modelDict) in modelsArray.enumerated() {
             let make = NSEntityDescription.insertNewObject(forEntityName: "Makes", into: InventoryModelManager.sharedInstance.context) as! Makes
             make.name = modelDict["make"] as? String
             for modelData in modelDict["models"] as! NSArray{
